@@ -96,6 +96,7 @@ namespace Facturar.Servicios
 
         public void AsignaClienteAEmpresa(Cliente cliente, Empresa empresa)
         {
+            // Permite modificar la asignación de un cliente a una empresa existente
             // Evita agregar clientes nulos
             if(cliente == null)
             {
@@ -161,33 +162,6 @@ namespace Facturar.Servicios
             clienteExistente.IBAN = cliente.IBAN;
             clienteExistente.Observaciones = cliente.Observaciones;
 
-            // Actualiza empresas asociadas comparando las listas (antigua y nueva) que devuelve los elementos que estan en la primera y no en la segunda y viceversa
-
-            // Almacena la lista de empresas que ya no estan en la nueva lista para eliminarlas
-            var empresasAntiguas = clienteExistente.Empresas.Except(cliente.Empresas).ToList();
-
-            //Almacena la lista de empresas que son nuevas para agregarlas
-            var empresasNuevas = cliente.Empresas.Except(clienteExistente.Empresas).ToList();
-
-            // Eliminar el cliente de las empresas que ya no pertenecen
-            foreach(var e in empresasAntiguas)
-            {
-                e.Clientes.Remove(clienteExistente);
-            }
-
-            // Agregar el cliente a las nuevas empresas
-            foreach(var e in empresasNuevas)
-            {
-                if(!e.Clientes.Contains(clienteExistente))
-                {
-                    e.Clientes.Add(clienteExistente);
-                }
-            }
-
-            // Actualizar la lista de empresas del cliente
-            clienteExistente.Empresas.Clear();
-            clienteExistente.Empresas.AddRange(cliente.Empresas);
-
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
         }
@@ -206,6 +180,15 @@ namespace Facturar.Servicios
             //Establece la fecha de baja
             cliente.FechaBaja = fechaBaja ?? DateTime.Now;
 
+            // Buscar la empresa a la que pertenece el cliente y eliminarlo de su lista de clientes
+            var empresas = GestorEmpresas.Instancia.ListarEmpresas(false)
+                   .Where(e => e.Clientes.Contains(cliente));
+
+            foreach(var empresa in empresas)
+            {
+                empresa.Clientes.Remove(cliente);
+            }
+
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
         }
@@ -214,7 +197,7 @@ namespace Facturar.Servicios
         {
             // Filtra la lista de clientes según el parámetro 'incluirActivos'
             var clientesFiltrados = incluirInactivos
-                ? _clientes.ToList()
+                ? _clientes
                 : _clientes.Where(c => c.Activo).ToList();
 
             // Devuelve una lista de clientes de solo lectura para evitar modificaciones externas
