@@ -141,6 +141,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Locales.png" />
+    <None Include="Resources\Clientes.png" />
+    <None Include="Resources\Empresas.png" />
+    <None Include="Resources\lista.png" />
     <None Include="Resources\cancelar.png" />
     <None Include="Resources\Validar.png" />
     <None Include="Resources\elminar.png" />
