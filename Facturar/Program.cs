@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Facturar.Infraestructura;
 using Facturar.Presentacion;
 
 namespace Facturar
@@ -15,9 +16,11 @@ namespace Facturar
         [STAThread]
         static void Main()
         {
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new frmBase());
+            InicializadorBaseDatos.Inicializar();
+
+            //Application.EnableVisualStyles();
+            //Application.SetCompatibleTextRenderingDefault(false);
+            //Application.Run(new frmBase());
         }
     }
 }

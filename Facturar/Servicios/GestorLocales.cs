@@ -44,8 +44,9 @@ namespace Facturar.Servicios
             {
                 throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
             }
+
             // Evita agregar locales sin Empresa asociada
-            if(local.Empresa == null)
+            if(local.EmpresaId == null)
             {
                 throw new ArgumentException("El local debe estar asociado a una empresa.", nameof(local));
             }
@@ -65,11 +66,11 @@ namespace Facturar.Servicios
 
             _locales.Add(local);
 
-            // Añade el local a la lista de locales de la empresa
-            if(local.Empresa != null)
-            {
-                local.Empresa.Locales.Add(local);
-            }
+            //// Añade el local a la lista de locales de la empresa
+            //if(local.Empresa != null)
+            //{
+            //    local.Empresa.Locales.Add(local);
+            //}
 
             GestorDatos.Instancia.GuardarDatos();
         }
@@ -86,24 +87,24 @@ namespace Facturar.Servicios
             }
 
             // Guardar referencia a la empresa antigua
-            var empresaAntigua = localExistente.Empresa;
+            var empresaAntigua = localExistente.EmpresaId;
 
             // Actualiza las propiedades del local existente
             localExistente.Descripcion = local.Descripcion;
             localExistente.Direccion = local.Direccion;
             localExistente.CodigoPostal = local.CodigoPostal;
-            localExistente.Ciudad = local.Ciudad;
+            localExistente.Poblacion = local.Poblacion;
             localExistente.Provincia = local.Provincia;
-            localExistente.Empresa = local.Empresa;
+            localExistente.EmpresaId = local.EmpresaId;
             localExistente.ImporteAlquiler = local.ImporteAlquiler;
             localExistente.Observaciones = local.Observaciones;
 
-            // Si la empresa ha cambiado, actualizar listas de locales
-            if(empresaAntigua != null && empresaAntigua != local.Empresa)
-            {
-                empresaAntigua.Locales.Remove(localExistente); // quitar de la antigua
-                local.Empresa.Locales.Add(localExistente);     // añadir a la nueva
-            }
+            //// Si la empresa ha cambiado, actualizar listas de locales
+            //if(empresaAntigua != null && empresaAntigua != local.EmpresaId)
+            //{
+            //    empresaAntigua.Locales.Remove(localExistente); // quitar de la antigua
+            //    local.EmpresaId.Locales.Add(localExistente);     // añadir a la nueva
+            //}
 
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
@@ -123,11 +124,12 @@ namespace Facturar.Servicios
             // Establece la fecha de baja 
             local.FechaBaja = fechaBaja ?? DateTime.Now;
 
-            // Elimina el local de la lista de locales de la empresa
-            if(local.Empresa != null)
-            {
-                local.Empresa.Locales.Remove(local);
-            }
+            //// Elimina el local de la lista de locales de la empresa
+            //if(local.Empresa != null)
+            //{
+            //    local.Empresa.Locales.Remove(local);
+            //}
+
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
         }
@@ -153,15 +155,16 @@ namespace Facturar.Servicios
             foreach(var local in _locales)
             {
                 // Solo si local.Empresa no es null
-                if(local.Empresa != null)
+                if(local.EmpresaId != null)
                 {
                     // Busca la empresa en la lista de empresas
-                    var empresa = empresas.FirstOrDefault(e => e.Id == local.Empresa.Id);
-                    // Si la empresa existe y no contiene ya el local, lo añade a su lista de locales
-                    if(empresa != null && !empresa.Locales.Contains(local))
-                    {
-                        empresa.Locales.Add(local);
-                    }
+                    var empresa = empresas.FirstOrDefault(e => e.Id == local.EmpresaId);
+
+                    //// Si la empresa existe y no contiene ya el local, lo añade a su lista de locales
+                    //if(empresa != null && !empresa.Locales.Contains(local))
+                    //{
+                    //    empresa.Locales.Add(local);
+                    //}
                 }
             }
         }

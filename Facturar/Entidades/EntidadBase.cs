@@ -18,7 +18,6 @@ namespace Facturar.Entidades
         public string Telefono { get; set; }
         public string Email { get; set; }
         public string PersonaContacto { get; set; }
-
         public DateTime FechaAlta { get; set; }
         public DateTime? FechaBaja { get; set; } // Nullable para permitir que no tenga fecha de baja
         public bool Activo => !FechaBaja.HasValue || FechaBaja > DateTime.Now; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)

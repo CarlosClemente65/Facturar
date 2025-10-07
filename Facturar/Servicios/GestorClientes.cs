@@ -78,61 +78,8 @@ namespace Facturar.Servicios
             cliente.FechaAlta = DateTime.Now;
             cliente.FechaBaja = null; // Asegura que la fecha de baja es nula al crear un nuevo cliente
 
-            // Añade la empresa a la lista de empresas a la que pertenece el cliente
-            cliente.Empresas.Add(empresa);
-
-            // Añade el cliente a la lista de clientes de la empresa
-            if(!empresa.Clientes.Contains(cliente))
-            {
-                empresa.Clientes.Add(cliente);
-            }
-
             // Agrega el cliente a la lista principal de clientes
             _clientes.Add(cliente);
-
-            // Guarda los cambios en el archivo
-            GestorDatos.Instancia.GuardarDatos();
-        }
-
-        public void AsignaClienteAEmpresa(Cliente cliente, Empresa empresa)
-        {
-            // Permite modificar la asignación de un cliente a una empresa existente
-            // Evita agregar clientes nulos
-            if(cliente == null)
-            {
-                throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
-            }
-
-            // Evita agregar clientes si la empresa no existe
-            if(empresa == null)
-            {
-                throw new ArgumentNullException(nameof(empresa), "La empresa no puede ser nula.");
-            }
-
-            // Verifica que el cliente exista en la lista de clientes
-            var clienteExistente = _clientes.FirstOrDefault(c => c.NIF == cliente.NIF);
-            if(clienteExistente == null)
-            {
-                throw new InvalidOperationException("El cliente no existe.");
-            }
-
-            // Verifica que el cliente este activo
-            if(!clienteExistente.Activo)
-            {
-                throw new InvalidOperationException("El cliente no esta activo.");
-            }
-
-            // Añade la empresa a la lista de empresas a la que pertenece el cliente si no está ya asignada
-            if(!clienteExistente.Empresas.Contains(empresa))
-            {
-                clienteExistente.Empresas.Add(empresa);
-            }
-
-            // Añade el cliente a la lista de clientes de la empresa si no está ya asignado
-            if(!empresa.Clientes.Contains(clienteExistente))
-            {
-                empresa.Clientes.Add(clienteExistente);
-            }
 
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
@@ -180,15 +127,6 @@ namespace Facturar.Servicios
             //Establece la fecha de baja
             cliente.FechaBaja = fechaBaja ?? DateTime.Now;
 
-            // Buscar la empresa a la que pertenece el cliente y eliminarlo de su lista de clientes
-            var empresas = GestorEmpresas.Instancia.ListarEmpresas(false)
-                   .Where(e => e.Clientes.Contains(cliente));
-
-            foreach(var empresa in empresas)
-            {
-                empresa.Clientes.Remove(cliente);
-            }
-
             // Guarda los cambios en el archivo
             GestorDatos.Instancia.GuardarDatos();
         }
@@ -233,32 +171,6 @@ namespace Facturar.Servicios
                 .Where(c => c.Nombre.Contains(criterio, StringComparison.OrdinalIgnoreCase) ||
                             c.NIF.Contains(criterio, StringComparison.OrdinalIgnoreCase))
                 .ToList().AsReadOnly();
-        }
-
-        public void CargarClientes(List<Cliente> listaClientes)
-        {
-            // Metodo para cargar la lista de clientes desde el gestor de datos
-            try
-            {
-                _clientes = listaClientes ?? new List<Cliente>();
-
-                // Actualiza la lista de clientes en cada empresa
-                foreach(var cliente in _clientes)
-                {
-                    foreach(var empresa in cliente.Empresas)
-                    {
-                        if(!empresa.Clientes.Contains(cliente))
-                        {
-                            empresa.Clientes.Add(cliente);
-                        }
-                    }
-                }
-            }
-
-            catch(Exception ex)
-            {
-                throw new InvalidOperationException("Error al cargar los clientes: " + ex.Message);
-            }
         }
     }
 }

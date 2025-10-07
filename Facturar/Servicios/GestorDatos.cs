@@ -59,7 +59,7 @@ namespace Facturar.Servicios
 
                 if(datos != null)
                 {
-                    _gestorClientes.CargarClientes(datos.Clientes);
+                    //_gestorClientes.CargarClientes(datos.Clientes);
                     _gestorEmpresas.CargarEmpresas(datos.Empresas); 
                     _gestorLocales.CargarLocales(datos.Locales); // Descomentar cuando se implemente el singleton en GestorLocales
                 }
