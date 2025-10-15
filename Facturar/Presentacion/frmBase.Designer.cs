@@ -29,33 +29,33 @@
         private void InitializeComponent()
         {
             this.panelSuperior = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lbMensaje = new System.Windows.Forms.Label();
+            this.imgCerrar = new System.Windows.Forms.PictureBox();
+            this.imgMinimizar = new System.Windows.Forms.PictureBox();
             this.panelLateral = new System.Windows.Forms.Panel();
-            this.panelInferior = new System.Windows.Forms.Panel();
-            this.panelInferiorGeneralEditar = new System.Windows.Forms.Panel();
-            this.panelInferiorGeneral = new System.Windows.Forms.Panel();
-            this.panelCentral = new System.Windows.Forms.Panel();
-            this.btnCancelar = new System.Windows.Forms.Button();
-            this.btnValidar = new System.Windows.Forms.Button();
-            this.btnEliminar = new System.Windows.Forms.Button();
-            this.btnEditar = new System.Windows.Forms.Button();
-            this.btnNuevo = new System.Windows.Forms.Button();
             this.btnLocales = new System.Windows.Forms.Button();
             this.btnClientes = new System.Windows.Forms.Button();
             this.btnEmpresas = new System.Windows.Forms.Button();
             this.btnAbrirPanel = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.imgCerrar = new System.Windows.Forms.PictureBox();
-            this.imgMinimizar = new System.Windows.Forms.PictureBox();
+            this.panelInferior = new System.Windows.Forms.Panel();
+            this.panelInferiorGeneralEditar = new System.Windows.Forms.Panel();
+            this.btnCancelar = new System.Windows.Forms.Button();
+            this.btnValidar = new System.Windows.Forms.Button();
+            this.panelInferiorGeneral = new System.Windows.Forms.Panel();
+            this.btnEliminar = new System.Windows.Forms.Button();
+            this.btnEditar = new System.Windows.Forms.Button();
+            this.btnNuevo = new System.Windows.Forms.Button();
+            this.panelCentral = new System.Windows.Forms.Panel();
             this.btnNnuevo = new System.Windows.Forms.Button();
             this.panelSuperior.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).BeginInit();
             this.panelLateral.SuspendLayout();
             this.panelInferior.SuspendLayout();
             this.panelInferiorGeneralEditar.SuspendLayout();
             this.panelInferiorGeneral.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).BeginInit();
             this.SuspendLayout();
             // 
             // panelSuperior
@@ -72,6 +72,16 @@
             this.panelSuperior.Size = new System.Drawing.Size(942, 40);
             this.panelSuperior.TabIndex = 0;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Facturar.Properties.Resources.Aplicacion;
+            this.pictureBox1.Location = new System.Drawing.Point(7, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabStop = false;
+            // 
             // lbMensaje
             // 
             this.lbMensaje.AutoSize = true;
@@ -81,6 +91,29 @@
             this.lbMensaje.Size = new System.Drawing.Size(227, 25);
             this.lbMensaje.TabIndex = 3;
             this.lbMensaje.Text = "Facturacion de alquieres";
+            // 
+            // imgCerrar
+            // 
+            this.imgCerrar.Image = global::Facturar.Properties.Resources.cerrar;
+            this.imgCerrar.Location = new System.Drawing.Point(905, 5);
+            this.imgCerrar.Name = "imgCerrar";
+            this.imgCerrar.Size = new System.Drawing.Size(30, 30);
+            this.imgCerrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCerrar.TabIndex = 2;
+            this.imgCerrar.TabStop = false;
+            this.imgCerrar.Click += new System.EventHandler(this.imgCerrar_Click);
+            // 
+            // imgMinimizar
+            // 
+            this.imgMinimizar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgMinimizar.Image = global::Facturar.Properties.Resources.minimizar1;
+            this.imgMinimizar.Location = new System.Drawing.Point(859, 5);
+            this.imgMinimizar.Name = "imgMinimizar";
+            this.imgMinimizar.Size = new System.Drawing.Size(30, 30);
+            this.imgMinimizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgMinimizar.TabIndex = 1;
+            this.imgMinimizar.TabStop = false;
+            this.imgMinimizar.Click += new System.EventHandler(this.imgMinimizar_Click);
             // 
             // panelLateral
             // 
@@ -94,6 +127,69 @@
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(44, 472);
             this.panelLateral.TabIndex = 1;
+            // 
+            // btnLocales
+            // 
+            this.btnLocales.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnLocales.FlatAppearance.BorderSize = 0;
+            this.btnLocales.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnLocales.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnLocales.Image = global::Facturar.Properties.Resources.Locales_black;
+            this.btnLocales.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnLocales.Location = new System.Drawing.Point(2, 230);
+            this.btnLocales.Name = "btnLocales";
+            this.btnLocales.Size = new System.Drawing.Size(85, 60);
+            this.btnLocales.TabIndex = 3;
+            this.btnLocales.Text = "Locales";
+            this.btnLocales.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnLocales.UseVisualStyleBackColor = true;
+            this.btnLocales.Visible = false;
+            // 
+            // btnClientes
+            // 
+            this.btnClientes.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnClientes.FlatAppearance.BorderSize = 0;
+            this.btnClientes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnClientes.Image = global::Facturar.Properties.Resources.Clientes_black;
+            this.btnClientes.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnClientes.Location = new System.Drawing.Point(2, 150);
+            this.btnClientes.Name = "btnClientes";
+            this.btnClientes.Size = new System.Drawing.Size(85, 60);
+            this.btnClientes.TabIndex = 2;
+            this.btnClientes.Text = "Clientes";
+            this.btnClientes.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnClientes.UseVisualStyleBackColor = true;
+            this.btnClientes.Visible = false;
+            // 
+            // btnEmpresas
+            // 
+            this.btnEmpresas.FlatAppearance.BorderSize = 0;
+            this.btnEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnEmpresas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnEmpresas.Image = global::Facturar.Properties.Resources.Empresa_black;
+            this.btnEmpresas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnEmpresas.Location = new System.Drawing.Point(0, 70);
+            this.btnEmpresas.Name = "btnEmpresas";
+            this.btnEmpresas.Size = new System.Drawing.Size(85, 60);
+            this.btnEmpresas.TabIndex = 1;
+            this.btnEmpresas.Text = "Empresas";
+            this.btnEmpresas.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnEmpresas.UseVisualStyleBackColor = true;
+            this.btnEmpresas.Visible = false;
+            // 
+            // btnAbrirPanel
+            // 
+            this.btnAbrirPanel.FlatAppearance.BorderSize = 0;
+            this.btnAbrirPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnAbrirPanel.Image = global::Facturar.Properties.Resources.Menu_black;
+            this.btnAbrirPanel.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnAbrirPanel.Location = new System.Drawing.Point(0, 0);
+            this.btnAbrirPanel.Name = "btnAbrirPanel";
+            this.btnAbrirPanel.Size = new System.Drawing.Size(40, 40);
+            this.btnAbrirPanel.TabIndex = 0;
+            this.btnAbrirPanel.UseVisualStyleBackColor = true;
+            this.btnAbrirPanel.Click += new System.EventHandler(this.btnAbrirPanel_Click);
             // 
             // panelInferior
             // 
@@ -119,28 +215,6 @@
             this.panelInferiorGeneralEditar.TabIndex = 1;
             this.panelInferiorGeneralEditar.Visible = false;
             // 
-            // panelInferiorGeneral
-            // 
-            this.panelInferiorGeneral.BackColor = System.Drawing.Color.LemonChiffon;
-            this.panelInferiorGeneral.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelInferiorGeneral.Controls.Add(this.btnEliminar);
-            this.panelInferiorGeneral.Controls.Add(this.btnEditar);
-            this.panelInferiorGeneral.Controls.Add(this.btnNuevo);
-            this.panelInferiorGeneral.Location = new System.Drawing.Point(40, 0);
-            this.panelInferiorGeneral.Name = "panelInferiorGeneral";
-            this.panelInferiorGeneral.Padding = new System.Windows.Forms.Padding(4);
-            this.panelInferiorGeneral.Size = new System.Drawing.Size(902, 70);
-            this.panelInferiorGeneral.TabIndex = 0;
-            // 
-            // panelCentral
-            // 
-            this.panelCentral.BackColor = System.Drawing.Color.Tan;
-            this.panelCentral.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panelCentral.Location = new System.Drawing.Point(4, 44);
-            this.panelCentral.Name = "panelCentral";
-            this.panelCentral.Size = new System.Drawing.Size(942, 402);
-            this.panelCentral.TabIndex = 3;
-            // 
             // btnCancelar
             // 
             this.btnCancelar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -148,7 +222,7 @@
             this.btnCancelar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnCancelar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnCancelar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancelar.Image = global::Facturar.Properties.Resources.cancelar;
+            this.btnCancelar.Image = global::Facturar.Properties.Resources.Cancelar2_black;
             this.btnCancelar.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnCancelar.Location = new System.Drawing.Point(732, 6);
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(0);
@@ -168,7 +242,7 @@
             this.btnValidar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnValidar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnValidar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnValidar.Image = global::Facturar.Properties.Resources.Validar;
+            this.btnValidar.Image = global::Facturar.Properties.Resources.Validar_black;
             this.btnValidar.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnValidar.Location = new System.Drawing.Point(817, 6);
             this.btnValidar.Margin = new System.Windows.Forms.Padding(0);
@@ -180,6 +254,19 @@
             this.btnValidar.UseVisualStyleBackColor = true;
             this.btnValidar.Click += new System.EventHandler(this.BotonEditar_Click);
             // 
+            // panelInferiorGeneral
+            // 
+            this.panelInferiorGeneral.BackColor = System.Drawing.Color.LemonChiffon;
+            this.panelInferiorGeneral.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelInferiorGeneral.Controls.Add(this.btnEliminar);
+            this.panelInferiorGeneral.Controls.Add(this.btnEditar);
+            this.panelInferiorGeneral.Controls.Add(this.btnNuevo);
+            this.panelInferiorGeneral.Location = new System.Drawing.Point(40, 0);
+            this.panelInferiorGeneral.Name = "panelInferiorGeneral";
+            this.panelInferiorGeneral.Padding = new System.Windows.Forms.Padding(4);
+            this.panelInferiorGeneral.Size = new System.Drawing.Size(902, 70);
+            this.panelInferiorGeneral.TabIndex = 0;
+            // 
             // btnEliminar
             // 
             this.btnEliminar.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
@@ -187,7 +274,7 @@
             this.btnEliminar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnEliminar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEliminar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEliminar.Image = global::Facturar.Properties.Resources.elminar;
+            this.btnEliminar.Image = global::Facturar.Properties.Resources.Borrar_black;
             this.btnEliminar.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnEliminar.Location = new System.Drawing.Point(182, 4);
             this.btnEliminar.Margin = new System.Windows.Forms.Padding(0);
@@ -207,7 +294,7 @@
             this.btnEditar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnEditar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEditar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEditar.Image = global::Facturar.Properties.Resources.editar;
+            this.btnEditar.Image = global::Facturar.Properties.Resources.Editar_black;
             this.btnEditar.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnEditar.Location = new System.Drawing.Point(93, 4);
             this.btnEditar.Margin = new System.Windows.Forms.Padding(0);
@@ -227,7 +314,7 @@
             this.btnNuevo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnNuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNuevo.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNuevo.Image = global::Facturar.Properties.Resources.añadir;
+            this.btnNuevo.Image = global::Facturar.Properties.Resources.Añadir_black;
             this.btnNuevo.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
             this.btnNuevo.Location = new System.Drawing.Point(4, 4);
             this.btnNuevo.Margin = new System.Windows.Forms.Padding(0);
@@ -240,101 +327,14 @@
             this.btnNuevo.UseVisualStyleBackColor = true;
             this.btnNuevo.Click += new System.EventHandler(this.BotonGeneral_Click);
             // 
-            // btnLocales
+            // panelCentral
             // 
-            this.btnLocales.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnLocales.FlatAppearance.BorderSize = 0;
-            this.btnLocales.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLocales.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnLocales.Image = global::Facturar.Properties.Resources.Locales;
-            this.btnLocales.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnLocales.Location = new System.Drawing.Point(2, 230);
-            this.btnLocales.Name = "btnLocales";
-            this.btnLocales.Size = new System.Drawing.Size(85, 60);
-            this.btnLocales.TabIndex = 3;
-            this.btnLocales.Text = "Locales";
-            this.btnLocales.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnLocales.UseVisualStyleBackColor = true;
-            this.btnLocales.Visible = false;
-            // 
-            // btnClientes
-            // 
-            this.btnClientes.Anchor = System.Windows.Forms.AnchorStyles.None;
-            this.btnClientes.FlatAppearance.BorderSize = 0;
-            this.btnClientes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnClientes.Image = global::Facturar.Properties.Resources.Clientes;
-            this.btnClientes.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClientes.Location = new System.Drawing.Point(2, 150);
-            this.btnClientes.Name = "btnClientes";
-            this.btnClientes.Size = new System.Drawing.Size(85, 60);
-            this.btnClientes.TabIndex = 2;
-            this.btnClientes.Text = "Clientes";
-            this.btnClientes.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnClientes.UseVisualStyleBackColor = true;
-            this.btnClientes.Visible = false;
-            // 
-            // btnEmpresas
-            // 
-            this.btnEmpresas.FlatAppearance.BorderSize = 0;
-            this.btnEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEmpresas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnEmpresas.Image = global::Facturar.Properties.Resources.Empresas;
-            this.btnEmpresas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnEmpresas.Location = new System.Drawing.Point(0, 70);
-            this.btnEmpresas.Name = "btnEmpresas";
-            this.btnEmpresas.Size = new System.Drawing.Size(85, 60);
-            this.btnEmpresas.TabIndex = 1;
-            this.btnEmpresas.Text = "Empresas";
-            this.btnEmpresas.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnEmpresas.UseVisualStyleBackColor = true;
-            this.btnEmpresas.Visible = false;
-            // 
-            // btnAbrirPanel
-            // 
-            this.btnAbrirPanel.FlatAppearance.BorderSize = 0;
-            this.btnAbrirPanel.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnAbrirPanel.Image = global::Facturar.Properties.Resources.lista;
-            this.btnAbrirPanel.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnAbrirPanel.Location = new System.Drawing.Point(0, 0);
-            this.btnAbrirPanel.Name = "btnAbrirPanel";
-            this.btnAbrirPanel.Size = new System.Drawing.Size(40, 40);
-            this.btnAbrirPanel.TabIndex = 0;
-            this.btnAbrirPanel.UseVisualStyleBackColor = true;
-            this.btnAbrirPanel.Click += new System.EventHandler(this.btnAbrirPanel_Click);
-            // 
-            // pictureBox1
-            // 
-            this.pictureBox1.Image = global::Facturar.Properties.Resources.Aplicacion;
-            this.pictureBox1.Location = new System.Drawing.Point(7, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
-            // 
-            // imgCerrar
-            // 
-            this.imgCerrar.Image = global::Facturar.Properties.Resources.cerrar;
-            this.imgCerrar.Location = new System.Drawing.Point(905, 5);
-            this.imgCerrar.Name = "imgCerrar";
-            this.imgCerrar.Size = new System.Drawing.Size(30, 30);
-            this.imgCerrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCerrar.TabIndex = 2;
-            this.imgCerrar.TabStop = false;
-            this.imgCerrar.Click += new System.EventHandler(this.imgCerrar_Click);
-            // 
-            // imgMinimizar
-            // 
-            this.imgMinimizar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgMinimizar.Image = global::Facturar.Properties.Resources.minimizar1;
-            this.imgMinimizar.Location = new System.Drawing.Point(859, 5);
-            this.imgMinimizar.Name = "imgMinimizar";
-            this.imgMinimizar.Size = new System.Drawing.Size(30, 30);
-            this.imgMinimizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgMinimizar.TabIndex = 1;
-            this.imgMinimizar.TabStop = false;
-            this.imgMinimizar.Click += new System.EventHandler(this.imgMinimizar_Click);
+            this.panelCentral.BackColor = System.Drawing.Color.Tan;
+            this.panelCentral.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panelCentral.Location = new System.Drawing.Point(4, 44);
+            this.panelCentral.Name = "panelCentral";
+            this.panelCentral.Size = new System.Drawing.Size(942, 402);
+            this.panelCentral.TabIndex = 3;
             // 
             // btnNnuevo
             // 
@@ -342,7 +342,7 @@
             this.btnNnuevo.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
             this.btnNnuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnNnuevo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnNnuevo.Image = global::Facturar.Properties.Resources.añadir;
+            this.btnNnuevo.Image = global::Facturar.Properties.Resources.Añadir_black;
             this.btnNnuevo.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft;
             this.btnNnuevo.Location = new System.Drawing.Point(0, 13);
             this.btnNnuevo.Margin = new System.Windows.Forms.Padding(0);
@@ -373,13 +373,13 @@
             this.Load += new System.EventHandler(this.frmBase_Load);
             this.panelSuperior.ResumeLayout(false);
             this.panelSuperior.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).EndInit();
             this.panelLateral.ResumeLayout(false);
             this.panelInferior.ResumeLayout(false);
             this.panelInferiorGeneralEditar.ResumeLayout(false);
             this.panelInferiorGeneral.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).EndInit();
             this.ResumeLayout(false);
 
         }

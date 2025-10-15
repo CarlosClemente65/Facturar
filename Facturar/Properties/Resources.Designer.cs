@@ -63,9 +63,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap añadir {
+        internal static System.Drawing.Bitmap Añadir_black {
             get {
-                object obj = ResourceManager.GetObject("añadir", resourceCulture);
+                object obj = ResourceManager.GetObject("Añadir_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -83,9 +83,19 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap cancelar {
+        internal static System.Drawing.Bitmap Borrar_black {
             get {
-                object obj = ResourceManager.GetObject("cancelar", resourceCulture);
+                object obj = ResourceManager.GetObject("Borrar_black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Cancelar2_black {
+            get {
+                object obj = ResourceManager.GetObject("Cancelar2_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -103,9 +113,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Clientes {
+        internal static System.Drawing.Bitmap Clientes_black {
             get {
-                object obj = ResourceManager.GetObject("Clientes", resourceCulture);
+                object obj = ResourceManager.GetObject("Clientes_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -113,9 +123,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap editar {
+        internal static System.Drawing.Bitmap Editar_black {
             get {
-                object obj = ResourceManager.GetObject("editar", resourceCulture);
+                object obj = ResourceManager.GetObject("Editar_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -123,9 +133,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap elminar {
+        internal static System.Drawing.Bitmap Eliminar2 {
             get {
-                object obj = ResourceManager.GetObject("elminar", resourceCulture);
+                object obj = ResourceManager.GetObject("Eliminar2", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +143,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Empresas {
+        internal static System.Drawing.Bitmap Empresa_black {
             get {
-                object obj = ResourceManager.GetObject("Empresas", resourceCulture);
+                object obj = ResourceManager.GetObject("Empresa_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -143,9 +153,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Guardar {
+        internal static System.Drawing.Bitmap Locales_black {
             get {
-                object obj = ResourceManager.GetObject("Guardar", resourceCulture);
+                object obj = ResourceManager.GetObject("Locales_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -153,19 +163,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap lista {
+        internal static System.Drawing.Bitmap Menu_black {
             get {
-                object obj = ResourceManager.GetObject("lista", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap Locales {
-            get {
-                object obj = ResourceManager.GetObject("Locales", resourceCulture);
+                object obj = ResourceManager.GetObject("Menu_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -183,9 +183,9 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Validar {
+        internal static System.Drawing.Bitmap Validar_black {
             get {
-                object obj = ResourceManager.GetObject("Validar", resourceCulture);
+                object obj = ResourceManager.GetObject("Validar_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -12,7 +12,7 @@ namespace Facturar.Infraestructura
         static string sqlEmpresas = @"
                     CREATE TABLE IF NOT EXISTS Empresas (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        NIF TEXT NOT NULL,
+                        NIF TEXT NOT NULL UNIQUE,
                         Nombre TEXT NOT NULL,
                         Direccion TEXT,
                         CodigoPostal TEXT,
@@ -155,7 +155,7 @@ namespace Facturar.Infraestructura
             }
         }
 
-        private static SQLiteConnection AbrirConexion()
+        public static SQLiteConnection AbrirConexion()
         {
             var conexion = new SQLiteConnection(cadenaConexion);
             conexion.Open();

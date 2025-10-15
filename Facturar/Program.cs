@@ -18,9 +18,9 @@ namespace Facturar
         {
             InicializadorBaseDatos.Inicializar();
 
-            //Application.EnableVisualStyles();
-            //Application.SetCompatibleTextRenderingDefault(false);
-            //Application.Run(new frmBase());
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.Run(new frmBase());
         }
     }
 }

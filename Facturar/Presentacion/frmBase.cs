@@ -129,7 +129,7 @@ namespace Facturar.Presentacion
                 
                 if(panelLateral.Width >= anchoPanelLateralExpandido)
                 {
-                    panelLateral.Width = anchoPanelLateralExpandido;
+                    //panelLateral.Width = anchoPanelLateralExpandido;
                     panelLateralVisible = true;
                     panelColapsado = false;
                     timerLateral.Stop();

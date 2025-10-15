@@ -101,7 +101,11 @@
     <Compile Include="Infraestructura\InicializadorBaseDatos.cs" />
     <Compile Include="Infraestructura\RepositorioDatos.cs" />
     <Compile Include="Infraestructura\RepositorioFacturas.cs" />
+    <Compile Include="Interfaces\IRepositorioBase.cs" />
+    <Compile Include="Interfaces\IRepositorioClientes.cs" />
     <Compile Include="Interfaces\IRepositorioContratos.cs" />
+    <Compile Include="Interfaces\IRepositorioEmpresas.cs" />
+    <Compile Include="Interfaces\IRepositorioLocales.cs" />
     <Compile Include="Presentacion\frmBase.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -149,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Locales_black.png" />
+    <None Include="Resources\Clientes_black.png" />
+    <None Include="Resources\Empresa_black.png" />
+    <None Include="Resources\Menu_black.png" />
+    <None Include="Resources\Validar_black.png" />
+    <None Include="Resources\Añadir_black.png" />
     <None Include="Resources\Locales.png" />
     <None Include="Resources\Clientes.png" />
     <None Include="Resources\Empresas.png" />
