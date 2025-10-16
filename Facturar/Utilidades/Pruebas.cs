@@ -4,7 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Facturar.Entidades;
-using Facturar.Infraestructura;
+using Facturar.Servicios;
+
 
 namespace Facturar.Utilidades
 {
@@ -34,7 +35,7 @@ namespace Facturar.Utilidades
 
         private static void ProbarEmpresas(string proceso)
         {
-            var repo = InicializadorBaseDatos.AbrirConexion();
+            var repo = GestorDatos.AbrirConexion();
             switch(proceso.ToLower())
             {
                 case "alta":

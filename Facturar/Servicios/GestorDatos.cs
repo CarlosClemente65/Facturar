@@ -1,22 +1,25 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using System.IO;
-using System.Linq;
-using System.Security.Cryptography;
-using System.Security.Cryptography.X509Certificates;
-using System.Text.Json;
-using Facturar.Entidades;
 using Facturar.Utilidades;
+using Facturar.Infraestructura;
 
 namespace Facturar.Servicios
 {
     public static class GestorDatos
     {
         // Propiedades para inicializar la base de datos
-        private static readonly string rutaBD = "./datos/facturacion.db";
-        private static readonly string cadenaConexion = $"Data Source={rutaBD};Version=3;";
+        public static readonly string rutaBD = "./datos/facturacion.db";
+        public static readonly string cadenaConexion = $"Data Source={rutaBD};Version=3;";
 
+
+        public static void ChequeoBaseDatos()
+        {
+            if(!File.Exists(GestorDatos.rutaBD)) 
+            {
+                InicializadorBaseDatos.Inicializar(rutaBD);
+            }
+        }
 
         /// <summary>
         /// Abre y devuelve una conexión SQLite usando la configuración general.
@@ -38,7 +41,7 @@ namespace Facturar.Servicios
         /// <summary>
         /// Ejecuta una consulta SQL sin devolver resultados (INSERT, UPDATE, DELETE).
         /// </summary>
-        public static int EjecutarNonQuery(string sql, params SQLiteParameter[] parametros)
+        public static int EjecutarComando(string sql, params SQLiteParameter[] parametros)
         {
             using(var conexion = AbrirConexion())
             {
@@ -53,14 +56,15 @@ namespace Facturar.Servicios
         /// <summary>
         /// Ejecuta una consulta SQL que devuelve un solo valor (por ejemplo, COUNT o MAX).
         /// </summary>
-        public static int EjecutarEscalar(string sql, params SQLiteParameter[] parametros)
+        public static object EjecutarComandoValorUnico(string sql, params SQLiteParameter[] parametros)
         {
+            // Sin uso actualmente pero se puede usar para contar registros o maximos (SELECT COUNT(*) FROM Clientes o SELECT MAX(FechaAlta) FROM Empresas)
             using(var conexion = AbrirConexion())
             {
                 using(var comando = new SQLiteCommand(sql, conexion))
                 {
                     comando.Parameters.AddRange(parametros);
-                    return comando.ExecuteNonQuery();
+                    return comando.ExecuteScalar();
                 }
             }
         }
@@ -86,7 +90,7 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Metodo generico para mapear en un objeto pasado con 'T' segun los datos de la tabla que se obtiene de la BBDD
+        /// Metodo generico para mapear en un objeto pasado con 'T' segun los datos de la tabla que se obtiene de la base de datos
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="nombreTabla"></param>
@@ -98,9 +102,27 @@ namespace Facturar.Servicios
             string sqlConsulta = $"SELECT * FROM {nombreTabla} WHERE Id = @Id";
             var parametros = new[] { new SQLiteParameter("@Id", id) };
 
-            // Se almacena el resultado en la tabla que luego se mapea al objeto Empresa
+            // Se almacena el resultado en la tabla que luego se mapea al objeto pasado 'T'
             DataTable tabla = EjecutarConsulta(sqlConsulta, parametros);
 
+            if(tabla.Rows.Count == 0)
+            {
+                return default(T); // Devuelve null si T es una clase
+            }
+
+            // Mapea la fila obtenida en la tabla anterior al tipo de objeto pasado 'T'
+            return MapeadorDatos.MapearFila<T>(tabla.Rows[0]);
+        }
+
+        public static T ObtenerDatosPorNIF<T>(string nombreTabla, string nif) where T : new()
+        {
+            // Hace la consulta a la base de datos de la tabla pasada seleccionado por el NIF
+            string sqlConsulta = $"SELECT * FROM {nombreTabla} WHERE NIF = @NIF";
+            var parametros = new[] { new SQLiteParameter("@NIF", nif) };
+
+            // Se almacena el resultado en la tabla que luego se mapea al objeto pasado 'T'
+            DataTable tabla = EjecutarConsulta(sqlConsulta, parametros);
+            
             if(tabla.Rows.Count == 0)
             {
                 return default(T); // Devuelve null si T es una clase

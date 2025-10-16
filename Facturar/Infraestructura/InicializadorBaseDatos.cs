@@ -1,14 +1,12 @@
-﻿using System;
-using System.Data.SQLite;
+﻿using System.Data.SQLite;
 using System.IO;
+using Facturar.Servicios;
 
 namespace Facturar.Infraestructura
 {
     public static class InicializadorBaseDatos
     {
-        private static readonly string rutaBD = "./datos/facturacion.db";
-        private static readonly string cadenaConexion = $"Data Source={rutaBD};Version=3;";
-
+        // Configuracion para la creacion de las tablas
         static string sqlEmpresas = @"
                     CREATE TABLE IF NOT EXISTS Empresas (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -103,25 +101,24 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        public static void Inicializar()
-        {
-            if(!File.Exists(rutaBD))
-            {
-                // Crear la carpeta si no existe
-                var carpeta = Path.GetDirectoryName(rutaBD);
-                if(!Directory.Exists(carpeta))
-                {
-                    Directory.CreateDirectory(carpeta);
-                }
 
-                SQLiteConnection.CreateFile(rutaBD);
-                CrearTablas();
+        // Inicializar la base de datos y crea las tablas
+        public static void Inicializar(string rutaBD)
+        {
+            // Crear la carpeta si no existe
+            var carpeta = Path.GetDirectoryName(rutaBD);
+            if(!Directory.Exists(carpeta))
+            {
+                Directory.CreateDirectory(carpeta);
             }
+
+            SQLiteConnection.CreateFile(rutaBD);
+            CrearTablas();
         }
 
         private static void CrearTablas()
         {
-            using(var conexion = AbrirConexion())
+            using(var conexion = GestorDatos.AbrirConexion())
             {
                 // Creacion de las tablas
                 using(var comando = new SQLiteCommand(sqlEmpresas, conexion))
@@ -154,20 +151,6 @@ namespace Facturar.Infraestructura
                     comando.ExecuteNonQuery();
                 }
             }
-        }
-
-        public static SQLiteConnection AbrirConexion()
-        {
-            var conexion = new SQLiteConnection(cadenaConexion);
-            conexion.Open();
-
-            // Activar foreign keys
-            using(var comando = new SQLiteCommand("PRAGMA foreign_keys = ON;", conexion))
-            {
-                comando.ExecuteNonQuery();
-            }
-
-            return conexion;
         }
     }
 }

@@ -6,8 +6,9 @@ namespace Facturar.Interfaces
     {
         bool Agregar(T entidad);
         bool Actualizar(T entidad);
-        bool Eliminar(int id);
-        T Obtener(int id);
+        bool Eliminar(string nif);
+        T ObtenerPorId(int id);
+        T ObtenerPorNIF(string nif);
         IEnumerable<T> ListarTodos();
     }
 }

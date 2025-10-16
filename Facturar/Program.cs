@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Facturar.Infraestructura;
 using Facturar.Presentacion;
+using Facturar.Servicios;
 
 namespace Facturar
 {
@@ -16,7 +17,8 @@ namespace Facturar
         [STAThread]
         static void Main()
         {
-            InicializadorBaseDatos.Inicializar();
+            // Chequeao e inicialización de la base de datos
+            GestorDatos.ChequeoBaseDatos();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

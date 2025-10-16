@@ -30,13 +30,13 @@ namespace Facturar.Servicios
             "FechaAlta = @FechaAlta, " +
             "FechaBaja = @FechaBaja, " +
             "SerieFactura = @SerieFactura, " +
-            "NumeroFacturaActual = @NumeroFacturaActual" +
-            " WHERE NIF = @NIF";
+            "NumeroFacturaActual = @NumeroFacturaActua l" +
+            "WHERE NIF = @NIF";
 
         private string sqlEliminarEmpresa =
             "DELETE " +
             "FROM Empresas " +
-            "WHERE Id = @Id";
+            "WHERE NIF = @NIF";
 
         private string sqlSeleccionEmpresasActivas =
             "SELECT * " +
@@ -55,27 +55,27 @@ namespace Facturar.Servicios
         /// <summary>
         /// Inserta una nueva empresa en la base de datos
         /// </summary>
-        /// <param name="_empresa"></param>
+        /// <param name="empresa"></param>
         /// <returns>Devuelve 'true' si se ha podido grabar en la BBDD</returns>
         /// <exception cref="ApplicationException"></exception>
-        public bool Agregar(Empresa _empresa)
+        public bool Agregar(Empresa empresa)
         {
             try
             {
                 // Valida que la empresa no sea nula, y el NIF y nombre tengan contenido
-                ValidarEmpresa(_empresa);
+                ValidarEmpresa(empresa);
 
                 // Asigna la fecha de alta si no está establecida
-                if(_empresa.FechaAlta == DateTime.MinValue)
+                if(empresa.FechaAlta == DateTime.MinValue)
                 {
                     //Asigna la fecha de alta
-                    _empresa.FechaAlta = DateTime.Now;
+                    empresa.FechaAlta = DateTime.Now;
                 }
 
-                _empresa.SerieFactura = _empresa.SerieFactura ?? string.Empty; // Asigna una serie por defecto si no se proporciona
+                empresa.SerieFactura = empresa.SerieFactura ?? string.Empty; // Asigna una serie por defecto si no se proporciona
 
                 // Verifica que no exista ya una empresa con el mismo NIF
-                if(EmpresaExiste(_empresa.NIF))
+                if(EmpresaExiste(empresa.NIF))
                 {
                     throw new InvalidOperationException("Ya existe una empresa con ese NIF.");
                 }
@@ -83,25 +83,25 @@ namespace Facturar.Servicios
                 // Inserta la nueva empresa en la base de datos
                 var parametros = new[]
                 {
-                    new SQLiteParameter("@NIF", _empresa.NIF),
-                    new SQLiteParameter("@Nombre", _empresa.Nombre),
-                    new SQLiteParameter("@Direccion", _empresa.Direccion),
-                    new SQLiteParameter("@CodigoPostal", _empresa.CodigoPostal),
-                    new SQLiteParameter("@Poblacion", _empresa.Poblacion),
-                    new SQLiteParameter("@Provincia", _empresa.Provincia),
-                    new SQLiteParameter("@Telefono", _empresa.Telefono),
-                    new SQLiteParameter("@Email", _empresa.Email),
-                    new SQLiteParameter("@PersonaContacto", _empresa.PersonaContacto),
-                    new SQLiteParameter("@FechaAlta", _empresa.FechaAlta),
-                    new SQLiteParameter("@FechaBaja", _empresa.FechaBaja != DateTime.MinValue ? (object)_empresa.FechaBaja: DBNull.Value),
-                    new SQLiteParameter("@SerieFactura", _empresa.SerieFactura),
-                    new SQLiteParameter("@NumeroFacturaActual", _empresa.NumeroFacturaActual)
+                    new SQLiteParameter("@NIF", empresa.NIF),
+                    new SQLiteParameter("@Nombre", empresa.Nombre),
+                    new SQLiteParameter("@Direccion", empresa.Direccion),
+                    new SQLiteParameter("@CodigoPostal", empresa.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", empresa.Poblacion),
+                    new SQLiteParameter("@Provincia", empresa.Provincia),
+                    new SQLiteParameter("@Telefono", empresa.Telefono),
+                    new SQLiteParameter("@Email", empresa.Email),
+                    new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
+                    new SQLiteParameter("@FechaAlta", empresa.FechaAlta),
+                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
+                    new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
                 };
 
-                // Ejecuta el comando y obtiene el Id generado
-                _empresa.Id = Convert.ToInt32(GestorDatos.EjecutarEscalar(sqlInsertarEmpresa, parametros));
+                // Ejecuta el comando y obtiene el numero de filas insertadas
+                var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarEmpresa, parametros));
 
-                if(_empresa.Id <= 0)
+                if(filasInsertadas <= 0)
                 {
                     throw new InvalidOperationException("No se pudo insertar la empresa en la base de datos");
                 }
@@ -110,7 +110,6 @@ namespace Facturar.Servicios
 
             catch(Exception ex)
             {
-                // Manejo de la excepción (puede ser logging, rethrow, etc.)
                 throw new ApplicationException("Error al agregar la empresa.", ex);
             }
         }
@@ -119,41 +118,42 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite actualizar los datos de una empresa en la BBDD
         /// </summary>
-        /// <param name="_empresa"></param>
+        /// <param name="empresa"></param>
         /// <returns>True si se ha podido actualizar</returns>
         /// <exception cref="InvalidOperationException"></exception>
 
-        public bool Actualizar(Empresa _empresa)
+        public bool Actualizar(Empresa empresa)
         {
             try
             {
-                ValidarEmpresa(_empresa);
+                // Valida que la empresa no sea nula, y el NIF y nombre tengan contenido
+                ValidarEmpresa(empresa);
 
-                // Verifica que exista una empresa con el mismo NIF
-                if(!EmpresaExiste(_empresa.NIF))
+                // Verifica que exista una empresa con el NIF proporcionado
+                if(!EmpresaExiste(empresa.NIF))
                 {
                     throw new InvalidOperationException("No existe una empresa con ese NIF.");
                 }
 
                 var parametros = new[]
                 {
-                    new SQLiteParameter("@NIF", _empresa.NIF),
-                    new SQLiteParameter("@Nombre", _empresa.Nombre),
-                    new SQLiteParameter("@Direccion", _empresa.Direccion),
-                    new SQLiteParameter("@CodigoPostal", _empresa.CodigoPostal),
-                    new SQLiteParameter("@Poblacion", _empresa.Poblacion),
-                    new SQLiteParameter("@Provincia", _empresa.Provincia),
-                    new SQLiteParameter("@Telefono", _empresa.Telefono),
-                    new SQLiteParameter("@Email", _empresa.Email),
-                    new SQLiteParameter("@PersonaContacto", _empresa.PersonaContacto),
-                    new SQLiteParameter("@FechaAlta", _empresa.FechaAlta),
-                    new SQLiteParameter("@FechaBaja", _empresa.FechaBaja != DateTime.MinValue ? (object)_empresa.FechaBaja: DBNull.Value),
-                    new SQLiteParameter("@SerieFactura", _empresa.SerieFactura),
-                    new SQLiteParameter("@NumeroFacturaActual", _empresa.NumeroFacturaActual)
+                    new SQLiteParameter("@NIF", empresa.NIF),
+                    new SQLiteParameter("@Nombre", empresa.Nombre),
+                    new SQLiteParameter("@Direccion", empresa.Direccion),
+                    new SQLiteParameter("@CodigoPostal", empresa.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", empresa.Poblacion),
+                    new SQLiteParameter("@Provincia", empresa.Provincia),
+                    new SQLiteParameter("@Telefono", empresa.Telefono),
+                    new SQLiteParameter("@Email", empresa.Email),
+                    new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
+                    new SQLiteParameter("@FechaAlta", empresa.FechaAlta),
+                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
+                    new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
                 };
 
                 // Ejecuta la actualizacion y devuelve las filas actualizadas
-                int filasActualizadas = GestorDatos.EjecutarNonQuery(sqlActualizarEmpresa, parametros);
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarEmpresa, parametros);
 
                 if(filasActualizadas == 0)
                 {
@@ -170,15 +170,15 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Permite eliminar una empresa de la base de datos
+        /// Permite eliminar una empresa de la base de datos pasando el NIF
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="nif"></param>
         /// <returns>True si se ha podido eliminar</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool Eliminar(int id)
+        public bool Eliminar(string nif)
         {
             // Verifica que exista la empresa
-            var empresa = Obtener(id);
+            var empresa = ObtenerPorNIF(nif);
             if(empresa == null)
             {
                 throw new InvalidOperationException("La empresa no existe en la base de datos.");
@@ -186,8 +186,8 @@ namespace Facturar.Servicios
             try
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
-                var parametros = new[] { new SQLiteParameter("@Id", id) };
-                int filasActualizadas = GestorDatos.EjecutarNonQuery(sqlEliminarEmpresa, parametros);
+                var parametros = new[] { new SQLiteParameter("@NIF", empresa.NIF) };
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarEmpresa, parametros);
 
                 if(filasActualizadas == 0)
                 {
@@ -202,15 +202,16 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Graba la fecha de baja de una empresa
+        /// Graba la fecha de baja de una empresa pasando el NIF
+        /// Si no se pasa fecha, se pone la fecha actual
         /// </summary>
-        /// <param name="id"></param>
+        /// <param name="nif"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool BajaEmpresa(int id, DateTime? fechaBaja = null)
+        public bool BajaEmpresa(string nif, DateTime? fechaBaja = null)
         {
             // Verifica que exista la empresa
-            var empresa = Obtener(id);
+            var empresa = ObtenerPorNIF(nif);
             if(empresa == null)
             {
                 throw new InvalidOperationException("La empresa no existe en la base de datos.");
@@ -235,9 +236,20 @@ namespace Facturar.Servicios
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Objeto empresa con las propiedades que tenga</returns>
-        public Empresa Obtener(int _id)
+        public Empresa ObtenerPorId(int _id)
         {
             return GestorDatos.ObtenerDatosPorId<Empresa>("Empresas", _id);
+        }
+
+
+        /// <summary>
+        /// Obtiene una empresa por su NIF
+        /// </summary>
+        /// <param name="nif"></param>
+        /// <returns>Objeto empresa con las propiedades que tenga</returns>
+        public Empresa ObtenerPorNIF(string nif)
+        {
+            return GestorDatos.ObtenerDatosPorNIF<Empresa>("Empresas", nif);
         }
 
         /// <summary>
@@ -310,24 +322,24 @@ namespace Facturar.Servicios
         /// <summary>
         /// Metodo para validar que una empresa no sea nula y que tenga NIF y nombre
         /// </summary>
-        /// <param name="_empresa"></param>
+        /// <param name="empresa"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
-        private void ValidarEmpresa(Empresa _empresa)
+        private void ValidarEmpresa(Empresa empresa)
         {
             // Evita agregar entidades nulas
-            if(_empresa == null)
+            if(empresa == null)
             {
-                throw new ArgumentNullException(nameof(_empresa), "La entidad no puede ser nula.");
+                throw new ArgumentNullException(nameof(empresa), "La entidad no puede ser nula.");
             }
 
             // Validar campos obligatorios
-            if(string.IsNullOrEmpty(_empresa.Nombre))
+            if(string.IsNullOrEmpty(empresa.Nombre))
             {
                 throw new ArgumentException("El nombre de la empresa es obligatorio.");
             }
 
-            if(string.IsNullOrEmpty(_empresa.NIF))
+            if(string.IsNullOrEmpty(empresa.NIF))
             {
                 throw new ArgumentException("El NIF de la empresa es obligatorio.");
             }
