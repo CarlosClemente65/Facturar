@@ -7,166 +7,142 @@ namespace Facturar.Servicios
 {
     public class GestorLocales
     {
-        private static GestorLocales _instancia; //Propiedad privada para la instancia única
-        private static readonly object _lock = new object(); //Objeto para asegurar la sincronización en entornos multihilo
-
-        private List<Local> _locales = new List<Local>();
 
         //Constructor privado para evitar instanciación externa
         private GestorLocales()
         {
         }
 
-        // Propiedad para obtener la instancia única del gestor (Singleton)
-        public static GestorLocales Instancia
-        {
-            get
-            {
-                if(_instancia == null)
-                {
-                    lock(_lock)
-                    {
-                        if(_instancia == null)
-                        {
-                            _instancia = new GestorLocales();
-                        }
-                    }
-                }
-                return _instancia;
-            }
-        }
+        //public void AgregarLocal(Local local)
+        //{
+        //    //Evitar agregar locales nulos o con Descripcion vacía
+        //    if(local == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
+        //    }
 
+        //    // Evita agregar locales sin Empresa asociada
+        //    if(local.EmpresaId == null)
+        //    {
+        //        throw new ArgumentException("El local debe estar asociado a una empresa.", nameof(local));
+        //    }
 
-        public void AgregarLocal(Local local)
-        {
-            //Evitar agregar locales nulos o con Descripcion vacía
-            if(local == null)
-            {
-                throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
-            }
+        //    // Evita agregar sin Descripcion
+        //    if(string.IsNullOrWhiteSpace(local.Descripcion))
+        //    {
+        //        throw new ArgumentException("La descripcon del local no puede estar vacía.", nameof(local));
+        //    }
 
-            // Evita agregar locales sin Empresa asociada
-            if(local.EmpresaId == null)
-            {
-                throw new ArgumentException("El local debe estar asociado a una empresa.", nameof(local));
-            }
+        //    // Asignar un Id único al local (simple incremento basado en el conteo actual)
+        //    local.Id = _locales.Any() ? _locales.Max(l => l.Id) + 1 : 1;
 
-            // Evita agregar sin Descripcion
-            if(string.IsNullOrWhiteSpace(local.Descripcion))
-            {
-                throw new ArgumentException("La descripcon del local no puede estar vacía.", nameof(local));
-            }
+        //    //Asigna la fecha de alta
+        //    local.FechaAlta = DateTime.Now;
+        //    local.FechaBaja = null; // Asegura que la fecha de baja es nula al crear un nuevo local
 
-            // Asignar un Id único al local (simple incremento basado en el conteo actual)
-            local.Id = _locales.Any() ? _locales.Max(l => l.Id) + 1 : 1;
+        //    _locales.Add(local);
 
-            //Asigna la fecha de alta
-            local.FechaAlta = DateTime.Now;
-            local.FechaBaja = null; // Asegura que la fecha de baja es nula al crear un nuevo local
+        //    //// Añade el local a la lista de locales de la empresa
+        //    //if(local.Empresa != null)
+        //    //{
+        //    //    local.Empresa.Locales.Add(local);
+        //    //}
 
-            _locales.Add(local);
+        //    GestorDatos.Instancia.GuardarDatos();
+        //}
 
-            //// Añade el local a la lista de locales de la empresa
-            //if(local.Empresa != null)
-            //{
-            //    local.Empresa.Locales.Add(local);
-            //}
+        //public void ModificarLocal(Local local)
+        //{
+        //    // Filtra la lista de locales activos y la busca por Id
+        //    var localExistente = _locales.FirstOrDefault(l => l.Id == local.Id && l.Activo);
 
-            GestorDatos.Instancia.GuardarDatos();
-        }
+        //    // Controlar que el local no sea nulo y que exista
+        //    if(localExistente == null)
+        //    {
+        //        throw new ArgumentNullException(nameof(local), "El local no existe o esta dado de baja.");
+        //    }
 
-        public void ModificarLocal(Local local)
-        {
-            // Filtra la lista de locales activos y la busca por Id
-            var localExistente = _locales.FirstOrDefault(l => l.Id == local.Id && l.Activo);
+        //    // Guardar referencia a la empresa antigua
+        //    var empresaAntigua = localExistente.EmpresaId;
 
-            // Controlar que el local no sea nulo y que exista
-            if(localExistente == null)
-            {
-                throw new ArgumentNullException(nameof(local), "El local no existe o esta dado de baja.");
-            }
+        //    // Actualiza las propiedades del local existente
+        //    localExistente.Descripcion = local.Descripcion;
+        //    localExistente.Direccion = local.Direccion;
+        //    localExistente.CodigoPostal = local.CodigoPostal;
+        //    localExistente.Poblacion = local.Poblacion;
+        //    localExistente.Provincia = local.Provincia;
+        //    localExistente.EmpresaId = local.EmpresaId;
+        //    localExistente.ImporteAlquiler = local.ImporteAlquiler;
+        //    localExistente.Observaciones = local.Observaciones;
 
-            // Guardar referencia a la empresa antigua
-            var empresaAntigua = localExistente.EmpresaId;
+        //    //// Si la empresa ha cambiado, actualizar listas de locales
+        //    //if(empresaAntigua != null && empresaAntigua != local.EmpresaId)
+        //    //{
+        //    //    empresaAntigua.Locales.Remove(localExistente); // quitar de la antigua
+        //    //    local.EmpresaId.Locales.Add(localExistente);     // añadir a la nueva
+        //    //}
 
-            // Actualiza las propiedades del local existente
-            localExistente.Descripcion = local.Descripcion;
-            localExistente.Direccion = local.Direccion;
-            localExistente.CodigoPostal = local.CodigoPostal;
-            localExistente.Poblacion = local.Poblacion;
-            localExistente.Provincia = local.Provincia;
-            localExistente.EmpresaId = local.EmpresaId;
-            localExistente.ImporteAlquiler = local.ImporteAlquiler;
-            localExistente.Observaciones = local.Observaciones;
+        //    // Guarda los cambios en el archivo
+        //    GestorDatos.Instancia.GuardarDatos();
+        //}
 
-            //// Si la empresa ha cambiado, actualizar listas de locales
-            //if(empresaAntigua != null && empresaAntigua != local.EmpresaId)
-            //{
-            //    empresaAntigua.Locales.Remove(localExistente); // quitar de la antigua
-            //    local.EmpresaId.Locales.Add(localExistente);     // añadir a la nueva
-            //}
+        //public void EliminarLocal(int id, DateTime? fechaBaja = null)
+        //{
+        //    // Filtra la lista de locales activos y la busca por Id
+        //    var local = _locales.FirstOrDefault(l => l.Id == id && l.Activo);
 
-            // Guarda los cambios en el archivo
-            GestorDatos.Instancia.GuardarDatos();
-        }
+        //    // Controlar que el local exista y esté activo
+        //    if(local == null)
+        //    {
+        //        throw new ArgumentException("El local no existe o ya está dado de baja.", nameof(id));
+        //    }
 
-        public void EliminarLocal(int id, DateTime? fechaBaja = null)
-        {
-            // Filtra la lista de locales activos y la busca por Id
-            var local = _locales.FirstOrDefault(l => l.Id == id && l.Activo);
+        //    // Establece la fecha de baja 
+        //    local.FechaBaja = fechaBaja ?? DateTime.Now;
 
-            // Controlar que el local exista y esté activo
-            if(local == null)
-            {
-                throw new ArgumentException("El local no existe o ya está dado de baja.", nameof(id));
-            }
+        //    //// Elimina el local de la lista de locales de la empresa
+        //    //if(local.Empresa != null)
+        //    //{
+        //    //    local.Empresa.Locales.Remove(local);
+        //    //}
 
-            // Establece la fecha de baja 
-            local.FechaBaja = fechaBaja ?? DateTime.Now;
+        //    // Guarda los cambios en el archivo
+        //    GestorDatos.Instancia.GuardarDatos();
+        //}
+        //public IReadOnlyList<Local> ListarLocales(bool incluirInactivos = false)
+        //{
+        //    // Filtra la lista de locales según el parámetro incluirInactivos
+        //    var localesFiltrados = incluirInactivos 
+        //        ? _locales 
+        //        : _locales.Where(l => l.Activo).ToList();
 
-            //// Elimina el local de la lista de locales de la empresa
-            //if(local.Empresa != null)
-            //{
-            //    local.Empresa.Locales.Remove(local);
-            //}
+        //    // Devuelve una lista de solo lectura para evitar modificaciones externas
+        //    return _locales.AsReadOnly();
+        //}
 
-            // Guarda los cambios en el archivo
-            GestorDatos.Instancia.GuardarDatos();
-        }
-        public IReadOnlyList<Local> ListarLocales(bool incluirInactivos = false)
-        {
-            // Filtra la lista de locales según el parámetro incluirInactivos
-            var localesFiltrados = incluirInactivos 
-                ? _locales 
-                : _locales.Where(l => l.Activo).ToList();
+        //public void CargarLocales(List<Local> listaLocales)
+        //{
+        //    _locales = listaLocales ?? new List<Local>();
 
-            // Devuelve una lista de solo lectura para evitar modificaciones externas
-            return _locales.AsReadOnly();
-        }
+        //    // Se obtiene la lista de empresas para actualizar sus listas de locales
+        //    //var empresas = GestorEmpresas.Instancia.ListarEmpresas(true);
 
-        public void CargarLocales(List<Local> listaLocales)
-        {
-            _locales = listaLocales ?? new List<Local>();
+        //    // Asigna cada local a su empresa correspondiente
+        //    foreach(var local in _locales)
+        //    {
+        //        // Solo si local.Empresa no es null
+        //        if(local.EmpresaId != null)
+        //        {
+        //            // Busca la empresa en la lista de empresas
+        //            //var empresa = empresas.FirstOrDefault(e => e.Id == local.EmpresaId);
 
-            // Se obtiene la lista de empresas para actualizar sus listas de locales
-            var empresas = GestorEmpresas.Instancia.ListarEmpresas(true);
-
-            // Asigna cada local a su empresa correspondiente
-            foreach(var local in _locales)
-            {
-                // Solo si local.Empresa no es null
-                if(local.EmpresaId != null)
-                {
-                    // Busca la empresa en la lista de empresas
-                    var empresa = empresas.FirstOrDefault(e => e.Id == local.EmpresaId);
-
-                    //// Si la empresa existe y no contiene ya el local, lo añade a su lista de locales
-                    //if(empresa != null && !empresa.Locales.Contains(local))
-                    //{
-                    //    empresa.Locales.Add(local);
-                    //}
-                }
-            }
-        }
+        //            //// Si la empresa existe y no contiene ya el local, lo añade a su lista de locales
+        //            //if(empresa != null && !empresa.Locales.Contains(local))
+        //            //{
+        //            //    empresa.Locales.Add(local);
+        //            //}
+        //        }
+        //    }
+        //}
     }
 }

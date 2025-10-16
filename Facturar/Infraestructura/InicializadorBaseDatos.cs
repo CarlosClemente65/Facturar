@@ -74,6 +74,7 @@ namespace Facturar.Infraestructura
                         FOREIGN KEY (EmpresaId) REFERENCES Empresas(Id)
                     );
                 ";
+
         static string sqlContratos = @"
                     CREATE TABLE IF NOT EXISTS Contratos (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,

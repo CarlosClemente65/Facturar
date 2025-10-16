@@ -1,100 +1,113 @@
 ﻿using System;
+using System.Data;
+using System.Data.SQLite;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.Json;
 using Facturar.Entidades;
+using Facturar.Utilidades;
 
 namespace Facturar.Servicios
 {
-    public class GestorDatos
+    public static class GestorDatos
     {
-        private static GestorDatos _instancia; // Instancia unica del gestor de datos
-        private static readonly object _lock = new object(); // Objeto para asegurar la utilizacion en multihilo
-
-        private GestorClientes _gestorClientes;
-        private GestorEmpresas _gestorEmpresas;
-        private GestorLocales _gestorLocales;
-
-        //Propiedades publicas de solo lectura para acceder a los gestores
-        public GestorClientes GestorClientes => _gestorClientes;
-        public GestorEmpresas GestorEmpresas => _gestorEmpresas;
-        public GestorLocales GestorLocales => _gestorLocales;
+        // Propiedades para inicializar la base de datos
+        private static readonly string rutaBD = "./datos/facturacion.db";
+        private static readonly string cadenaConexion = $"Data Source={rutaBD};Version=3;";
 
 
-        private GestorDatos()
+        /// <summary>
+        /// Abre y devuelve una conexión SQLite usando la configuración general.
+        /// </summary>
+        public static SQLiteConnection AbrirConexion()
         {
-            _gestorClientes = GestorClientes.Instancia;
-            // _gestorEmpresas = GestorEmpresas.Instancia; // Descomentar cuando se implemente el singleton en GestorEmpresas
-            // _gestorLocales = GestorLocales.Instancia; // Descomentar cuando se implemente el singleton en GestorLocales
+            var conexion = new SQLiteConnection(cadenaConexion);
+            conexion.Open();
 
-            CargarDatos();
+            // Activar foreign keys
+            using(var comando = new SQLiteCommand("PRAGMA foreign_keys = ON;", conexion))
+            {
+                comando.ExecuteNonQuery();
+            }
 
+            return conexion;
         }
 
-        public static GestorDatos Instancia
+        /// <summary>
+        /// Ejecuta una consulta SQL sin devolver resultados (INSERT, UPDATE, DELETE).
+        /// </summary>
+        public static int EjecutarNonQuery(string sql, params SQLiteParameter[] parametros)
         {
-            get
+            using(var conexion = AbrirConexion())
             {
-                if(_instancia == null)
+                using(var comando = new SQLiteCommand(sql, conexion))
                 {
-                    lock(_lock)
+                    comando.Parameters.AddRange(parametros);
+                    return comando.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ejecuta una consulta SQL que devuelve un solo valor (por ejemplo, COUNT o MAX).
+        /// </summary>
+        public static int EjecutarEscalar(string sql, params SQLiteParameter[] parametros)
+        {
+            using(var conexion = AbrirConexion())
+            {
+                using(var comando = new SQLiteCommand(sql, conexion))
+                {
+                    comando.Parameters.AddRange(parametros);
+                    return comando.ExecuteNonQuery();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ejecuta una consulta SQL que devuelve un conjunto de resultados (SELECT).
+        /// </summary>
+        public static DataTable EjecutarConsulta(string sql, params SQLiteParameter[] parametros)
+        {
+            using(var conexion = AbrirConexion())
+            {
+                using(var comando = new SQLiteCommand(sql, conexion))
+                {
+                    comando.Parameters.AddRange(parametros);
+                    using(var adaptador = new SQLiteDataAdapter(comando))
                     {
-                        if(_instancia == null)
-                        {
-                            _instancia = new GestorDatos();
-                        }
+                        var tabla = new DataTable();
+                        adaptador.Fill(tabla);
+                        return tabla;
                     }
                 }
-                return _instancia;
             }
         }
 
-        public void CargarDatos()
+        /// <summary>
+        /// Metodo generico para mapear en un objeto pasado con 'T' segun los datos de la tabla que se obtiene de la BBDD
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nombreTabla"></param>
+        /// <param name="id"></param>
+        /// <returns>Objeto del tipo que corresponda a T</returns>
+        public static T ObtenerDatosPorId<T>(string nombreTabla, int id) where T : new()
         {
-            try
-            {
-                // Carga los datos desde el archivo JSON
-                var json = File.ReadAllText(Utilidades.Configuracion.FicheroDatos);
-                var datos = JsonSerializer.Deserialize<Infraestructura.RepositorioDatos>(json);
+            // Hace la consulta a la base de datos de la tabla pasada seleccionado por el Id
+            string sqlConsulta = $"SELECT * FROM {nombreTabla} WHERE Id = @Id";
+            var parametros = new[] { new SQLiteParameter("@Id", id) };
 
-                if(datos != null)
-                {
-                    //_gestorClientes.CargarClientes(datos.Clientes);
-                    _gestorEmpresas.CargarEmpresas(datos.Empresas); 
-                    _gestorLocales.CargarLocales(datos.Locales); // Descomentar cuando se implemente el singleton en GestorLocales
-                }
+            // Se almacena el resultado en la tabla que luego se mapea al objeto Empresa
+            DataTable tabla = EjecutarConsulta(sqlConsulta, parametros);
+
+            if(tabla.Rows.Count == 0)
+            {
+                return default(T); // Devuelve null si T es una clase
             }
 
-            catch(Exception ex)
-            {
-                throw new InvalidOperationException("Error al cargar los clientes: " + ex.Message);
-            }
-        }
-        public void GuardarDatos()
-        {
-            // Obtener los datos actuales de los gestores
-            var datos = new Infraestructura.RepositorioDatos
-            {
-                Clientes = _gestorClientes.ListarClientes().ToList(),
-                Empresas = _gestorEmpresas.ListarEmpresas().ToList(),
-                Locales = _gestorLocales.ListarLocales().ToList()
-            };
-
-            // Crear copia de seguridad si existe
-            if(File.Exists(Utilidades.Configuracion.FicheroDatos))
-            {
-                string rutaBackup = Utilidades.Configuracion.FicheroCopiasSeguridad(Utilidades.Configuracion.FicheroDatos);
-                File.Copy(Utilidades.Configuracion.FicheroDatos, rutaBackup);
-            }
-
-            // Serializar y guardar
-            var opciones = new JsonSerializerOptions
-            {
-                WriteIndented = true,
-                ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.Preserve
-            };
-            var json = JsonSerializer.Serialize(datos, opciones);
-            File.WriteAllText(Utilidades.Configuracion.FicheroDatos, json);
+            // Mapea la fila obtenida en la tabla anterior al tipo de objeto pasado 'T'
+            return MapeadorDatos.MapearFila<T>(tabla.Rows[0]);
         }
     }
 }

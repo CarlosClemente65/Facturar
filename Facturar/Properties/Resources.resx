@@ -148,13 +148,13 @@
   <data name="Menu_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Menu_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
-  <data name="Empresa_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\..\Recursos\Iconos (coleccion)\32x32\Empresa_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
-  <data name="Clientes_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
-    <value>..\..\..\..\Recursos\Iconos (coleccion)\32x32\Clientes_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
-  </data>
   <data name="Locales_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\Locales_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Clientes_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Clientes_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="Empresa_black" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\Empresa_black.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
 </root>
