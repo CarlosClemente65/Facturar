@@ -11,62 +11,105 @@ namespace Facturar.Utilidades
 {
     public static class Pruebas
     {
-        public static void GestionBD(string proceso, string tabla)
+        public static void LanzaPruebas(Entidades entidad, Procesos proceso)
         {
-            switch(tabla.ToLower())
+            switch(entidad)
             {
-                case "empresas":
+                case Entidades.Empresas:
                     ProbarEmpresas(proceso);
                     break;
 
-                case "locales":
+                case Entidades.Locales:
+                    break;
+
+                case Entidades.Clientes:
+                    break;
+
+                case Entidades.Contratos:
 
                     break;
 
-                case "clientes":
+                case Entidades.BaseDatos:
+                    break;
+
+            }
+        }
+
+        private static void ProbarEmpresas(Procesos proceso)
+        {
+            var repo = GestorDatos.AbrirConexion();
+            var empresa = new Empresa();
+            var gestor = new GestorEmpresas();
+            bool resultado;
+            switch(proceso)
+            {
+                case Procesos.Alta:
+                    empresa.Nombre = "CLEMENTE RODRIGUEZ, CARLOS";
+                    empresa.NIF = "05196375P";
+                    empresa.Direccion = "Calle Mayor, 1";
+                    empresa.CodigoPostal = "02002";
+                    empresa.Poblacion = "Albacete";
+                    empresa.Provincia = "Albacete";
+                    empresa.Telefono = "666333222";
+                    empresa.Email = "correo@correo.com";
+                    empresa.PersonaContacto = "Persona contacto";
+                    empresa.SerieFactura = "A";
+
+                    resultado = gestor.Agregar(empresa);
 
                     break;
 
-                case "contratos":
+                case Procesos.Baja:
+                    resultado = gestor.BajaEmpresa("05100001G");
+                    break;
 
+                case Procesos.Modificacion:
+                    empresa.Nombre = "Empresa de pruebas modificada";
+                    empresa.NIF = "05100001G";
+                    empresa.Direccion = "Calle Mayor, 1";
+                    empresa.CodigoPostal = "02002";
+                    empresa.Poblacion = "Albacete";
+                    empresa.Provincia = "Albacete";
+                    empresa.Telefono = "666333222";
+                    empresa.Email = "correo@correo.com";
+                    empresa.PersonaContacto = "Persona contacto";
+                    empresa.SerieFactura = "A";
+
+                    resultado = gestor.Actualizar(empresa);
+                    break;
+
+
+                case Procesos.Consulta:
+                   List<Empresa> ConsultaEmpresa = gestor.ListarTodos().ToList();
+                    break;
+
+                case Procesos.ConsultaActivas:
+                    List<Empresa> ConsultaActivas = gestor.ListarActivas().ToList();
+                    break;
+
+                case Procesos.Eliminacion:
+                    resultado = gestor.Eliminar("05100001G");
                     break;
             }
         }
 
-        private static void ProbarEmpresas(string proceso)
+        public enum Entidades
         {
-            var repo = GestorDatos.AbrirConexion();
-            switch(proceso.ToLower())
-            {
-                case "alta":
-                    var empresa = new Empresa
-                    {
-                        Nombre = "Empresa de pruebas",
-                        NIF = "05100001G",
-                        Direccion = "Calle Mayor, 1",
-                        CodigoPostal = "02002",
-                        Poblacion = "Albacete",
-                        Provincia = "Albacete",
-                        Telefono = "666333222",
-                        Email = "correo@correo.com",
-                        PersonaContacto = "Persona contacto",
-                        SerieFactura = "A"
-                    };
+            Empresas = 0,
+            Clientes = 1,
+            Contratos = 2,
+            Locales = 3,
+            BaseDatos = 4
+        }
 
-                    break;
-
-                case "baja":
-
-                    break;
-
-                case "modificacion":
-
-                    break;
-
-                case "consulta":
-
-                    break;
-            }
+        public enum Procesos
+        {
+            Alta = 0,
+            Baja = 1,
+            Modificacion = 2,
+            Consulta = 3,
+            ConsultaActivas= 4,
+            Eliminacion = 5
         }
     }
 }

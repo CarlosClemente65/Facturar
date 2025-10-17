@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using Facturar.Infraestructura;
 using Facturar.Presentacion;
 using Facturar.Servicios;
+using Facturar.Utilidades;
 
 namespace Facturar
 {
@@ -17,8 +14,16 @@ namespace Facturar
         [STAThread]
         static void Main()
         {
-            // Chequeao e inicialización de la base de datos
             GestorDatos.ChequeoBaseDatos();
+
+            // Procesos de pruebas
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Empresas, Pruebas.Procesos.Alta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Empresas, Pruebas.Procesos.Modificacion);
+            Pruebas.LanzaPruebas(Pruebas.Entidades.Empresas, Pruebas.Procesos.Baja);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Empresas, Pruebas.Procesos.Eliminacion);
+            Pruebas.LanzaPruebas(Pruebas.Entidades.Empresas, Pruebas.Procesos.Consulta);
+
+            Environment.Exit(0);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

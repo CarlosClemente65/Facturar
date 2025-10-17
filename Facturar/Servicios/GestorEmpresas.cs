@@ -30,7 +30,7 @@ namespace Facturar.Servicios
             "FechaAlta = @FechaAlta, " +
             "FechaBaja = @FechaBaja, " +
             "SerieFactura = @SerieFactura, " +
-            "NumeroFacturaActual = @NumeroFacturaActua l" +
+            "NumeroFacturaActual = @NumeroFacturaActual " +
             "WHERE NIF = @NIF";
 
         private string sqlEliminarEmpresa =
@@ -47,7 +47,7 @@ namespace Facturar.Servicios
             "SELECT * " + "FROM Empresas ";
 
         //Constructor privado para evitar instanciación externa
-        private GestorEmpresas()
+        public GestorEmpresas()
         {
 
         }
