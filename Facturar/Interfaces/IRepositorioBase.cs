@@ -11,6 +11,6 @@ namespace Facturar.Interfaces
         bool Baja (string nif, DateTime? fechaBaja);
         T ObtenerPorId(int id);
         T ObtenerPorNIF(string nif);
-        IEnumerable<T> ListarTodos();
+        IEnumerable<T> ListarTodos(bool? activas = null);
     }
 }

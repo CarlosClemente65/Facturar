@@ -40,13 +40,6 @@ namespace Facturar.Servicios
             "FROM Clientes " +
             "WHERE NIF = @NIF";
 
-        private string sqlSeleccionClientesActivos =
-            "SELECT * " +
-            "FROM Clientes " +
-            "WHERE FechaBaja IS NULL";
-
-        private string sqlSeleccionClientes =
-            "SELECT * " + "FROM Clientes ";
 
         // Constructor privado para evitar instanciación externa
         public GestorClientes()
@@ -255,16 +248,16 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Permite obtener una lista con todas los clientes (activas o no)
+        /// Permite obtener una lista con todas los clientes segun el parametro 'activos'
         /// </summary>
         /// <returns>Lista con los clientes y sus propiedades</returns>
-        public IEnumerable<Cliente> ListarTodos()
+        public IEnumerable<Cliente> ListarTodos(bool? activos = null)
         {
             // Crea una lista de empresas
             var listaClientes = new List<Cliente>();
 
             // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarClientes();
+            DataTable tabla = ConsultarClientes(activos);
 
             // Va añadiendo cada cliente a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -273,27 +266,6 @@ namespace Facturar.Servicios
                 listaClientes.Add(cliente);
             }
 
-            return listaClientes;
-        }
-
-        /// <summary>
-        /// Permite obtener una lista con todos los clientes activos
-        /// </summary>
-        /// <returns>Lista con los clientes y sus propiedades</returns>
-        public IEnumerable<Cliente> ListarClientesActivos()
-        {
-            // Crea una lista de clientes
-            var listaClientes = new List<Cliente>();
-
-            // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarActivas();
-
-            // Va añadiendo cada cliente a la lista, utilizando el mapeador de filas
-            foreach(DataRow fila in tabla.Rows)
-            {
-                var cliente = Utilidades.MapeadorDatos.MapearFila<Cliente>(fila);
-                listaClientes.Add(cliente);
-            }
             return listaClientes;
         }
 
@@ -341,18 +313,23 @@ namespace Facturar.Servicios
         /// Devuelve una tabla con todos los clientes y sus datos
         /// </summary>
         /// <returns></returns>
-        public DataTable ConsultarClientes()
+        public DataTable ConsultarClientes(bool? activos)
         {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionClientes);
-        }
-
-        /// <summary>
-        /// Devuelve una tabla con todos los clientes activos y sus datos
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarActivas()
-        {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionClientesActivos);
+            string sqlClientes = "SELECT * " + "FROM Clientes "; ;
+            string sqlClientesActivos = sqlClientes + " WHERE FechaBaja IS NULL";
+            string sqlClientesInactivos = sqlClientes + " WHERE FechaBaja IS NOT NULL";
+            if (activos == true)
+            {
+                return GestorDatos.EjecutarConsulta(sqlClientesActivos);
+            }
+            else if (activos == false)
+            {
+                return GestorDatos.EjecutarConsulta(sqlClientesInactivos);
+            }
+            else
+            {
+                return GestorDatos.EjecutarConsulta(sqlClientes);
+            }
         }
 
 

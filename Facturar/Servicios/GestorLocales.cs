@@ -34,21 +34,7 @@ namespace Facturar.Servicios
             "DELETE " +
             "FROM Locales " +
             "WHERE Id = @Id";
-
-        private string sqlSeleccionLocalesActivosEmpresa =
-            "SELECT * " +
-            "FROM Locales " +
-            "WHERE FechaBaja IS NULL " +
-            "AND EmpresaId = @EmpresaId";
-
-        private string sqlSeleccionTotalLocalesEmpresa =
-            "SELECT * " +
-            "FROM Locales " +
-            "WHERE EmpresaId = @EmpresaId";
-
-        private string sqlSeleccionTotalLocales =
-            "SELECT * FROM Locales ";
-
+      
         //Constructor privado para evitar instanciación externa
         public GestorLocales()
         {
@@ -229,7 +215,7 @@ namespace Facturar.Servicios
         }
 
 
-        public IEnumerable<Local> ListarLocalesPorEmpresa(int empresaId, bool activos = true)
+        public IEnumerable<Local> ListarLocalesPorEmpresa(int empresaId, bool? activos = null)
         {
             // Crea una lista de locales vacia
             var listaLocales = new List<Local>();
@@ -239,18 +225,11 @@ namespace Facturar.Servicios
 
             // Asigna el parametro de empresaId a las consultas
             var parametros = new[]
-               {
-                    new SQLiteParameter("@EmpresaId", empresaId)
-                };
+            {
+                new SQLiteParameter("@EmpresaId", empresaId)
+            };
 
-            if(activos)
-            {
-                tabla = ConsultarLocalesActivosEmpresa(parametros);
-            }
-            else
-            {
-                tabla = ConsultarLocalesEmpresa(parametros);
-            }
+            tabla = ConsultarLocalesEmpresa(activos, parametros);
 
             // Va añadiendo cada local a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -262,13 +241,13 @@ namespace Facturar.Servicios
             return listaLocales;
         }
 
-        public IEnumerable<Local> ListarTodos()
+        public IEnumerable<Local> ListarTodos(bool? activos = null)
         {
             // Crea una lista de locales vacia
             var listaLocales = new List<Local>();
 
             // Carga una tabla con todos los locales
-            DataTable tabla = ConsultarTotalLocales();
+            DataTable tabla = ConsultarTotalLocales(activos);
 
             // Va añadiendo cada local a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -282,31 +261,49 @@ namespace Facturar.Servicios
 
 
         /// <summary>
-        /// Devuelve una tabla con todos los locales activos de una empresa
+        /// Devuelve una tabla con todos los locales de una empresa segun el parametro 'activos'
         /// </summary>
         /// <returns></returns>
-        public DataTable ConsultarLocalesActivosEmpresa(params SQLiteParameter[] parametros)
+        public DataTable ConsultarLocalesEmpresa(bool? activos, params SQLiteParameter[] pametros)
         {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionLocalesActivosEmpresa,parametros);
-        }
-
-
-        /// <summary>
-        /// Devuelve una tabla con todos los locales (activos o no) de una empresa
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarLocalesEmpresa(params SQLiteParameter[] pametros)
-        {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionTotalLocalesEmpresa, pametros);
+            string sqlLocales = "SELECT * FROM Locales WHERE EmpresaId = @EmpresaId";
+            string sqlLocalesActivos = sqlLocales + " AND FechaBaja IS NULL ";
+            string sqlLocalesInactivos = sqlLocales + " AND FechaBaja IS NOT NULL ";
+            if(activos == true)
+            {
+                return GestorDatos.EjecutarConsulta(sqlLocalesActivos, pametros);
+            }
+            else if(activos == false)
+            {
+                return GestorDatos.EjecutarConsulta(sqlLocalesInactivos, pametros);
+            }
+            else
+            {
+                return GestorDatos.EjecutarConsulta(sqlLocales, pametros);
+            }
         }
 
         /// <summary>
         /// Devuelve una tabla con todos los locales
         /// </summary>
         /// <returns></returns>
-        public DataTable ConsultarTotalLocales()
+        public DataTable ConsultarTotalLocales(bool? activos)
         {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionTotalLocales);
+            string sqlLocales = "SELECT * FROM Locales "; ;
+            string sqlocalesActivos = sqlLocales + " WHERE FechaBaja IS NULL ";
+            string sqloLocalesInactivos = sqlLocales + " WHERE FechaBaja IS NOT NULL ";
+            if(activos == true)
+            {
+                return GestorDatos.EjecutarConsulta(sqlocalesActivos);
+            }
+            else if(activos == false)
+            {
+                return GestorDatos.EjecutarConsulta(sqloLocalesInactivos);
+            }
+            else
+            {
+                return GestorDatos.EjecutarConsulta(sqlLocales);
+            }
         }
 
 

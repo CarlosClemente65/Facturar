@@ -39,9 +39,10 @@ namespace Facturar.Utilidades
 
         private static void ProbarEmpresas(Procesos proceso)
         {
-            var repo = GestorDatos.AbrirConexion();
+            //var repo = GestorDatos.AbrirConexion();
             var empresa = new Empresa();
             var gestor = new GestorEmpresas();
+            var gestorLocales = new GestorLocales();
             bool resultado;
             switch(proceso)
             {
@@ -82,11 +83,11 @@ namespace Facturar.Utilidades
 
 
                 case Procesos.Consulta:
-                    List<Empresa> ConsultaEmpresa = gestor.ListarTodos().ToList();
+                    List<Empresa> ConsultaEmpresa = gestor.ListarTodos(false).ToList();
                     break;
 
                 case Procesos.ConsultaActivas:
-                    List<Empresa> ConsultaActivas = gestor.ListarEmpresasActivas().ToList();
+                    List<Empresa> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
                 case Procesos.Eliminacion:
@@ -97,7 +98,7 @@ namespace Facturar.Utilidades
 
         private static void ProbarClientes(Procesos proceso)
         {
-            var repo = GestorDatos.AbrirConexion();
+            //var repo = GestorDatos.AbrirConexion();
             var cliente = new Cliente();
             var gestor = new GestorClientes();
             bool resultado;
@@ -143,11 +144,11 @@ namespace Facturar.Utilidades
 
 
                 case Procesos.Consulta:
-                    List<Cliente> ConsultaCliente = gestor.ListarTodos().ToList();
+                    List<Cliente> ConsultaCliente = gestor.ListarTodos(false).ToList();
                     break;
 
                 case Procesos.ConsultaActivas:
-                    List<Cliente> ConsultaActivas = gestor.ListarClientesActivos().ToList();
+                    List<Cliente> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
                 case Procesos.Eliminacion:
@@ -159,7 +160,7 @@ namespace Facturar.Utilidades
 
         private static void ProbarLocales(Procesos proceso)
         {
-            var repo = GestorDatos.AbrirConexion();
+            //var repo = GestorDatos.AbrirConexion();
             var local = new Local();
             var gestor = new GestorLocales();
             bool resultado;
@@ -167,19 +168,19 @@ namespace Facturar.Utilidades
             {
                 case Procesos.Alta:
                     local.EmpresaId = 1;
-                    local.Descripcion = "Local en QUINTANAR DEL REY";
-                    local.Direccion = "CALLE MAYOR, 1";
-                    local.CodigoPostal = "16200";
-                    local.Poblacion = "QUINTANAR DEL REY";
-                    local.Provincia = "CUENVA";
-                    local.ImporteAlquiler = 425.22M;
+                    local.Descripcion = "Local en poligono campollano";
+                    local.Direccion = "POLIGONO CAMPOLLANO C/B, 1";
+                    local.CodigoPostal = "02007";
+                    local.Poblacion = "ALBAETE";
+                    local.Provincia = "ALBAETE";
+                    local.ImporteAlquiler = 725.45m;
 
                     resultado = gestor.Agregar(local);
 
                     break;
 
                 case Procesos.Baja:
-                    resultado = gestor.BajaLocal(1);
+                    resultado = gestor.BajaLocal(2);
                     break;
 
                 case Procesos.Modificacion:
@@ -195,7 +196,7 @@ namespace Facturar.Utilidades
                     break;
 
                 case Procesos.ConsultaActivas:
-                    List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(2).ToList();
+                    List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(1, false).ToList();
                     break;
 
                 case Procesos.Eliminacion:

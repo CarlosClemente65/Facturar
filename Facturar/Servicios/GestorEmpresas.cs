@@ -37,13 +37,6 @@ namespace Facturar.Servicios
             "FROM Empresas " +
             "WHERE NIF = @NIF";
 
-        private string sqlSeleccionEmpresasActivas =
-            "SELECT * " +
-            "FROM Empresas " +
-            "WHERE FechaBaja IS NULL";
-
-        private string sqlSeleccionEmpresas =
-            "SELECT * " + "FROM Empresas ";
 
         //Constructor privado para evitar instanciación externa
         public GestorEmpresas()
@@ -252,16 +245,16 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Permite obtener una lista con todas las empresas (activas o no)
+        /// Permite obtener una lista con todas las empresas según su estado (activas o no)
         /// </summary>
         /// <returns>Lista con las empresas y sus propiedades</returns>
-        public IEnumerable<Empresa> ListarTodos()
+        public IEnumerable<Empresa> ListarTodos(bool? activas = null)
         {
             // Crea una lista de empresas
             var listaEmpresas = new List<Empresa>();
 
             // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarEmpresas();
+            DataTable tabla = ConsultarEmpresas(activas);
 
             // Va añadiendo cada empresa a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -272,32 +265,6 @@ namespace Facturar.Servicios
             return listaEmpresas;
         }
 
-
-        /// <summary>
-        /// Permite obtener una lista con todas las empresas activas
-        /// </summary>
-        /// <returns>Lista con las empresas y sus propiedades</returns>
-        public IEnumerable<Empresa> ListarEmpresasActivas()
-        {
-            // Crea una lista de empresas
-            var listaEmpresas = new List<Empresa>();
-
-            // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarActivas();
-
-            // Va añadiendo cada empresa a la lista, utilizando el mapeador de filas
-            foreach(DataRow fila in tabla.Rows)
-            {
-                var empresa = Utilidades.MapeadorDatos.MapearFila<Empresa>(fila);
-                listaEmpresas.Add(empresa);
-            }
-            return listaEmpresas;
-        }
-
-        public IEnumerable<Empresa> ListarLocalesEmpresa(bool activas = true)
-        {
-            throw new NotImplementedException();
-        }
 
         /// <summary>
         /// Permite comprobar si la empresa existe en la base de datos
@@ -344,22 +311,45 @@ namespace Facturar.Servicios
             }
         }
 
-        /// <summary>
-        /// Devuelve una tabla con todas las empresas activas y sus datos
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarActivas()
+
+        public DataTable ConsultaLocalesEmpresa(string nif, bool activas = true)
         {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionEmpresasActivas);
+            // Asigna parametros y consulta SQL según si se quieren locales activos o todos
+            string sql = string.Empty;
+            var parametros = new[] { new SQLiteParameter("@NIF", nif) };
+            if(activas)
+            {
+                sql = @"SELECT * FROM Empresas WHERE NIF = @NIF AND FechaBaja IS NULL";
+            }
+            else
+            {
+                sql = @"SELECT * FROM Empresas WHERE NIF = @NIF";
+            }
+            return GestorDatos.EjecutarConsulta(sql, parametros);
         }
 
         /// <summary>
         /// Devuelve una tabla con todas las empresas y sus datos
         /// </summary>
         /// <returns></returns>
-        public DataTable ConsultarEmpresas()
+        public DataTable ConsultarEmpresas(bool? activas)
         {
-            return GestorDatos.EjecutarConsulta(sqlSeleccionEmpresas);
+            string sqlEmpresas = "SELECT * " + "FROM Empresas ";
+            string sqlEmpresasActivas = sqlEmpresas + " WHERE FechaBaja IS NULL";
+            string sqlEmpresasInactivas = sqlEmpresas + " WHERE FechaBaja IS NOT NULL";
+            if(activas == true)
+            {
+                return GestorDatos.EjecutarConsulta(sqlEmpresasActivas);
+            }
+            else if(activas == false)
+            {
+                return GestorDatos.EjecutarConsulta(sqlEmpresasInactivas);
+            }
+            else
+            {
+                return GestorDatos.EjecutarConsulta(sqlEmpresas);
+            }
+
         }
     }
 }

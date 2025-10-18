@@ -5,9 +5,6 @@ namespace Facturar.Interfaces
 {
     public interface IRepositorioEmpresas : IRepositorioBase<Empresa>
     {
-        IEnumerable<Empresa> ListarLocalesEmpresa(bool activas = true);
-
-        IEnumerable<Empresa> ListarEmpresasActivas();
 
     }
 }
