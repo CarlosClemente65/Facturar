@@ -58,7 +58,7 @@ namespace Facturar.Servicios
                 if(local.FechaAlta == DateTime.MinValue)
                 {
                     //Asigna la fecha de alta
-                    local.FechaAlta = DateTime.Now;
+                    local.FechaAlta = DateTime.Now.Date;
                 }
 
                 // Inserta el nuevo local en la base de datos
@@ -72,7 +72,7 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Provincia", local.Provincia),
                     new SQLiteParameter("@ImporteAlquiler", local.ImporteAlquiler),
                     new SQLiteParameter("@Observaciones", local.Observaciones),
-                    new SQLiteParameter("@FechaAlta", local.FechaAlta),
+                    new SQLiteParameter("@FechaAlta", local.FechaAlta.Date),
                     new SQLiteParameter("@FechaBaja", local.FechaBaja != DateTime.MinValue ? (object)local.FechaBaja: DBNull.Value)
                 };
 
@@ -198,7 +198,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad del local
-                local.FechaBaja = fechaBaja ?? DateTime.Now;
+                local.FechaBaja = fechaBaja ?? DateTime.Now.Date;
                 return Actualizar(local);
             }
             catch(Exception ex)

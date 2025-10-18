@@ -6,11 +6,9 @@ namespace Facturar.Interfaces
 {
     public interface IRepositorioContratos : IRepositorioBase<Contrato>
     {
-        IEnumerable<Contrato> ListarContratos(bool activos = true);
-        IEnumerable<Contrato> ListarContratosPorCliente(int clienteId);
-        IEnumerable<Contrato> ListarContratosPorEmpresa(int empresaId);
-        IEnumerable<Contrato> ListarContratosPorLocal(int localId);
-        IEnumerable<Contrato> ListarContratosPorFecha(DateTime fechaInicio, DateTime fechaFin);
-        Contrato ObtenerContratoActivoPorLocal(int localId);
+        IEnumerable<Contrato> ListarContratosPorCliente(string nif, bool? activos = null);
+        IEnumerable<Contrato> ListarContratosPorEmpresa(string nif, bool? activos = null);
+        IEnumerable<Contrato> ListarContratosPorLocal(int localId, bool? activos = null);
+        IEnumerable<Contrato> ListarContratosPorFecha(DateTime fechaInicio, DateTime fechaFin, bool? activos = null);
     }
 }

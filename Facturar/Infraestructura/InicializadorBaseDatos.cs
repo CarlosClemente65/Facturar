@@ -46,7 +46,7 @@ namespace Facturar.Infraestructura
         static string sqlClientes = @"
                     CREATE TABLE IF NOT EXISTS Clientes (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        NIF TEXT NOT NULL,
+                        NIF TEXT NOT NULL UNIQUE,
                         Nombre TEXT NOT NULL,
                         Direccion TEXT,
                         CodigoPostal TEXT,

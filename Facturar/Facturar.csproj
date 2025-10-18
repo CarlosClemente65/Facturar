@@ -100,7 +100,6 @@
     </Compile>
     <Compile Include="Infraestructura\InicializadorBaseDatos.cs" />
     <Compile Include="Infraestructura\RepositorioDatos.cs" />
-    <Compile Include="Infraestructura\RepositorioFacturas.cs" />
     <Compile Include="Interfaces\IRepositorioBase.cs" />
     <Compile Include="Interfaces\IRepositorioClientes.cs" />
     <Compile Include="Interfaces\IRepositorioContratos.cs" />
@@ -123,6 +122,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Servicios\GestorClientes.cs" />
+    <Compile Include="Servicios\GestorContratos.cs" />
     <Compile Include="Servicios\GestorDatos.cs" />
     <Compile Include="Servicios\GestorEmpresas.cs" />
     <Compile Include="Servicios\GestorFacturas.cs" />

@@ -11,7 +11,7 @@ namespace Facturar.Entidades
         public int Id { get; set; }
         public int EmpresaId { get; set; }
         public int ClienteId { get; set; }
-        public int Locald { get; set; }
+        public int LocalId { get; set; }
         public decimal PrecioMensual { get; set; }
         public DateTime FechaInicio { get; set; }
         public DateTime FechaFin { get; set; }

@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Facturar.Entidades;
 using Facturar.Servicios;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 
 namespace Facturar.Utilidades
@@ -28,7 +29,7 @@ namespace Facturar.Utilidades
                     break;
 
                 case Entidades.Contratos:
-
+                    ProbarContratos(proceso);
                     break;
 
                 case Entidades.BaseDatos:
@@ -86,7 +87,7 @@ namespace Facturar.Utilidades
                     List<Empresa> ConsultaEmpresa = gestor.ListarTodos(false).ToList();
                     break;
 
-                case Procesos.ConsultaActivas:
+                case Procesos.ConsultaActivos:
                     List<Empresa> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
@@ -147,7 +148,7 @@ namespace Facturar.Utilidades
                     List<Cliente> ConsultaCliente = gestor.ListarTodos(false).ToList();
                     break;
 
-                case Procesos.ConsultaActivas:
+                case Procesos.ConsultaActivos:
                     List<Cliente> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
@@ -195,12 +196,82 @@ namespace Facturar.Utilidades
                     List<Local> ConsultaLocal = gestor.ListarTodos().ToList();
                     break;
 
-                case Procesos.ConsultaActivas:
+                case Procesos.ConsultaActivos:
                     List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(1, false).ToList();
                     break;
 
                 case Procesos.Eliminacion:
                     resultado = gestor.EliminarLocal(1);
+                    break;
+            }
+        }
+
+
+        private static void ProbarContratos(Procesos proceso)
+        {
+            var contrato = new Contrato();
+            var gestor = new GestorContratos();
+            bool resultado;
+            switch(proceso)
+            {
+                case Procesos.Alta:
+                    contrato.EmpresaId = 1;
+                    contrato.ClienteId = 4;
+                    contrato.LocalId = 2;
+                    contrato.PrecioMensual = 755.22m;
+                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025");
+                    contrato.Observaciones = "Observaciones contrato 1";
+
+                    resultado = gestor.Agregar(contrato);
+
+                    contrato.EmpresaId = 2;
+                    contrato.ClienteId = 4;
+                    contrato.LocalId = 3;
+                    contrato.PrecioMensual = 755.22m;
+                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025");
+                    contrato.Observaciones = "Observaciones contrato 2";
+
+                    resultado = gestor.Agregar(contrato);
+
+                    break;
+
+                case Procesos.Baja:
+                    resultado = gestor.Baja(2);
+                    break;
+
+                case Procesos.Modificacion:
+                    var contratoNuevo = gestor.ObtenerPorId(1);
+                    contratoNuevo.EmpresaId = 2;
+                    contratoNuevo.Observaciones = "Observaciones modificadas";
+
+                    resultado = gestor.Actualizar(contratoNuevo);
+                    break;
+
+
+                case Procesos.Consulta:
+                    List<Contrato> ConsultaContratos = gestor.ListarTodos().ToList();
+                    break;
+
+                case Procesos.ConsultaActivos:
+                    // Consulta todos los contratos activos
+                    List<Contrato> ConsultaContratosActivos = gestor.ListarTodos(true).ToList();
+
+                    // Consulta contratos de un cliente
+                    List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente("05100001G").ToList();
+
+                    //Consulta los contratos de una empresa
+                    List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa("05196375P").ToList();
+
+                    // Consulta los contratos de un local
+                    List<Contrato> ConsultaContratosLocal = gestor.ListarContratosPorLocal(2).ToList();
+
+                    //Consulta contratos por fecha
+                    List<Contrato> ConsultaContratosFecha = gestor.ListarContratosPorFecha(Utiles.ConvertirFecha("01/05/2025"), Utiles.ConvertirFecha("01/05/2025")).ToList();
+
+                    break;
+
+                case Procesos.Eliminacion:
+                    resultado = gestor.Eliminar(1);
                     break;
             }
         }
@@ -220,7 +291,7 @@ namespace Facturar.Utilidades
             Baja = 1,
             Modificacion = 2,
             Consulta = 3,
-            ConsultaActivas = 4,
+            ConsultaActivos = 4,
             Eliminacion = 5
         }
     }

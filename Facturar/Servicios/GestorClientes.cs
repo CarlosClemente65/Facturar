@@ -2,11 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
 using Facturar.Entidades;
 using Facturar.Interfaces;
-using Facturar.Servicios;
-using Facturar.Utilidades;
 
 namespace Facturar.Servicios
 {
@@ -64,7 +61,7 @@ namespace Facturar.Servicios
                 if(cliente.FechaAlta == DateTime.MinValue)
                 {
                     //Asigna la fecha de alta
-                    cliente.FechaAlta = DateTime.Now;
+                    cliente.FechaAlta = DateTime.Now.Date;
                 }
 
                 // Asigna la forma de pago por defecto si no está 
@@ -88,7 +85,7 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Telefono", cliente.Telefono),
                     new SQLiteParameter("@Email", cliente.Email),
                     new SQLiteParameter("@PersonaContacto", cliente.PersonaContacto),
-                    new SQLiteParameter("@FechaAlta", cliente.FechaAlta),
+                    new SQLiteParameter("@FechaAlta", cliente.FechaAlta.Date),
                     new SQLiteParameter("@FechaBaja", cliente.FechaBaja != DateTime.MinValue ? (object)cliente.FechaBaja: DBNull.Value),
                     new SQLiteParameter("@FormaPago", cliente.FormaPago),
                     new SQLiteParameter("@IBAN", cliente.IBAN),
@@ -217,7 +214,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad del cliente
-                cliente.FechaBaja = fechaBaja ?? DateTime.Now;
+                cliente.FechaBaja = fechaBaja ?? DateTime.Now.Date;
                 return Actualizar(cliente);
 
             }

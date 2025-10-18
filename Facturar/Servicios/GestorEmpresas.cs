@@ -61,7 +61,7 @@ namespace Facturar.Servicios
                 if(empresa.FechaAlta == DateTime.MinValue)
                 {
                     //Asigna la fecha de alta
-                    empresa.FechaAlta = DateTime.Now;
+                    empresa.FechaAlta = DateTime.Now.Date;
                 }
 
                 empresa.SerieFactura = empresa.SerieFactura ?? string.Empty; // Asigna una serie por defecto si no se proporciona
@@ -84,7 +84,7 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Telefono", empresa.Telefono),
                     new SQLiteParameter("@Email", empresa.Email),
                     new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
-                    new SQLiteParameter("@FechaAlta", empresa.FechaAlta),
+                    new SQLiteParameter("@FechaAlta", empresa.FechaAlta.Date),
                     new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
                     new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
                     new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
@@ -212,7 +212,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad de la empresa
-                empresa.FechaBaja = fechaBaja ?? DateTime.Now;
+                empresa.FechaBaja = fechaBaja ?? DateTime.Now.Date;
                 return Actualizar(empresa);
 
             }
