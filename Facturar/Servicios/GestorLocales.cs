@@ -1,148 +1,352 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Linq;
 using Facturar.Entidades;
+using Facturar.Interfaces;
+using static Facturar.Servicios.GestorClientes;
 
 namespace Facturar.Servicios
 {
-    public class GestorLocales
+    public class GestorLocales : IRepositorioLocales
     {
+        // Propiedades para comandos CRUD
+        private string sqlInsertarLocal =
+            "INSERT INTO Locales " +
+            "(EmpresaId, Descripcion, Direccion, CodigoPostal, Poblacion, Provincia, ImporteAlquiler, Observaciones, FechaAlta, FechaBaja) " +
+            "VALUES (@EmpresaId, @Descripcion, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @ImporteAlquiler, @Observaciones, @FechaAlta, @FechaBaja)";
+
+        private string sqlActualizarLocal =
+            "UPDATE Locales SET " +
+            "EmpresaId = @EmpresaId, " +
+            "Descripcion = @Descripcion, " +
+            "Direccion = @Direccion, " +
+            "CodigoPostal = @CodigoPostal, " +
+            "Poblacion = @Poblacion, " +
+            "Provincia = @Provincia, " +
+            "ImporteAlquiler = @ImporteAlquiler, " +
+            "Observaciones = @Observaciones, " +
+            "FechaBaja = @FechaBaja " +
+            "WHERE Id = @Id";
+
+        private string sqlEliminarLocal =
+            "DELETE " +
+            "FROM Locales " +
+            "WHERE Id = @Id";
+
+        private string sqlSeleccionLocalesActivosEmpresa =
+            "SELECT * " +
+            "FROM Locales " +
+            "WHERE FechaBaja IS NULL " +
+            "AND EmpresaId = @EmpresaId";
+
+        private string sqlSeleccionTotalLocalesEmpresa =
+            "SELECT * " +
+            "FROM Locales " +
+            "WHERE EmpresaId = @EmpresaId";
+
+        private string sqlSeleccionTotalLocales =
+            "SELECT * FROM Locales ";
 
         //Constructor privado para evitar instanciación externa
-        private GestorLocales()
+        public GestorLocales()
         {
         }
 
-        //public void AgregarLocal(Local local)
-        //{
-        //    //Evitar agregar locales nulos o con Descripcion vacía
-        //    if(local == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
-        //    }
 
-        //    // Evita agregar locales sin Empresa asociada
-        //    if(local.EmpresaId == null)
-        //    {
-        //        throw new ArgumentException("El local debe estar asociado a una empresa.", nameof(local));
-        //    }
+        /// <summary>
+        /// Inserta un nuevo local en la base de datos
+        /// </summary>
+        /// <param name="local"></param>
+        /// <returns>Devuelve 'true' si se ha podido grabar en la BBDD</returns>
+        /// <exception cref="ApplicationException"></exception>
+        public bool Agregar(Local local)
+        {
+            try
+            {
+                // Valida que el local no sea nulo y se pase el Id de la empresa
+                ValidarLocal(local);
 
-        //    // Evita agregar sin Descripcion
-        //    if(string.IsNullOrWhiteSpace(local.Descripcion))
-        //    {
-        //        throw new ArgumentException("La descripcon del local no puede estar vacía.", nameof(local));
-        //    }
+                // Asigna la fecha de alta si no está establecida
+                if(local.FechaAlta == DateTime.MinValue)
+                {
+                    //Asigna la fecha de alta
+                    local.FechaAlta = DateTime.Now;
+                }
 
-        //    // Asignar un Id único al local (simple incremento basado en el conteo actual)
-        //    local.Id = _locales.Any() ? _locales.Max(l => l.Id) + 1 : 1;
+                // Inserta el nuevo local en la base de datos
+                var parametros = new[]
+                {
+                    new SQLiteParameter("@EmpresaId", local.EmpresaId),
+                    new SQLiteParameter("@Descripcion", local.Descripcion),
+                    new SQLiteParameter("@Direccion", local.Direccion),
+                    new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", local.Poblacion),
+                    new SQLiteParameter("@Provincia", local.Provincia),
+                    new SQLiteParameter("@ImporteAlquiler", local.ImporteAlquiler),
+                    new SQLiteParameter("@Observaciones", local.Observaciones),
+                    new SQLiteParameter("@FechaAlta", local.FechaAlta),
+                    new SQLiteParameter("@FechaBaja", local.FechaBaja != DateTime.MinValue ? (object)local.FechaBaja: DBNull.Value)
+                };
 
-        //    //Asigna la fecha de alta
-        //    local.FechaAlta = DateTime.Now;
-        //    local.FechaBaja = null; // Asegura que la fecha de baja es nula al crear un nuevo local
+                // Ejecuta el comando y obtiene el numero de filas insertadas
+                var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarLocal, parametros));
 
-        //    _locales.Add(local);
+                if(filasInsertadas <= 0)
+                {
+                    throw new InvalidOperationException("No se pudo insertar el local en la base de datos");
+                }
+                return true; // Indica que la inserción fue exitosa
+            }
 
-        //    //// Añade el local a la lista de locales de la empresa
-        //    //if(local.Empresa != null)
-        //    //{
-        //    //    local.Empresa.Locales.Add(local);
-        //    //}
+            catch(Exception ex)
+            {
+                throw new ApplicationException("Error al agregar el cliente.", ex);
+            }
+        }
 
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
 
-        //public void ModificarLocal(Local local)
-        //{
-        //    // Filtra la lista de locales activos y la busca por Id
-        //    var localExistente = _locales.FirstOrDefault(l => l.Id == local.Id && l.Activo);
+        /// <summary>
+        /// Permite actualizar los datos de un cliente en la BBDD
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <returns>True si se ha podido actualizar</returns>
+        /// <exception cref="InvalidOperationException"></exception>
 
-        //    // Controlar que el local no sea nulo y que exista
-        //    if(localExistente == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(local), "El local no existe o esta dado de baja.");
-        //    }
+        public bool Actualizar(Local local)
+        {
+            try
+            {
+                // Valida que el local no sea nulo, y se pase el Id de la empresa
+                ValidarLocal(local);
 
-        //    // Guardar referencia a la empresa antigua
-        //    var empresaAntigua = localExistente.EmpresaId;
+                // Nota: no se incluye la fecha de alta porque solo se graba en el alta, no se puede modificar en la actualizacion
+                var parametros = new[]
+                {
+                    new SQLiteParameter("@Id", local.Id),
+                    new SQLiteParameter("@EmpresaId", local.EmpresaId),
+                    new SQLiteParameter("@Descripcion", local.Descripcion),
+                    new SQLiteParameter("@Direccion", local.Direccion),
+                    new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", local.Poblacion),
+                    new SQLiteParameter("@Provincia", local.Provincia),
+                    new SQLiteParameter("@ImporteAlquiler", local.ImporteAlquiler),
+                    new SQLiteParameter("@Observaciones", local.Observaciones),
+                    new SQLiteParameter("@FechaBaja", local.FechaBaja != DateTime.MinValue ? (object)local.FechaBaja: DBNull.Value)
+                };
 
-        //    // Actualiza las propiedades del local existente
-        //    localExistente.Descripcion = local.Descripcion;
-        //    localExistente.Direccion = local.Direccion;
-        //    localExistente.CodigoPostal = local.CodigoPostal;
-        //    localExistente.Poblacion = local.Poblacion;
-        //    localExistente.Provincia = local.Provincia;
-        //    localExistente.EmpresaId = local.EmpresaId;
-        //    localExistente.ImporteAlquiler = local.ImporteAlquiler;
-        //    localExistente.Observaciones = local.Observaciones;
+                // Ejecuta la actualizacion y devuelve las filas actualizadas
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarLocal, parametros);
 
-        //    //// Si la empresa ha cambiado, actualizar listas de locales
-        //    //if(empresaAntigua != null && empresaAntigua != local.EmpresaId)
-        //    //{
-        //    //    empresaAntigua.Locales.Remove(localExistente); // quitar de la antigua
-        //    //    local.EmpresaId.Locales.Add(localExistente);     // añadir a la nueva
-        //    //}
+                if(filasActualizadas == 0)
+                {
+                    throw new InvalidOperationException("No se encontro el local para actualizar en la base de datos");
+                }
+                return true; // Indica que la inserción fue exitosa
+            }
 
-        //    // Guarda los cambios en el archivo
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido actualizar el local: {ex.Message}", ex);
+            }
 
-        //public void EliminarLocal(int id, DateTime? fechaBaja = null)
-        //{
-        //    // Filtra la lista de locales activos y la busca por Id
-        //    var local = _locales.FirstOrDefault(l => l.Id == id && l.Activo);
+        }
 
-        //    // Controlar que el local exista y esté activo
-        //    if(local == null)
-        //    {
-        //        throw new ArgumentException("El local no existe o ya está dado de baja.", nameof(id));
-        //    }
 
-        //    // Establece la fecha de baja 
-        //    local.FechaBaja = fechaBaja ?? DateTime.Now;
+        /// <summary>
+        /// Permite eliminar un local de la base de datos pasando el Id del local
+        /// </summary>
+        /// <param name="nif"></param>
+        /// <returns>True si se ha podido eliminar</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public bool EliminarLocal(int id)
+        {
+            // Verifica que exista el local antes de intentar eliminarlo
+            var local = ObtenerPorId(id);
+            if(local == null)
+            {
+                throw new InvalidOperationException("El local no existe en la base de datos.");
+            }
+            try
+            {
+                // Ejecuta el borrado y devuelve las filas afectadas
+                var parametros = new[] { new SQLiteParameter("@Id", local.Id) };
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarLocal, parametros);
 
-        //    //// Elimina el local de la lista de locales de la empresa
-        //    //if(local.Empresa != null)
-        //    //{
-        //    //    local.Empresa.Locales.Remove(local);
-        //    //}
+                if(filasActualizadas == 0)
+                {
+                    throw new InvalidOperationException("No se encontro el local para borrar en la base de datos");
+                }
+                return true; // Indica que la eliminacion fue exitosa
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido local el cliente: {ex.Message}", ex);
+            }
+        }
 
-        //    // Guarda los cambios en el archivo
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
-        //public IReadOnlyList<Local> ListarLocales(bool incluirInactivos = false)
-        //{
-        //    // Filtra la lista de locales según el parámetro incluirInactivos
-        //    var localesFiltrados = incluirInactivos 
-        //        ? _locales 
-        //        : _locales.Where(l => l.Activo).ToList();
+        // No se implementa este metodo porque la eliminacion se hace por Id
+        public bool Eliminar(string nif)
+        {
+            throw new NotImplementedException();
+        }
 
-        //    // Devuelve una lista de solo lectura para evitar modificaciones externas
-        //    return _locales.AsReadOnly();
-        //}
 
-        //public void CargarLocales(List<Local> listaLocales)
-        //{
-        //    _locales = listaLocales ?? new List<Local>();
+        /// <summary>
+        /// Graba la fecha de baja de un local pasando el Id del local
+        /// Si no se pasa fecha, se pone la fecha actual
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public bool BajaLocal(int id, DateTime? fechaBaja = null)
+        {
+            // Verifica que exista el local
+            var local = ObtenerPorId(id);
+            if(local == null)
+            {
+                throw new InvalidOperationException("El local no existe en la base de datos.");
+            }
 
-        //    // Se obtiene la lista de empresas para actualizar sus listas de locales
-        //    //var empresas = GestorEmpresas.Instancia.ListarEmpresas(true);
+            try
+            {
+                // Graba la fecha de baja en la propiedad del local
+                local.FechaBaja = fechaBaja ?? DateTime.Now;
+                return Actualizar(local);
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido dar de baja el local: {ex.Message}", ex);
+            }
+        }
 
-        //    // Asigna cada local a su empresa correspondiente
-        //    foreach(var local in _locales)
-        //    {
-        //        // Solo si local.Empresa no es null
-        //        if(local.EmpresaId != null)
-        //        {
-        //            // Busca la empresa en la lista de empresas
-        //            //var empresa = empresas.FirstOrDefault(e => e.Id == local.EmpresaId);
 
-        //            //// Si la empresa existe y no contiene ya el local, lo añade a su lista de locales
-        //            //if(empresa != null && !empresa.Locales.Contains(local))
-        //            //{
-        //            //    empresa.Locales.Add(local);
-        //            //}
-        //        }
-        //    }
-        //}
+        /// No se implementa este metodo porque la baja se hace por Id
+        public bool Baja(string nif, DateTime? fechaBaja)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public IEnumerable<Local> ListarLocalesPorEmpresa(int empresaId, bool activos = true)
+        {
+            // Crea una lista de locales vacia
+            var listaLocales = new List<Local>();
+
+            // Carga una tabla con todos los locales de la empresa segun el paremetro 'activos'
+            DataTable tabla = null;
+
+            // Asigna el parametro de empresaId a las consultas
+            var parametros = new[]
+               {
+                    new SQLiteParameter("@EmpresaId", empresaId)
+                };
+
+            if(activos)
+            {
+                tabla = ConsultarLocalesActivosEmpresa(parametros);
+            }
+            else
+            {
+                tabla = ConsultarLocalesEmpresa(parametros);
+            }
+
+            // Va añadiendo cada local a la lista, utilizando el mapeador de filas
+            foreach(DataRow fila in tabla.Rows)
+            {
+                var local = Utilidades.MapeadorDatos.MapearFila<Local>(fila);
+                listaLocales.Add(local);
+            }
+
+            return listaLocales;
+        }
+
+        public IEnumerable<Local> ListarTodos()
+        {
+            // Crea una lista de locales vacia
+            var listaLocales = new List<Local>();
+
+            // Carga una tabla con todos los locales
+            DataTable tabla = ConsultarTotalLocales();
+
+            // Va añadiendo cada local a la lista, utilizando el mapeador de filas
+            foreach(DataRow fila in tabla.Rows)
+            {
+                var local = Utilidades.MapeadorDatos.MapearFila<Local>(fila);
+                listaLocales.Add(local);
+            }
+
+            return listaLocales; ;
+        }
+
+
+        /// <summary>
+        /// Devuelve una tabla con todos los locales activos de una empresa
+        /// </summary>
+        /// <returns></returns>
+        public DataTable ConsultarLocalesActivosEmpresa(params SQLiteParameter[] parametros)
+        {
+            return GestorDatos.EjecutarConsulta(sqlSeleccionLocalesActivosEmpresa,parametros);
+        }
+
+
+        /// <summary>
+        /// Devuelve una tabla con todos los locales (activos o no) de una empresa
+        /// </summary>
+        /// <returns></returns>
+        public DataTable ConsultarLocalesEmpresa(params SQLiteParameter[] pametros)
+        {
+            return GestorDatos.EjecutarConsulta(sqlSeleccionTotalLocalesEmpresa, pametros);
+        }
+
+        /// <summary>
+        /// Devuelve una tabla con todos los locales
+        /// </summary>
+        /// <returns></returns>
+        public DataTable ConsultarTotalLocales()
+        {
+            return GestorDatos.EjecutarConsulta(sqlSeleccionTotalLocales);
+        }
+
+
+        private void ValidarLocal(Local local)
+        {
+            // Evita agregar clientes nulos
+            if(local == null)
+            {
+                throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
+            }
+
+            // Validar campos obligatorios
+            if(local.EmpresaId == 0)
+            {
+                throw new ArgumentException("El codigo de empresa es obligatorio.");
+            }
+
+            if(string.IsNullOrEmpty(local.Direccion))
+            {
+                throw new ArgumentException("La direccion del local es obligatorio.");
+            }
+        }
+
+
+        /// <summary>
+        /// Obtiene un local por su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Objeto local con las propiedades que tenga</returns>
+        public Local ObtenerPorId(int id)
+        {
+            return GestorDatos.ObtenerDatosPorId<Local>("Locales", id);
+        }
+
+
+        // No se implementa este metodo porque los locales no se buscan por NIF
+        public Local ObtenerPorNIF(string nif)
+        {
+            throw new NotImplementedException();
+        }
+
     }
 }

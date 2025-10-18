@@ -20,9 +20,11 @@ namespace Facturar.Utilidades
                     break;
 
                 case Entidades.Locales:
+                    ProbarLocales(proceso);
                     break;
 
                 case Entidades.Clientes:
+                    ProbarClientes(proceso);
                     break;
 
                 case Entidades.Contratos:
@@ -44,8 +46,8 @@ namespace Facturar.Utilidades
             switch(proceso)
             {
                 case Procesos.Alta:
-                    empresa.Nombre = "CLEMENTE RODRIGUEZ, CARLOS";
-                    empresa.NIF = "05196375P";
+                    empresa.Nombre = "EMPRESA PRUEBAS DOS";
+                    empresa.NIF = "05100001G";
                     empresa.Direccion = "Calle Mayor, 1";
                     empresa.CodigoPostal = "02002";
                     empresa.Poblacion = "Albacete";
@@ -60,7 +62,7 @@ namespace Facturar.Utilidades
                     break;
 
                 case Procesos.Baja:
-                    resultado = gestor.BajaEmpresa("05100001G");
+                    resultado = gestor.Baja("05100001G");
                     break;
 
                 case Procesos.Modificacion:
@@ -80,15 +82,124 @@ namespace Facturar.Utilidades
 
 
                 case Procesos.Consulta:
-                   List<Empresa> ConsultaEmpresa = gestor.ListarTodos().ToList();
+                    List<Empresa> ConsultaEmpresa = gestor.ListarTodos().ToList();
                     break;
 
                 case Procesos.ConsultaActivas:
-                    List<Empresa> ConsultaActivas = gestor.ListarActivas().ToList();
+                    List<Empresa> ConsultaActivas = gestor.ListarEmpresasActivas().ToList();
                     break;
 
                 case Procesos.Eliminacion:
                     resultado = gestor.Eliminar("05100001G");
+                    break;
+            }
+        }
+
+        private static void ProbarClientes(Procesos proceso)
+        {
+            var repo = GestorDatos.AbrirConexion();
+            var cliente = new Cliente();
+            var gestor = new GestorClientes();
+            bool resultado;
+            switch(proceso)
+            {
+                case Procesos.Alta:
+                    cliente.Nombre = "PRIMER CLIENTE NOMBRE";
+                    cliente.NIF = "05100001G";
+                    cliente.Direccion = "Calle Mayor, 1";
+                    cliente.CodigoPostal = "02002";
+                    cliente.Poblacion = "Albacete";
+                    cliente.Provincia = "Albacete";
+                    cliente.Telefono = "666333222";
+                    cliente.Email = "correo@correo.com";
+                    cliente.PersonaContacto = "Persona contacto";
+                    cliente.FormaPago = GestorClientes.FormasPago.Transferencia.ToString();
+                    cliente.Observaciones = "Observaciones del cliente 2";
+
+                    resultado = gestor.Agregar(cliente);
+
+                    break;
+
+                case Procesos.Baja:
+                    resultado = gestor.Baja("05100001G");
+                    break;
+
+                case Procesos.Modificacion:
+                    cliente.Nombre = "CLIENTE DE PRUEBAS MODIFICADO";
+                    cliente.NIF = "05100001G";
+                    cliente.Direccion = "Calle Mayor, 1";
+                    cliente.CodigoPostal = "02002";
+                    cliente.Poblacion = "Albacete";
+                    cliente.Provincia = "Albacete";
+                    cliente.Telefono = "666333222";
+                    cliente.Email = "correo@correo.com";
+                    cliente.PersonaContacto = "Persona contacto";
+                    cliente.FormaPago = GestorClientes.FormasPago.Transferencia.ToString();
+                    cliente.IBAN = "ES6601822032002200231234";
+                    cliente.Observaciones = "Cliente de pruebas modificado";
+
+                    resultado = gestor.Actualizar(cliente);
+                    break;
+
+
+                case Procesos.Consulta:
+                    List<Cliente> ConsultaCliente = gestor.ListarTodos().ToList();
+                    break;
+
+                case Procesos.ConsultaActivas:
+                    List<Cliente> ConsultaActivas = gestor.ListarClientesActivos().ToList();
+                    break;
+
+                case Procesos.Eliminacion:
+                    resultado = gestor.Eliminar("05100001G");
+                    break;
+            }
+        }
+
+
+        private static void ProbarLocales(Procesos proceso)
+        {
+            var repo = GestorDatos.AbrirConexion();
+            var local = new Local();
+            var gestor = new GestorLocales();
+            bool resultado;
+            switch(proceso)
+            {
+                case Procesos.Alta:
+                    local.EmpresaId = 1;
+                    local.Descripcion = "Local en QUINTANAR DEL REY";
+                    local.Direccion = "CALLE MAYOR, 1";
+                    local.CodigoPostal = "16200";
+                    local.Poblacion = "QUINTANAR DEL REY";
+                    local.Provincia = "CUENVA";
+                    local.ImporteAlquiler = 425.22M;
+
+                    resultado = gestor.Agregar(local);
+
+                    break;
+
+                case Procesos.Baja:
+                    resultado = gestor.BajaLocal(1);
+                    break;
+
+                case Procesos.Modificacion:
+                    var localNuevo = gestor.ObtenerPorId(1);
+                    localNuevo.EmpresaId = 2;
+
+                    resultado = gestor.Actualizar(localNuevo);
+                    break;
+
+
+                case Procesos.Consulta:
+                    List<Local> ConsultaLocal = gestor.ListarTodos().ToList();
+                    break;
+
+                case Procesos.ConsultaActivas:
+                    List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(2).ToList();
+                    break;
+
+                case Procesos.Eliminacion:
+                    resultado = gestor.EliminarLocal(1);
                     break;
             }
         }
@@ -108,7 +219,7 @@ namespace Facturar.Utilidades
             Baja = 1,
             Modificacion = 2,
             Consulta = 3,
-            ConsultaActivas= 4,
+            ConsultaActivas = 4,
             Eliminacion = 5
         }
     }

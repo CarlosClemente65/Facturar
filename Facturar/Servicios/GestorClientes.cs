@@ -1,155 +1,366 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.SQLite;
 using System.Linq;
 using Facturar.Entidades;
-using Facturar.Utilidades;
+using Facturar.Interfaces;
 using Facturar.Servicios;
+using Facturar.Utilidades;
 
 namespace Facturar.Servicios
 {
-    public class GestorClientes
+    public class GestorClientes : IRepositorioClientes
     {
+        // Propiedades para comandos CRUD
+        private string sqlInsertarCliente =
+            "INSERT INTO Clientes " +
+            "(NIF, Nombre, Direccion, CodigoPostal, Poblacion, Provincia, Telefono, Email, PersonaContacto, FechaAlta, FechaBaja, FormaPago, IBAN, Observaciones) " +
+            "VALUES (@NIF, @Nombre, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @Telefono, @Email, @PersonaContacto, @FechaAlta, @FechaBaja, @FormaPago, @IBAN, @Observaciones)";
+
+        private string sqlActualizarCliente =
+            "UPDATE Clientes SET " +
+            "NIF = @NIF, " +
+            "Nombre = @Nombre, " +
+            "Direccion = @Direccion, " +
+            "CodigoPostal = @CodigoPostal, " +
+            "Poblacion = @Poblacion, " +
+            "Provincia = @Provincia, " +
+            "Telefono = @Telefono, " +
+            "Email = @Email, " +
+            "PersonaContacto = @PersonaContacto, " +
+            "FechaBaja = @FechaBaja, " +
+            "FormaPago = @FormaPago, " +
+            "IBAN = @IBAN, " +
+            "Observaciones = @Observaciones " +
+            "WHERE NIF = @NIF";
+
+        private string sqlEliminarCliente =
+            "DELETE " +
+            "FROM Clientes " +
+            "WHERE NIF = @NIF";
+
+        private string sqlSeleccionClientesActivos =
+            "SELECT * " +
+            "FROM Clientes " +
+            "WHERE FechaBaja IS NULL";
+
+        private string sqlSeleccionClientes =
+            "SELECT * " + "FROM Clientes ";
 
         // Constructor privado para evitar instanciación externa
-        private GestorClientes()
+        public GestorClientes()
         {
 
         }
 
+        /// <summary>
+        /// Inserta un nuevo cliente en la base de datos
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <returns>Devuelve 'true' si se ha podido grabar en la BBDD</returns>
+        /// <exception cref="ApplicationException"></exception>
+        public bool Agregar(Cliente cliente)
+        {
+            try
+            {
+                // Valida que el cliente no sea nulo, y el NIF y nombre tengan contenido
+                ValidarCliente(cliente);
+
+                // Asigna la fecha de alta si no está establecida
+                if(cliente.FechaAlta == DateTime.MinValue)
+                {
+                    //Asigna la fecha de alta
+                    cliente.FechaAlta = DateTime.Now;
+                }
+
+                // Asigna la forma de pago por defecto si no está 
+                cliente.FormaPago = cliente.FormaPago ?? FormasPago.Transferencia.ToString();
+
+                // Verifica que no exista ya un cliente con el mismo NIF
+                if(ClienteExiste(cliente.NIF))
+                {
+                    throw new InvalidOperationException("Ya existe un cliente con ese NIF.");
+                }
+
+                // Inserta el nuevo cliente en la base de datos
+                var parametros = new[]
+                {
+                    new SQLiteParameter("@NIF", cliente.NIF),
+                    new SQLiteParameter("@Nombre", cliente.Nombre),
+                    new SQLiteParameter("@Direccion", cliente.Direccion),
+                    new SQLiteParameter("@CodigoPostal", cliente.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", cliente.Poblacion),
+                    new SQLiteParameter("@Provincia", cliente.Provincia),
+                    new SQLiteParameter("@Telefono", cliente.Telefono),
+                    new SQLiteParameter("@Email", cliente.Email),
+                    new SQLiteParameter("@PersonaContacto", cliente.PersonaContacto),
+                    new SQLiteParameter("@FechaAlta", cliente.FechaAlta),
+                    new SQLiteParameter("@FechaBaja", cliente.FechaBaja != DateTime.MinValue ? (object)cliente.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@FormaPago", cliente.FormaPago),
+                    new SQLiteParameter("@IBAN", cliente.IBAN),
+                    new SQLiteParameter("@Observaciones", cliente.Observaciones)
+                };
+
+                // Ejecuta el comando y obtiene el numero de filas insertadas
+                var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarCliente, parametros));
+
+                if(filasInsertadas <= 0)
+                {
+                    throw new InvalidOperationException("No se pudo insertar el cliente en la base de datos");
+                }
+                return true; // Indica que la inserción fue exitosa
+            }
+
+            catch(Exception ex)
+            {
+                throw new ApplicationException("Error al agregar el cliente.", ex);
+            }
+        }
+
+        /// <summary>
+        /// Permite actualizar los datos de un cliente en la BBDD
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <returns>True si se ha podido actualizar</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+
+        public bool Actualizar(Cliente cliente)
+        {
+            try
+            {
+                // Valida que el cliente no sea nulo, y el NIF y nombre tengan contenido
+                ValidarCliente(cliente);
+
+                // Verifica que exista un cliente con el NIF proporcionado
+                if(!ClienteExiste(cliente.NIF))
+                {
+                    throw new InvalidOperationException("No existe un cliente con ese NIF.");
+                }
+
+                // Nota: no se incluye la fecha de alta porque solo se graba en el alta, no se puede modificar en la actualizacion
+                var parametros = new[]
+                {
+                    new SQLiteParameter("@NIF", cliente.NIF),
+                    new SQLiteParameter("@Nombre", cliente.Nombre),
+                    new SQLiteParameter("@Direccion", cliente.Direccion),
+                    new SQLiteParameter("@CodigoPostal", cliente.CodigoPostal),
+                    new SQLiteParameter("@Poblacion", cliente.Poblacion),
+                    new SQLiteParameter("@Provincia", cliente.Provincia),
+                    new SQLiteParameter("@Telefono", cliente.Telefono),
+                    new SQLiteParameter("@Email", cliente.Email),
+                    new SQLiteParameter("@PersonaContacto", cliente.PersonaContacto),
+                    new SQLiteParameter("@FechaBaja", cliente.FechaBaja != DateTime.MinValue ? (object)cliente.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@FormaPago", cliente.FormaPago),
+                    new SQLiteParameter("@IBAN", cliente.IBAN),
+                    new SQLiteParameter("@Observaciones", cliente.Observaciones)
+                };
+
+                // Ejecuta la actualizacion y devuelve las filas actualizadas
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarCliente, parametros);
+
+                if(filasActualizadas == 0)
+                {
+                    throw new InvalidOperationException("No se encontro el cliente para actualizar en la base de datos");
+                }
+                return true; // Indica que la inserción fue exitosa
+            }
+
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido actualizar el cliente: {ex.Message}", ex);
+            }
+
+        }
+
+        /// <summary>
+        /// Permite eliminar un cliente de la base de datos pasando el NIF
+        /// </summary>
+        /// <param name="nif"></param>
+        /// <returns>True si se ha podido eliminar</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public bool Eliminar(string nif)
+        {
+            // Verifica que exista el cliente
+            var cliente = ObtenerPorNIF(nif);
+            if(cliente == null)
+            {
+                throw new InvalidOperationException("El cliente no existe en la base de datos.");
+            }
+            try
+            {
+                // Ejecuta el borrado y devuelve las filas afectadas
+                var parametros = new[] { new SQLiteParameter("@NIF", cliente.NIF) };
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarCliente, parametros);
+
+                if(filasActualizadas == 0)
+                {
+                    throw new InvalidOperationException("No se encontro el cliente para borrar en la base de datos");
+                }
+                return true; // Indica que la eliminacion fue exitosa
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido eliminar el cliente: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Graba la fecha de baja de un cliente pasando el NIF
+        /// Si no se pasa fecha, se pone la fecha actual
+        /// </summary>
+        /// <param name="nif"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public bool Baja(string nif, DateTime? fechaBaja = null)
+        {
+            // Verifica que exista el cliente
+            var cliente = ObtenerPorNIF(nif);
+            if(cliente == null)
+            {
+                throw new InvalidOperationException("El cliente no existe en la base de datos.");
+            }
+
+            try
+            {
+                // Graba la fecha de baja en la propiedad del cliente
+                cliente.FechaBaja = fechaBaja ?? DateTime.Now;
+                return Actualizar(cliente);
+
+            }
+            catch(Exception ex)
+            {
+                throw new InvalidOperationException($"No se ha podido dar de baja el cliente: {ex.Message}", ex);
+            }
+        }
+
+        /// <summary>
+        /// Obtiene un cliente por su Id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Objeto clente con las propiedades que tenga</returns>
+        public Cliente ObtenerPorId(int id)
+        {
+            return GestorDatos.ObtenerDatosPorId<Cliente>("Clientes", id);
+        }
+
+        /// <summary>
+        /// Obtiene un cliente por su NIF
+        /// </summary>
+        /// <param name="nif"></param>
+        /// <returns>Objeto cliente con las propiedades que tenga</returns>
+        public Cliente ObtenerPorNIF(string nif)
+        {
+            return GestorDatos.ObtenerDatosPorNIF<Cliente>("Clientes", nif);
+        }
+
+        /// <summary>
+        /// Permite obtener una lista con todas los clientes (activas o no)
+        /// </summary>
+        /// <returns>Lista con los clientes y sus propiedades</returns>
+        public IEnumerable<Cliente> ListarTodos()
+        {
+            // Crea una lista de empresas
+            var listaClientes = new List<Cliente>();
+
+            // Carga una tabla con todas las empresas
+            DataTable tabla = ConsultarClientes();
+
+            // Va añadiendo cada cliente a la lista, utilizando el mapeador de filas
+            foreach(DataRow fila in tabla.Rows)
+            {
+                var cliente = Utilidades.MapeadorDatos.MapearFila<Cliente>(fila);
+                listaClientes.Add(cliente);
+            }
+
+            return listaClientes;
+        }
+
+        /// <summary>
+        /// Permite obtener una lista con todos los clientes activos
+        /// </summary>
+        /// <returns>Lista con los clientes y sus propiedades</returns>
+        public IEnumerable<Cliente> ListarClientesActivos()
+        {
+            // Crea una lista de clientes
+            var listaClientes = new List<Cliente>();
+
+            // Carga una tabla con todas las empresas
+            DataTable tabla = ConsultarActivas();
+
+            // Va añadiendo cada cliente a la lista, utilizando el mapeador de filas
+            foreach(DataRow fila in tabla.Rows)
+            {
+                var cliente = Utilidades.MapeadorDatos.MapearFila<Cliente>(fila);
+                listaClientes.Add(cliente);
+            }
+            return listaClientes;
+        }
+
+        /// <summary>
+        /// Metodo para validar que un cliente no sea nulo y que tenga NIF y nombre
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        private void ValidarCliente(Cliente cliente)
+        {
+            // Evita agregar clientes nulos
+            if(cliente == null)
+            {
+                throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
+            }
+
+            // Validar campos obligatorios
+            if(string.IsNullOrEmpty(cliente.Nombre))
+            {
+                throw new ArgumentException("El nombre del cliente es obligatorio.");
+            }
+
+            if(string.IsNullOrEmpty(cliente.NIF))
+            {
+                throw new ArgumentException("El NIF del cliente es obligatorio.");
+            }
+        }
+
+        private bool ClienteExiste(string nif)
+        {
+            string sqlClientes = @"SELECT COUNT(1) FROM Clientes WHERE NIF = @NIF";
+            using(var conexion = GestorDatos.AbrirConexion())
+            {
+                using(var comando = new SQLiteCommand(sqlClientes, conexion))
+                {
+                    comando.Parameters.AddWithValue("@NIF", nif);
+                    var resultado = Convert.ToInt32(comando.ExecuteScalar());
+                    return resultado > 0;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Devuelve una tabla con todos los clientes y sus datos
+        /// </summary>
+        /// <returns></returns>
+        public DataTable ConsultarClientes()
+        {
+            return GestorDatos.EjecutarConsulta(sqlSeleccionClientes);
+        }
+
+        /// <summary>
+        /// Devuelve una tabla con todos los clientes activos y sus datos
+        /// </summary>
+        /// <returns></returns>
+        public DataTable ConsultarActivas()
+        {
+            return GestorDatos.EjecutarConsulta(sqlSeleccionClientesActivos);
+        }
 
 
-        //public void AgregarCliente(Cliente cliente, Empresa empresa)
-        //{
-        //    // Evita agregar clientes nulos
-        //    if(cliente == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(cliente), "El cliente no puede ser nulo.");
-        //    }
-
-        //    // Evita agregar clientes si la empresa no existe
-        //    if(empresa == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(empresa), "La empresa no puede ser nula.");
-        //    }
-
-        //    // Evita agregar clientes sin NIF
-        //    if(string.IsNullOrWhiteSpace(cliente.NIF))
-        //    {
-        //        throw new ArgumentException("El NIF del cliente es obligatorio.", nameof(cliente));
-        //    }
-
-        //    // Evita agregar clientes sin nombre
-        //    if(string.IsNullOrWhiteSpace(cliente.Nombre))
-        //    {
-        //        throw new ArgumentException("El nombre del cliente es obligatorio.", nameof(cliente));
-        //    }
-
-        //    // Evita agregar clientes con NIF duplicados
-        //    if(_clientes.Any(c => c.NIF == cliente.NIF))
-        //    {
-        //        throw new InvalidOperationException("El cliente ya existe.");
-        //    }
-
-        //    //Asigna automáticamente un Id único
-        //    cliente.Id = _clientes.Any() ? _clientes.Max(c => c.Id) + 1 : 1;
-
-        //    //Asigna la fecha de alta
-        //    cliente.FechaAlta = DateTime.Now;
-        //    cliente.FechaBaja = null; // Asegura que la fecha de baja es nula al crear un nuevo cliente
-
-        //    // Agrega el cliente a la lista principal de clientes
-        //    _clientes.Add(cliente);
-
-        //    // Guarda los cambios en el archivo
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
-
-        //public void ModificarCliente(Cliente cliente)
-        //{
-        //    // Filtra la lista de clientes activos y lo busca por NIF
-        //    var clienteExistente = _clientes.FirstOrDefault(c => c.NIF == cliente.NIF && c.Activo);
-
-        //    // Contorla que el cliente no sea nulo
-        //    if(clienteExistente == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(cliente), "El cliente no existe o esta dado de baja.");
-        //    }
-
-        //    // Actualiza los datos del cliente
-        //    clienteExistente.Nombre = cliente.Nombre;
-        //    clienteExistente.Direccion = cliente.Direccion;
-        //    clienteExistente.CodigoPostal = cliente.CodigoPostal;
-        //    clienteExistente.Poblacion = cliente.Poblacion;
-        //    clienteExistente.Provincia = cliente.Provincia;
-        //    clienteExistente.Telefono = cliente.Telefono;
-        //    clienteExistente.Email = cliente.Email;
-        //    clienteExistente.PersonaContacto = cliente.PersonaContacto;
-        //    clienteExistente.FormaPago = cliente.FormaPago;
-        //    clienteExistente.IBAN = cliente.IBAN;
-        //    clienteExistente.Observaciones = cliente.Observaciones;
-
-        //    // Guarda los cambios en el archivo
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
-
-        //public void EliminarCliente(string nif, DateTime? fechaBaja = null)
-        //{
-        //    // Controla que el NIF exista en la lista
-        //    var cliente = _clientes.FirstOrDefault(c => c.NIF == nif && c.Activo);
-
-        //    // Controla que el cliente exista y no este dado de baja
-        //    if(cliente == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(nif), "El cliente no existe o ya esta dado de baja.");
-        //    }
-
-        //    //Establece la fecha de baja
-        //    cliente.FechaBaja = fechaBaja ?? DateTime.Now;
-
-        //    // Guarda los cambios en el archivo
-        //    GestorDatos.Instancia.GuardarDatos();
-        //}
-
-        //public IReadOnlyList<Cliente> ListarClientes(bool incluirInactivos = false)
-        //{
-        //    // Filtra la lista de clientes según el parámetro 'incluirActivos'
-        //    var clientesFiltrados = incluirInactivos
-        //        ? _clientes
-        //        : _clientes.Where(c => c.Activo).ToList();
-
-        //    // Devuelve una lista de clientes de solo lectura para evitar modificaciones externas
-        //    return clientesFiltrados.AsReadOnly();
-        //}
-
-        //public Cliente ObtenerClientePorNIF(string nif, bool incluirInactivos = false)
-        //{
-        //    //Filtra los clientes según el parámetro 'incluirInactivos'
-        //    var cliente = incluirInactivos
-        //        ? _clientes.FirstOrDefault(c => c.NIF == nif)
-        //        : _clientes.FirstOrDefault(c => c.NIF == nif && c.Activo);
-
-        //    // Controla que el cliente exista o no este dado de baja
-        //    if(cliente == null)
-        //    {
-        //        throw new ArgumentNullException(nameof(nif), "El cliente no existe o esta dado de baja.");
-        //    }
-
-        //    // Devuelve el cliente encontrado
-        //    return cliente;
-        //}
-
-        //public IReadOnlyList<Cliente> BuscarClientes(string criterio, bool incluirInactivos = false)
-        //{
-        //    // Filtra los clientes según el parámetro 'incluirInactivos'
-        //    var clientesFiltrados = incluirInactivos
-        //        ? _clientes
-        //        : _clientes.Where(c => c.Activo);
-
-        //    // Devuelve la lista de clientes que contengan en el nombre o NIF el criterio pasado (case insensitive)
-        //    return clientesFiltrados
-        //        .Where(c => c.Nombre.Contains(criterio, StringComparison.OrdinalIgnoreCase) ||
-        //                    c.NIF.Contains(criterio, StringComparison.OrdinalIgnoreCase))
-        //        .ToList().AsReadOnly();
-        //}
+        public enum FormasPago
+        {
+            Transferencia,
+            Domiciliacion,
+            Efectivo
+        }
     }
 }

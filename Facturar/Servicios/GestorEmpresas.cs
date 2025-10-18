@@ -27,7 +27,6 @@ namespace Facturar.Servicios
             "Telefono = @Telefono, " +
             "Email = @Email, " +
             "PersonaContacto = @PersonaContacto, " +
-            "FechaAlta = @FechaAlta, " +
             "FechaBaja = @FechaBaja, " +
             "SerieFactura = @SerieFactura, " +
             "NumeroFacturaActual = @NumeroFacturaActual " +
@@ -135,6 +134,7 @@ namespace Facturar.Servicios
                     throw new InvalidOperationException("No existe una empresa con ese NIF.");
                 }
 
+                // Nota: no se incluye la fecha de alta porque se graba en el alta y no se debe modificar al actualizar
                 var parametros = new[]
                 {
                     new SQLiteParameter("@NIF", empresa.NIF),
@@ -146,7 +146,6 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Telefono", empresa.Telefono),
                     new SQLiteParameter("@Email", empresa.Email),
                     new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
-                    new SQLiteParameter("@FechaAlta", empresa.FechaAlta),
                     new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
                     new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
                     new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
@@ -208,7 +207,7 @@ namespace Facturar.Servicios
         /// <param name="nif"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool BajaEmpresa(string nif, DateTime? fechaBaja = null)
+        public bool Baja(string nif, DateTime? fechaBaja = null)
         {
             // Verifica que exista la empresa
             var empresa = ObtenerPorNIF(nif);
@@ -236,9 +235,9 @@ namespace Facturar.Servicios
         /// </summary>
         /// <param name="id"></param>
         /// <returns>Objeto empresa con las propiedades que tenga</returns>
-        public Empresa ObtenerPorId(int _id)
+        public Empresa ObtenerPorId(int id)
         {
-            return GestorDatos.ObtenerDatosPorId<Empresa>("Empresas", _id);
+            return GestorDatos.ObtenerDatosPorId<Empresa>("Empresas", id);
         }
 
 
@@ -278,7 +277,7 @@ namespace Facturar.Servicios
         /// Permite obtener una lista con todas las empresas activas
         /// </summary>
         /// <returns>Lista con las empresas y sus propiedades</returns>
-        public IEnumerable<Empresa> ListarActivas()
+        public IEnumerable<Empresa> ListarEmpresasActivas()
         {
             // Crea una lista de empresas
             var listaEmpresas = new List<Empresa>();

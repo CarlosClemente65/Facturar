@@ -7,5 +7,7 @@ namespace Facturar.Interfaces
     {
         IEnumerable<Empresa> ListarLocalesEmpresa(bool activas = true);
 
+        IEnumerable<Empresa> ListarEmpresasActivas();
+
     }
 }
