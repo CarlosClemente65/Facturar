@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using Facturar.Entidades;
 using Facturar.Interfaces;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Servicios
 {
@@ -57,12 +58,8 @@ namespace Facturar.Servicios
                 // Valida que el cliente no sea nulo, y el NIF y nombre tengan contenido
                 ValidarCliente(cliente);
 
-                // Asigna la fecha de alta si no está establecida
-                if(cliente.FechaAlta == DateTime.MinValue)
-                {
-                    //Asigna la fecha de alta
-                    cliente.FechaAlta = DateTime.Now.Date;
-                }
+                //Asigna la fecha de alta
+                cliente.FechaAlta = Utiles.ValidarFecha(cliente.FechaAlta);
 
                 // Asigna la forma de pago por defecto si no está 
                 cliente.FormaPago = cliente.FormaPago ?? FormasPago.Transferencia.ToString();
@@ -315,11 +312,11 @@ namespace Facturar.Servicios
             string sqlClientes = "SELECT * " + "FROM Clientes "; ;
             string sqlClientesActivos = sqlClientes + " WHERE FechaBaja IS NULL";
             string sqlClientesInactivos = sqlClientes + " WHERE FechaBaja IS NOT NULL";
-            if (activos == true)
+            if(activos == true)
             {
                 return GestorDatos.EjecutarConsulta(sqlClientesActivos);
             }
-            else if (activos == false)
+            else if(activos == false)
             {
                 return GestorDatos.EjecutarConsulta(sqlClientesInactivos);
             }

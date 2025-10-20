@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -32,11 +33,16 @@ namespace Facturar.Utilidades
                     ProbarContratos(proceso);
                     break;
 
+                case Entidades.RevisionContratos:
+                    ProbarRevisiones(proceso);
+                    break;
+
                 case Entidades.BaseDatos:
                     break;
 
             }
         }
+
 
         private static void ProbarEmpresas(Procesos proceso)
         {
@@ -48,16 +54,29 @@ namespace Facturar.Utilidades
             switch(proceso)
             {
                 case Procesos.Alta:
-                    empresa.Nombre = "EMPRESA PRUEBAS DOS";
+                    empresa.Nombre = "EMPRESA PRUEBAS UNO";
                     empresa.NIF = "05100001G";
-                    empresa.Direccion = "Calle Mayor, 1";
+                    empresa.Direccion = "Calle pruebas uno, 1";
                     empresa.CodigoPostal = "02002";
                     empresa.Poblacion = "Albacete";
                     empresa.Provincia = "Albacete";
-                    empresa.Telefono = "666333222";
+                    empresa.Telefono = "666111111";
                     empresa.Email = "correo@correo.com";
-                    empresa.PersonaContacto = "Persona contacto";
+                    empresa.PersonaContacto = "Persona contacto uno";
                     empresa.SerieFactura = "A";
+
+                    resultado = gestor.Agregar(empresa);
+
+                    empresa.Nombre = "EMPRESA PRUEBAS DOS";
+                    empresa.NIF = "05196375P";
+                    empresa.Direccion = "Calle Pruebas dos, 1";
+                    empresa.CodigoPostal = "02002";
+                    empresa.Poblacion = "Albacete";
+                    empresa.Provincia = "Albacete";
+                    empresa.Telefono = "666222222";
+                    empresa.Email = "correo@correo.com";
+                    empresa.PersonaContacto = "Persona contacto dos";
+                    empresa.SerieFactura = "B";
 
                     resultado = gestor.Agregar(empresa);
 
@@ -84,10 +103,7 @@ namespace Facturar.Utilidades
 
 
                 case Procesos.Consulta:
-                    List<Empresa> ConsultaEmpresa = gestor.ListarTodos(false).ToList();
-                    break;
-
-                case Procesos.ConsultaActivos:
+                    List<Empresa> ConsultaEmpresa = gestor.ListarTodos().ToList();
                     List<Empresa> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
@@ -108,13 +124,27 @@ namespace Facturar.Utilidades
                 case Procesos.Alta:
                     cliente.Nombre = "PRIMER CLIENTE NOMBRE";
                     cliente.NIF = "05100001G";
-                    cliente.Direccion = "Calle Mayor, 1";
+                    cliente.Direccion = "Calle cliente primero, 1";
                     cliente.CodigoPostal = "02002";
                     cliente.Poblacion = "Albacete";
                     cliente.Provincia = "Albacete";
-                    cliente.Telefono = "666333222";
+                    cliente.Telefono = "666111111";
                     cliente.Email = "correo@correo.com";
-                    cliente.PersonaContacto = "Persona contacto";
+                    cliente.PersonaContacto = "Persona contacto primero";
+                    cliente.FormaPago = GestorClientes.FormasPago.Transferencia.ToString();
+                    cliente.Observaciones = "Observaciones del cliente 1";
+
+                    resultado = gestor.Agregar(cliente);
+
+                    cliente.Nombre = "SEGUNDO CLIENTE NOMBRE";
+                    cliente.NIF = "05126963X";
+                    cliente.Direccion = "Calle cliente segundo, 1";
+                    cliente.CodigoPostal = "02002";
+                    cliente.Poblacion = "Albacete";
+                    cliente.Provincia = "Albacete";
+                    cliente.Telefono = "666222222";
+                    cliente.Email = "correo@correo.com";
+                    cliente.PersonaContacto = "Persona contacto segundo";
                     cliente.FormaPago = GestorClientes.FormasPago.Transferencia.ToString();
                     cliente.Observaciones = "Observaciones del cliente 2";
 
@@ -123,7 +153,7 @@ namespace Facturar.Utilidades
                     break;
 
                 case Procesos.Baja:
-                    resultado = gestor.Baja("05100001G");
+                    resultado = gestor.Baja(nif: "05100001G");
                     break;
 
                 case Procesos.Modificacion:
@@ -145,15 +175,16 @@ namespace Facturar.Utilidades
 
 
                 case Procesos.Consulta:
-                    List<Cliente> ConsultaCliente = gestor.ListarTodos(false).ToList();
+                    List<Cliente> ClientesInactivos = gestor.ListarTodos(activos: false).ToList();
+                    List<Cliente> TodosClientes = gestor.ListarTodos().ToList();
+                    List<Cliente> ClientesActivos = gestor.ListarTodos(activos: true).ToList();
                     break;
 
                 case Procesos.ConsultaActivos:
-                    List<Cliente> ConsultaActivas = gestor.ListarTodos(true).ToList();
                     break;
 
                 case Procesos.Eliminacion:
-                    resultado = gestor.Eliminar("05100001G");
+                    resultado = gestor.Eliminar(nif: "05100001G");
                     break;
             }
         }
@@ -161,32 +192,45 @@ namespace Facturar.Utilidades
 
         private static void ProbarLocales(Procesos proceso)
         {
-            //var repo = GestorDatos.AbrirConexion();
             var local = new Local();
             var gestor = new GestorLocales();
             bool resultado;
             switch(proceso)
             {
                 case Procesos.Alta:
-                    local.EmpresaId = 1;
-                    local.Descripcion = "Local en poligono campollano";
+                    local.EmpresaId = 2;
+                    local.Descripcion = "Local empresa uno";
                     local.Direccion = "POLIGONO CAMPOLLANO C/B, 1";
                     local.CodigoPostal = "02007";
                     local.Poblacion = "ALBAETE";
                     local.Provincia = "ALBAETE";
-                    local.ImporteAlquiler = 725.45m;
+                    local.ImporteAlquiler = 800m;
+                    local.FechaAlta = Utiles.ValidarFecha("01/05/2025");
+
+                    resultado = gestor.Agregar(local);
+
+                    local.EmpresaId = 3;
+                    local.Descripcion = "Local empresa dos";
+                    local.Direccion = "POLIGONO CAMPOLLANO C/B, 1";
+                    local.CodigoPostal = "02007";
+                    local.Poblacion = "ALBAETE";
+                    local.Provincia = "ALBAETE";
+                    local.ImporteAlquiler = 900m;
 
                     resultado = gestor.Agregar(local);
 
                     break;
 
                 case Procesos.Baja:
-                    resultado = gestor.BajaLocal(2);
+                    resultado = gestor.BajaLocal(id: 2);
                     break;
 
                 case Procesos.Modificacion:
-                    var localNuevo = gestor.ObtenerPorId(1);
-                    localNuevo.EmpresaId = 2;
+                    var localNuevo = gestor.ObtenerPorId(id: 4);
+                    if(localNuevo != null)
+                    {
+                        localNuevo.EmpresaId = 2;
+                    }
 
                     resultado = gestor.Actualizar(localNuevo);
                     break;
@@ -197,11 +241,11 @@ namespace Facturar.Utilidades
                     break;
 
                 case Procesos.ConsultaActivos:
-                    List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(1, false).ToList();
+                    List<Local> ConsultaLocalesActivos = gestor.ListarLocalesPorEmpresa(empresaId: 1, false).ToList();
                     break;
 
                 case Procesos.Eliminacion:
-                    resultado = gestor.EliminarLocal(1);
+                    resultado = gestor.EliminarLocal(id: 1);
                     break;
             }
         }
@@ -257,10 +301,10 @@ namespace Facturar.Utilidades
                     List<Contrato> ConsultaContratosActivos = gestor.ListarTodos(true).ToList();
 
                     // Consulta contratos de un cliente
-                    List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente(clienteNif:"05100001G").ToList();
+                    List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente(clienteNif: "05100001G").ToList();
 
                     //Consulta los contratos de una empresa
-                    List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa(empresaNif:"05196375P").ToList();
+                    List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa(empresaNif: "05196375P").ToList();
 
                     // Consulta los contratos de un local
                     List<Contrato> ConsultaContratosLocal = gestor.ListarContratosPorLocal(2).ToList();
@@ -276,13 +320,44 @@ namespace Facturar.Utilidades
             }
         }
 
+
+        private static void ProbarRevisiones(Procesos proceso)
+        {
+            var revision = new RevisionContrato();
+            var gestor = new GestorContratos();
+            bool resultado;
+            switch(proceso)
+            {
+                case Procesos.Alta:
+                    revision.ContratoId = 1;
+                    revision.FechaRevision = Utiles.ConvertirFecha("16/05/2025").Value;
+                    revision.PrecioAnterior = 0;
+                    revision.PrecioRevisado = 750m;
+                    revision.Observaciones = "Revision contrato de pruebas";
+
+                    resultado = gestor.AgregarRevisionContrato(revision);
+
+                    revision.ContratoId = 1;
+                    revision.FechaRevision = Utiles.ConvertirFecha("16/05/2025").Value;
+                    revision.PrecioAnterior = 0;
+                    revision.PrecioRevisado = 750m;
+                    revision.Observaciones = "Revision contrato de pruebas";
+
+                    resultado = gestor.AgregarRevisionContrato(revision);
+
+                    break;
+
+            }
+        }
+
         public enum Entidades
         {
             Empresas = 0,
             Clientes = 1,
             Contratos = 2,
             Locales = 3,
-            BaseDatos = 4
+            BaseDatos = 4,
+            RevisionContratos = 5
         }
 
         public enum Procesos

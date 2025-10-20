@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using Facturar.Entidades;
 using Facturar.Interfaces;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 
 namespace Facturar.Servicios
@@ -57,12 +58,8 @@ namespace Facturar.Servicios
                 // Valida que la empresa no sea nula, y el NIF y nombre tengan contenido
                 ValidarEmpresa(empresa);
 
-                // Asigna la fecha de alta si no está establecida
-                if(empresa.FechaAlta == DateTime.MinValue)
-                {
-                    //Asigna la fecha de alta
-                    empresa.FechaAlta = DateTime.Now.Date;
-                }
+                //Asigna la fecha de alta
+                empresa.FechaAlta = Utiles.ValidarFecha(empresa.FechaAlta);
 
                 empresa.SerieFactura = empresa.SerieFactura ?? string.Empty; // Asigna una serie por defecto si no se proporciona
 
@@ -212,7 +209,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad de la empresa
-                empresa.FechaBaja = fechaBaja ?? DateTime.Now.Date;
+                empresa.FechaBaja = Utiles.ValidarFecha(fechaBaja);
                 return Actualizar(empresa);
 
             }
@@ -335,21 +332,15 @@ namespace Facturar.Servicios
         public DataTable ConsultarEmpresas(bool? activas)
         {
             string sqlEmpresas = "SELECT * " + "FROM Empresas ";
-            string sqlEmpresasActivas = sqlEmpresas + " WHERE FechaBaja IS NULL";
-            string sqlEmpresasInactivas = sqlEmpresas + " WHERE FechaBaja IS NOT NULL";
-            if(activas == true)
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activas.HasValue)
             {
-                return GestorDatos.EjecutarConsulta(sqlEmpresasActivas);
-            }
-            else if(activas == false)
-            {
-                return GestorDatos.EjecutarConsulta(sqlEmpresasInactivas);
-            }
-            else
-            {
-                return GestorDatos.EjecutarConsulta(sqlEmpresas);
+                sqlEmpresas += activas.Value
+                    ? " WHERE FechaBaja IS NULL"
+                    : " WHERE FechaBaja IS NOT NULL";
             }
 
+            return GestorDatos.EjecutarConsulta(sqlEmpresas);
         }
     }
 }

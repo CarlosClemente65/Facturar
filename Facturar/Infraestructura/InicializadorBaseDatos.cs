@@ -97,6 +97,7 @@ namespace Facturar.Infraestructura
                         PrecioAnterior DECIMAL NOT NULL,
                         PorcentajeRevision DECIMAL,
                         PrecioRevisado DECIMAL NOT NULL,
+                        Observaciones TEXT,
                         FOREIGN KEY(ContratoId) REFERENCES Contratos(Id)
                     );
                 ";

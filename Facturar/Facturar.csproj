@@ -98,6 +98,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Infraestructura\Excepciones.cs" />
     <Compile Include="Infraestructura\InicializadorBaseDatos.cs" />
     <Compile Include="Infraestructura\RepositorioDatos.cs" />
     <Compile Include="Interfaces\IRepositorioBase.cs" />

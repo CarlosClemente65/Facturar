@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Facturar.Servicios;
 
 namespace Facturar.Entidades
 {
@@ -43,6 +44,7 @@ namespace Facturar.Entidades
             {
                 throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.", nameof(FechaBaja));
             }
+
         }
     }
 

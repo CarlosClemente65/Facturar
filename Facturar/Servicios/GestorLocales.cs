@@ -66,7 +66,7 @@ namespace Facturar.Servicios
 
             catch(Exception ex)
             {
-                throw new ApplicationException("Error al agregar el cliente.", ex);
+                throw new ApplicationException("Error al agregar el local.", ex);
             }
         }
 
@@ -305,6 +305,14 @@ namespace Facturar.Servicios
             if(local == null)
             {
                 throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
+            }
+
+            // Valida que la empresa del exista
+            var gestor = new GestorEmpresas();
+            var empresa = local.EmpresaId;
+            if(gestor.ObtenerPorId(empresa) == null)
+            {
+                throw new ArgumentException("La empresa asignada al local no existe");
             }
 
             // Validar campos obligatorios

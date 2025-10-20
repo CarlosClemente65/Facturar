@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
@@ -42,14 +43,64 @@ namespace Facturar.Utilidades
 
         /// <summary>
         /// Asignacion de fechas validas
-        /// Si la fecha es nula o el valor por defecto, se devuelve la fehca actual
+        /// Si la fecha es nula o el valor por defecto, se devuelve la fecha actual
         /// </summary>
         /// <param name="fecha"></param>
         /// <returns>La fecha pasada o la fecha actual</returns>
-        public static DateTime ValidarFecha (DateTime? fecha)
+        public static DateTime ValidarFecha(DateTime? fecha)
         {
             return (fecha.HasValue && fecha.Value != default(DateTime)) ? fecha.Value : DateTime.Today;
         }
-        
+
+        public static DateTime ValidarFecha(string fecha)
+        {
+            if (DateTime.TryParseExact(fecha,"dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dt))
+            {
+                return dt;
+            }
+            return DateTime.Today;
+        }
+
+        // Permite registar un log de errores o de actividad
+        public static void RegistrarLog(string mensaje, tipoLog tipo)
+        {
+            string carpeta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+
+            // Crea la carpeta si no existe
+            if(!Directory.Exists(carpeta))
+            {
+                Directory.CreateDirectory(carpeta);
+            }
+
+            string ruta = string.Empty;
+
+            switch(tipo)
+            {
+                case tipoLog.Actividad:
+                    ruta = Path.Combine(carpeta, "logActividad.txt");
+                    break;
+
+                default:
+                    ruta = Path.Combine(carpeta, "logErrores.txt");
+                    break;
+            }
+
+            // Graba el mensaje en el registro de logs
+            StringBuilder texto = new StringBuilder();
+            int largoLinea = 50; // Largo de linea de separacion entre mensajes
+            texto.AppendLine(new string('_', largoLinea));
+            texto.AppendLine($"{DateTime.Now:yyyy/MM/dd HH:mm:ss} - {mensaje}\n");
+
+            // Graba la linea al final del fichero
+            File.AppendAllText(ruta, texto.ToString());
+        }
+
+
+        // Tipos de log permitidos
+        public enum tipoLog
+        {
+            Error = 1,
+            Actividad = 2
+        }
     }
 }
