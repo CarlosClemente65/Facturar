@@ -10,7 +10,7 @@ namespace Facturar.Entidades
     {
         //Configuracion para la emision de facturas
         public string SerieFactura { get; set; }
-        public int NumeroFacturaActual { get; set; }
+        public int NumeroFacturaActual { get; set; } = 0;
 
     }
 }

@@ -22,7 +22,7 @@ namespace Facturar.Infraestructura
                         FechaAlta DATETIME NOT NULL,
                         FechaBaja DATETIME,
                         SerieFactura TEXT,
-                        NumeroFacturaActual INTEGER NOT NULL
+                        NumeroFacturaActual INTEGER
                     );
                 ";
 
@@ -30,12 +30,12 @@ namespace Facturar.Infraestructura
                     CREATE TABLE IF NOT EXISTS Locales (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         EmpresaId INTEGER NOT NULL,
-                        Descripcion TEXT,
-                        Direccion TEXT NOT NULL,
+                        Descripcion TEXT NOT NULL,
+                        Direccion TEXT,
                         CodigoPostal TEXT,
                         Poblacion TEXT,
                         Provincia TEXT,
-                        ImporteAlquiler DECIMAL NOT NULL,
+                        ImporteAlquiler DECIMAL,
                         Observaciones TEXT,
                         FechaAlta DATETIME NOT NULL,
                         FechaBaja DATETIME,
@@ -95,7 +95,7 @@ namespace Facturar.Infraestructura
                         ContratoId INTEGER NOT NULL,
                         FechaRevision DATETIME NOT NULL,
                         PrecioAnterior DECIMAL NOT NULL,
-                        PorcentajeRevision DECIMAL NOT NULL,
+                        PorcentajeRevision DECIMAL,
                         PrecioRevisado DECIMAL NOT NULL,
                         FOREIGN KEY(ContratoId) REFERENCES Contratos(Id)
                     );

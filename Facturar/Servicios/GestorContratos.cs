@@ -4,6 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using Facturar.Entidades;
+using Facturar.Infraestructura;
 using Facturar.Interfaces;
 
 namespace Facturar.Servicios
@@ -30,7 +31,7 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@LocalId", contrato.LocalId),
                     new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
                     new SQLiteParameter("@FechaInicio", contrato.FechaInicio.Date),
-                    new SQLiteParameter("@FechaFin", contrato.FechaFin != DateTime.MinValue ? (object) contrato.FechaFin.Date: DBNull.Value),
+                    new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
                     new SQLiteParameter("@Observaciones", contrato.Observaciones)
                 };
 
@@ -68,7 +69,7 @@ namespace Facturar.Servicios
                 }
 
                 // Valida que la fecha de fin no sea anterior a la de inicio
-                if(contrato.FechaFin != DateTime.MinValue && contrato.FechaFin < contrato.FechaInicio)
+                if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date < contrato.FechaInicio.Date)
                 {
                     throw new ArgumentException("La fecha final no puede ser anterior a la de inicio.");
                 }
@@ -78,7 +79,7 @@ namespace Facturar.Servicios
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", contrato.Id),
-                    new SQLiteParameter("@FechaFin", contrato.FechaFin != DateTime.MinValue ? (object) contrato.FechaFin: DBNull.Value),
+                    new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
                     new SQLiteParameter("@Observaciones", contrato.Observaciones)
                 };
 
@@ -130,7 +131,7 @@ namespace Facturar.Servicios
             }
 
             //Evitar dar de baja un contrato ya dado de baja
-            if(contrato.FechaFin != DateTime.MinValue && contrato.FechaFin <= DateTime.Now.Date)
+            if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date <= DateTime.Today)
             {
                 throw new InvalidOperationException("El contrato ya está dado de baja.");
             }
@@ -138,9 +139,8 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha fin en el contrato 
-                contrato.FechaFin = fechaBaja ?? DateTime.Now.Date;
+                contrato.EstablecerFechaFin(fechaBaja ?? DateTime.Today);
                 return Actualizar(contrato);
-
             }
             catch(Exception ex)
             {
@@ -164,7 +164,7 @@ namespace Facturar.Servicios
         /// Permite eliminar un contrato de la base de datos
         /// </summary>
         /// <param name="contratoId"></param>
-        /// <returns></returns>
+        /// <returns>True si se ha podido eliminar el contrato</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool Eliminar(int contratoId)
         {
@@ -198,74 +198,164 @@ namespace Facturar.Servicios
         /// Obtiene todos los contratos, con opcion de filtrar por activos o inactivos
         /// </summary>
         /// <param name="activas"></param>
-        /// <returns></returns>
-        public IEnumerable<Contrato> ListarTodos(bool? activas = null)
+        /// <returns>Lista de contratos</returns>
+        public IEnumerable<Contrato> ListarTodos(bool? activos = null)
         {
-            // Crea una lista de contratos
+            // Sql de la consulta
+            string sql = "SELECT * FROM Contratos ";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value 
+                    ? " WHERE FechaFin IS NULL" 
+                    : " WHERE FechaFin IS NOT NULL";
+            }
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql);
+
+            // Crea una lista de contratos mapeando las propiedades en columnas
             var listaContratos = new List<Contrato>();
-
-            // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarContratos(activas);
-
-            // Va añadiendo cada contrato a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
             {
-                var contrato = Utilidades.MapeadorDatos.MapearFila<Contrato>(fila);
-                listaContratos.Add(contrato);
+                listaContratos.Add(Utilidades.MapeadorDatos.MapearFila<Contrato>(fila));
             }
 
             return listaContratos;
         }
 
         /// <summary>
-        /// Obtiene los contratos asociados a un cliente identificado por su NIF
+        /// Obtiene los contratos asociados a un cliente
         /// </summary>
         /// <param name="nif"></param>
         /// <param name="activos"></param>
-        /// <returns></returns>
-        public IEnumerable<Contrato> ListarContratosPorCliente(string nif, bool? activos = null)
+        /// <returns>Lista de contratos</returns>
+        public IEnumerable<Contrato> ListarContratosPorCliente(int? clienteId = null, string clienteNif = null, bool? activos = null)
         {
             // Obtiene el Id del cliente a partir del NIF
-            var gestorClientes = new GestorClientes();
-            var cliente = gestorClientes.ObtenerPorNIF(nif);
-            var clienteId = cliente?.Id;
+            if(clienteId == null && !string.IsNullOrWhiteSpace(clienteNif))
+            {
+                var gestorClientes = new GestorClientes();
+                var cliente = gestorClientes.ObtenerPorNIF(clienteNif);
+                if(cliente == null)
+                {
+                    return Enumerable.Empty<Contrato>();
+                }
+                clienteId = cliente.Id;
+            }
 
-            // Se utiliza el metodo general para listar contratos y luego se filtra por cliente
-            return ListarTodos(activos)
-                .Where(c => c.ClienteId == clienteId);
+            // Sql de consulta a la base de datos
+            string sql = "SELECT * FROM Contratos WHERE ClienteId = @ClienteId";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value 
+                    ? " AND FechaFin IS NULL" 
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            var parametros = new[]
+            {
+                new SQLiteParameter("@ClienteId", clienteId)
+            };
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            var listaContratos = new List<Contrato>();
+            foreach(DataRow fila in tabla.Rows)
+            {
+                listaContratos.Add(Utilidades.MapeadorDatos.MapearFila<Contrato>(fila));
+            }
+
+            return listaContratos;
+
         }
 
 
         /// <summary>
-        /// Obtiene los contratos asociados a una empresa identificado por su NIF
+        /// Obtiene los contratos asociados a una empresa
         /// </summary>
         /// <param name="nif"></param>
         /// <param name="activos"></param>
-        /// <returns></returns>
-        public IEnumerable<Contrato> ListarContratosPorEmpresa(string nif, bool? activos = null)
+        /// <returns>Lista de contratos</returns>
+        public IEnumerable<Contrato> ListarContratosPorEmpresa(int? empresaId = null, string empresaNif = null, bool? activos = null)
         {
             // Obtiene el Id de la empresa a partir del NIF
             var gestorEmpresas = new GestorEmpresas();
-            var empresa = gestorEmpresas.ObtenerPorNIF(nif);
-            var empresaId = empresa?.Id;
+            var empresa = gestorEmpresas.ObtenerPorNIF(empresaNif);
+            if(empresa == null)
+            {
+                return Enumerable.Empty<Contrato>();
+            }
 
-            // Se utiliza el metodo general para listar contratos y luego se filtra por empresa
-            return ListarTodos(activos)
-                .Where(c => c.EmpresaId == empresaId);
+            // Sql de consulta a la base de datos
+            string sql = "SELECT * FROM Contratos WHERE EmpresaId = @EmpresaId";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value 
+                    ? " AND FechaFin IS NULL" 
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            var parametros = new[]
+            {
+                new SQLiteParameter("@EmpresaId", empresa.Id)
+            };
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            var listaContratos = new List<Contrato>();
+            foreach(DataRow fila in tabla.Rows)
+            {
+                listaContratos.Add(Utilidades.MapeadorDatos.MapearFila<Contrato>(fila));
+            }
+            return listaContratos;
         }
 
 
         /// <summary>
-        /// Obtiene los contratos asociados a un local identificado por su Id
+        /// Obtiene los contratos asociados a un local
         /// </summary>
         /// <param name="localId"></param>
         /// <param name="activos"></param>
-        /// <returns></returns>
+        /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarContratosPorLocal(int localId, bool? activos = null)
         {
-            // Obtiene los contratos asociados al local indicado
-            return ListarTodos(activos)
-                .Where(c => c.LocalId == localId);
+            // Controla que el local existe
+            var gestorLocales = new GestorLocales();
+            var local = gestorLocales.ObtenerPorId(localId);
+            if(local == null)
+            {
+                return Enumerable.Empty<Contrato>();
+            }
+
+            // Sql de consulta a la base de datos
+            string sql = "SELECT * FROM Contratos WHERE LocalId = @LocalId";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value 
+                    ? " AND FechaFin IS NULL" 
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            var parametros = new[]
+            {
+                new SQLiteParameter("@LocalId", local.Id)
+            };
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            var listaContratos = new List<Contrato>();
+            foreach(DataRow fila in tabla.Rows)
+            {
+                listaContratos.Add(Utilidades.MapeadorDatos.MapearFila<Contrato>(fila));
+            }
+            return listaContratos;
         }
 
         /// <summary>
@@ -274,12 +364,37 @@ namespace Facturar.Servicios
         /// <param name="fechaInicio"></param>
         /// <param name="fechaFin"></param>
         /// <param name="activos"></param>
-        /// <returns></returns>
-        public IEnumerable<Contrato> ListarContratosPorFecha(DateTime fechaInicio, DateTime fechaFin, bool? activos = null)
+        /// <returns>Lista de contratos</returns>
+        public IEnumerable<Contrato> ListarContratosPorFecha(DateTime fechaDesde, DateTime fechaHasta, bool? activos = null)
         {
-            // Obtiene los contratos dentro del rango de fechas indicado
-            return ListarTodos(activos)
-                .Where(c => c.FechaInicio >= fechaInicio && c.FechaInicio <= fechaFin);
+            // Sql de consulta a la base de datos
+            string sql = "SELECT * FROM Contratos WHERE FechaInicio >= @fechaDesde AND FechaInicio <= @fechaHasta";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value 
+                    ? " AND FechaFin IS NULL" 
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            // Ordenar los contratros por fecha
+            sql += " ORDER BY FechaInicio DESC";
+
+            var parametros = new[]
+            {
+                new SQLiteParameter("@fechaDesde", fechaDesde),
+                new SQLiteParameter("@fechaHasta", fechaHasta)
+            };
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            var listaContratos = new List<Contrato>();
+            foreach(DataRow fila in tabla.Rows)
+            {
+                listaContratos.Add(Utilidades.MapeadorDatos.MapearFila<Contrato>(fila));
+            }
+            return listaContratos;
         }
 
 
@@ -287,13 +402,33 @@ namespace Facturar.Servicios
         /// Obtiene el contrato activo asociado a un local identificado por su Id
         /// </summary>
         /// <param name="localId"></param>
-        /// <returns></returns>
+        /// <returns>Objeto con el contrato activo</returns>
         public Contrato ObtenerContratoActivoPorLocal(int localId)
         {
-            // Nota: es similar a ListarContratosPorLocal pero devuelve solo el primero activo
-            return ListarContratosPorLocal(localId, activos: true).FirstOrDefault();
+            // Consulta a la base de datos
+            string sql = "SELECT * FROM Contratos WHERE LocalId = @LocalId AND FechaFin IS NULL LIMIT 1";
+            var parametros = new[]
+            {
+               new SQLiteParameter("@LocalId", localId)
+            };
+
+            // Almacena el resultado en una tabla
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+            if(tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            // Devuelve el resultado mapeado en la tabla.
+            return Utilidades.MapeadorDatos.MapearFila<Contrato>(tabla.Rows[0]);
         }
 
+        
+        /// <summary>
+        /// Obtiene el contrato identificado por su id
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns>Objeto con el contrato</returns>
         public Contrato ObtenerPorId(int id)
         {
             return GestorDatos.ObtenerDatosPorId<Contrato>("Contratos", id);
@@ -306,7 +441,7 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Metodo para validar que un contrato no sea nulo y que tenga empresa y local
+        /// Permite validar que al agregar un contrato no sea nulo y que tenga empresa y local
         /// </summary>
         /// <param name="cliente"></param>
         /// <exception cref="ArgumentNullException"></exception>
@@ -320,18 +455,18 @@ namespace Facturar.Servicios
             }
 
             // Validar que la empresa, el cliente y el local existan en la base de datos
-            var gestorClientes = new GestorClientes();
-            var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
-            if(clienteExistente == null)
-            {
-                throw new ArgumentException("El cliente especificado no existe.");
-            }
-
             var gestorEmpresas = new GestorEmpresas();
             var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
             if(empresaExistente == null)
             {
                 throw new ArgumentException("La empresa especificada no existe.");
+            }
+
+            var gestorClientes = new GestorClientes();
+            var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
+            if(clienteExistente == null)
+            {
+                throw new ArgumentException("El cliente especificado no existe.");
             }
 
             var gestorLocales = new GestorLocales();
@@ -341,43 +476,17 @@ namespace Facturar.Servicios
                 throw new ArgumentException("El local especificado no existe.");
             }
 
-            // Validar campos obligatorios
-            if(contrato.PrecioMensual <= 0)
-            {
-                throw new ArgumentException("El precio mensual debe ser mayor que cero.");
-            }
+            // Validar fechas contrato e importe
+            contrato.ValidarPropiedadesObjeto();
 
-            if(contrato.FechaInicio == DateTime.MinValue)
-            {
-                throw new ArgumentException("La fecha de inicio es obligatoria.");
-            }
-
-            // Comprueba que no hay un contrato activo
+            // Comprueba que no hay un contrato activo (solo puede haber un contrato activo)
             var contratoActivo = ObtenerContratoActivoPorLocal(contrato.LocalId);
             if(contratoActivo != null)
             {
-                throw new InvalidOperationException($"El local {contrato.LocalId} ya tiene un contrato activo (Id: {contratoActivo.Id}. Debe dar de baja el contrato anterior antes de crear uno nuevo");
+                throw new InvalidOperationException(
+                    $"El local {contrato.LocalId} ya tiene un contrato activo (Id: {contratoActivo.Id}). Debe dar de baja el contrato anterior antes de crear uno nuevo");
             }
 
-        }
-
-        public DataTable ConsultarContratos(bool? activos)
-        {
-            string sqlContratos = "SELECT * " + "FROM Contratos "; ;
-            string sqlContratosActivos = sqlContratos + " WHERE FechaFin IS NULL";
-            string sqlContratosInactivos = sqlContratos + " WHERE FechaFin IS NOT NULL";
-            if(activos == true)
-            {
-                return GestorDatos.EjecutarConsulta(sqlContratosActivos);
-            }
-            else if(activos == false)
-            {
-                return GestorDatos.EjecutarConsulta(sqlContratosInactivos);
-            }
-            else
-            {
-                return GestorDatos.EjecutarConsulta(sqlContratos);
-            }
         }
     }
 }

@@ -5,36 +5,14 @@ using System.Data.SQLite;
 using System.Linq;
 using Facturar.Entidades;
 using Facturar.Interfaces;
-using static Facturar.Servicios.GestorClientes;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
+
+
 
 namespace Facturar.Servicios
 {
     public class GestorLocales : IRepositorioLocales
     {
-        // Propiedades para comandos CRUD
-        private string sqlInsertarLocal =
-            "INSERT INTO Locales " +
-            "(EmpresaId, Descripcion, Direccion, CodigoPostal, Poblacion, Provincia, ImporteAlquiler, Observaciones, FechaAlta, FechaBaja) " +
-            "VALUES (@EmpresaId, @Descripcion, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @ImporteAlquiler, @Observaciones, @FechaAlta, @FechaBaja)";
-
-        private string sqlActualizarLocal =
-            "UPDATE Locales SET " +
-            "EmpresaId = @EmpresaId, " +
-            "Descripcion = @Descripcion, " +
-            "Direccion = @Direccion, " +
-            "CodigoPostal = @CodigoPostal, " +
-            "Poblacion = @Poblacion, " +
-            "Provincia = @Provincia, " +
-            "ImporteAlquiler = @ImporteAlquiler, " +
-            "Observaciones = @Observaciones, " +
-            "FechaBaja = @FechaBaja " +
-            "WHERE Id = @Id";
-
-        private string sqlEliminarLocal =
-            "DELETE " +
-            "FROM Locales " +
-            "WHERE Id = @Id";
-      
         //Constructor privado para evitar instanciación externa
         public GestorLocales()
         {
@@ -55,11 +33,7 @@ namespace Facturar.Servicios
                 ValidarLocal(local);
 
                 // Asigna la fecha de alta si no está establecida
-                if(local.FechaAlta == DateTime.MinValue)
-                {
-                    //Asigna la fecha de alta
-                    local.FechaAlta = DateTime.Now.Date;
-                }
+                local.FechaAlta = Utiles.ValidarFecha(local.FechaAlta);
 
                 // Inserta el nuevo local en la base de datos
                 var parametros = new[]
@@ -73,10 +47,14 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@ImporteAlquiler", local.ImporteAlquiler),
                     new SQLiteParameter("@Observaciones", local.Observaciones),
                     new SQLiteParameter("@FechaAlta", local.FechaAlta.Date),
-                    new SQLiteParameter("@FechaBaja", local.FechaBaja != DateTime.MinValue ? (object)local.FechaBaja: DBNull.Value)
+                    new SQLiteParameter("@FechaBaja", local.FechaBaja != default(DateTime) ? (object)local.FechaBaja: DBNull.Value)
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas insertadas
+                string sqlInsertarLocal = "INSERT INTO Locales " +
+                    "(EmpresaId, Descripcion, Direccion, CodigoPostal, Poblacion, Provincia, ImporteAlquiler, Observaciones, FechaAlta, FechaBaja) " +
+                    "VALUES (@EmpresaId, @Descripcion, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @ImporteAlquiler, @Observaciones, @FechaAlta, @FechaBaja)";
+
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarLocal, parametros));
 
                 if(filasInsertadas <= 0)
@@ -119,10 +97,22 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Provincia", local.Provincia),
                     new SQLiteParameter("@ImporteAlquiler", local.ImporteAlquiler),
                     new SQLiteParameter("@Observaciones", local.Observaciones),
-                    new SQLiteParameter("@FechaBaja", local.FechaBaja != DateTime.MinValue ? (object)local.FechaBaja: DBNull.Value)
+                    new SQLiteParameter("@FechaBaja", local.FechaBaja != default(DateTime) ? (object)local.FechaBaja: DBNull.Value)
                 };
 
                 // Ejecuta la actualizacion y devuelve las filas actualizadas
+                string sqlActualizarLocal = "UPDATE Locales SET " +
+                    "EmpresaId = @EmpresaId, " +
+                    "Descripcion = @Descripcion, " +
+                    "Direccion = @Direccion, " +
+                    "CodigoPostal = @CodigoPostal, " +
+                    "Poblacion = @Poblacion, " +
+                    "Provincia = @Provincia, " +
+                    "ImporteAlquiler = @ImporteAlquiler, " +
+                    "Observaciones = @Observaciones, " +
+                    "FechaBaja = @FechaBaja " +
+                    "WHERE Id = @Id";
+
                 int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarLocal, parametros);
 
                 if(filasActualizadas == 0)
@@ -157,7 +147,9 @@ namespace Facturar.Servicios
             try
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
+                string sqlEliminarLocal = "DELETE FROM Locales WHERE Id = @Id";
                 var parametros = new[] { new SQLiteParameter("@Id", local.Id) };
+
                 int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarLocal, parametros);
 
                 if(filasActualizadas == 0)
@@ -171,6 +163,7 @@ namespace Facturar.Servicios
                 throw new InvalidOperationException($"No se ha podido local el cliente: {ex.Message}", ex);
             }
         }
+
 
         // No se implementa este metodo porque la eliminacion se hace por Id
         public bool Eliminar(string nif)
@@ -198,7 +191,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad del local
-                local.FechaBaja = fechaBaja ?? DateTime.Now.Date;
+                local.FechaBaja = Utiles.ValidarFecha(fechaBaja); // Si la fecha es nula se establece la fecha actual
                 return Actualizar(local);
             }
             catch(Exception ex)
@@ -214,14 +207,16 @@ namespace Facturar.Servicios
             throw new NotImplementedException();
         }
 
-
+        /// <summary>
+        /// Obtiene los locales de una empresa segun el parametro 'activos'
+        /// </summary>
+        /// <param name="empresaId"></param>
+        /// <param name="activos"></param>
+        /// <returns>Lista con los locales de la emrpesa</returns>
         public IEnumerable<Local> ListarLocalesPorEmpresa(int empresaId, bool? activos = null)
         {
             // Crea una lista de locales vacia
             var listaLocales = new List<Local>();
-
-            // Carga una tabla con todos los locales de la empresa segun el paremetro 'activos'
-            DataTable tabla = null;
 
             // Asigna el parametro de empresaId a las consultas
             var parametros = new[]
@@ -229,7 +224,18 @@ namespace Facturar.Servicios
                 new SQLiteParameter("@EmpresaId", empresaId)
             };
 
-            tabla = ConsultarLocalesEmpresa(activos, parametros);
+            string sql = "SELECT * FROM Locales WHERE EmpresaId = @EmpresaId";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value
+                    ? " AND FechaBaja IS NULL"
+                    : " AND FechaBaja IS NOT NULL";
+            }
+
+            // Carga una tabla con todos los locales
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
 
             // Va añadiendo cada local a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -241,13 +247,29 @@ namespace Facturar.Servicios
             return listaLocales;
         }
 
+
+        /// <summary>
+        /// Obtiene todos los locales segun el parametro 'activos'
+        /// </summary>
+        /// <param name="activos"></param>
+        /// <returns>Lista con los locales</returns>
         public IEnumerable<Local> ListarTodos(bool? activos = null)
         {
             // Crea una lista de locales vacia
             var listaLocales = new List<Local>();
 
+            string sql = "SELECT * FROM Locales ";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sql += activos.Value
+                    ? " WHERE FechaBaja IS NULL"
+                    : " WHERE FechaBaja IS NOT NULL";
+            }
+
             // Carga una tabla con todos los locales
-            DataTable tabla = ConsultarTotalLocales(activos);
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql);
 
             // Va añadiendo cada local a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -256,75 +278,7 @@ namespace Facturar.Servicios
                 listaLocales.Add(local);
             }
 
-            return listaLocales; ;
-        }
-
-
-        /// <summary>
-        /// Devuelve una tabla con todos los locales de una empresa segun el parametro 'activos'
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarLocalesEmpresa(bool? activos, params SQLiteParameter[] pametros)
-        {
-            string sqlLocales = "SELECT * FROM Locales WHERE EmpresaId = @EmpresaId";
-            string sqlLocalesActivos = sqlLocales + " AND FechaBaja IS NULL ";
-            string sqlLocalesInactivos = sqlLocales + " AND FechaBaja IS NOT NULL ";
-            if(activos == true)
-            {
-                return GestorDatos.EjecutarConsulta(sqlLocalesActivos, pametros);
-            }
-            else if(activos == false)
-            {
-                return GestorDatos.EjecutarConsulta(sqlLocalesInactivos, pametros);
-            }
-            else
-            {
-                return GestorDatos.EjecutarConsulta(sqlLocales, pametros);
-            }
-        }
-
-        /// <summary>
-        /// Devuelve una tabla con todos los locales
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarTotalLocales(bool? activos)
-        {
-            string sqlLocales = "SELECT * FROM Locales "; ;
-            string sqlocalesActivos = sqlLocales + " WHERE FechaBaja IS NULL ";
-            string sqloLocalesInactivos = sqlLocales + " WHERE FechaBaja IS NOT NULL ";
-            if(activos == true)
-            {
-                return GestorDatos.EjecutarConsulta(sqlocalesActivos);
-            }
-            else if(activos == false)
-            {
-                return GestorDatos.EjecutarConsulta(sqloLocalesInactivos);
-            }
-            else
-            {
-                return GestorDatos.EjecutarConsulta(sqlLocales);
-            }
-        }
-
-
-        private void ValidarLocal(Local local)
-        {
-            // Evita agregar clientes nulos
-            if(local == null)
-            {
-                throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
-            }
-
-            // Validar campos obligatorios
-            if(local.EmpresaId == 0)
-            {
-                throw new ArgumentException("El codigo de empresa es obligatorio.");
-            }
-
-            if(string.IsNullOrEmpty(local.Direccion))
-            {
-                throw new ArgumentException("La direccion del local es obligatorio.");
-            }
+            return listaLocales;
         }
 
 
@@ -332,7 +286,7 @@ namespace Facturar.Servicios
         /// Obtiene un local por su Id
         /// </summary>
         /// <param name="id"></param>
-        /// <returns>Objeto local con las propiedades que tenga</returns>
+        /// <returns>Objeto local con sus propiedades</returns>
         public Local ObtenerPorId(int id)
         {
             return GestorDatos.ObtenerDatosPorId<Local>("Locales", id);
@@ -345,5 +299,27 @@ namespace Facturar.Servicios
             throw new NotImplementedException();
         }
 
+        private void ValidarLocal(Local local)
+        {
+            // Evita agregar locales nulos
+            if(local == null)
+            {
+                throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
+            }
+
+            // Validar campos obligatorios
+            if(local.EmpresaId == 0)
+            {
+                throw new ArgumentException("El codigo de empresa es obligatorio.");
+            }
+
+            if(string.IsNullOrEmpty(local.Descripcion))
+            {
+                throw new ArgumentException("La descripcion del local es obligatoria.");
+            }
+
+            // Valida las propiedades del Local
+            local.ValidarPropiedadesObjeto();
+        }
     }
 }

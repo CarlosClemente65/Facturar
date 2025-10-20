@@ -219,7 +219,7 @@ namespace Facturar.Utilidades
                     contrato.ClienteId = 4;
                     contrato.LocalId = 2;
                     contrato.PrecioMensual = 755.22m;
-                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025");
+                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025").Value;
                     contrato.Observaciones = "Observaciones contrato 1";
 
                     resultado = gestor.Agregar(contrato);
@@ -228,7 +228,7 @@ namespace Facturar.Utilidades
                     contrato.ClienteId = 4;
                     contrato.LocalId = 3;
                     contrato.PrecioMensual = 755.22m;
-                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025");
+                    contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025").Value;
                     contrato.Observaciones = "Observaciones contrato 2";
 
                     resultado = gestor.Agregar(contrato);
@@ -257,16 +257,16 @@ namespace Facturar.Utilidades
                     List<Contrato> ConsultaContratosActivos = gestor.ListarTodos(true).ToList();
 
                     // Consulta contratos de un cliente
-                    List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente("05100001G").ToList();
+                    List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente(clienteNif:"05100001G").ToList();
 
                     //Consulta los contratos de una empresa
-                    List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa("05196375P").ToList();
+                    List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa(empresaNif:"05196375P").ToList();
 
                     // Consulta los contratos de un local
                     List<Contrato> ConsultaContratosLocal = gestor.ListarContratosPorLocal(2).ToList();
 
                     //Consulta contratos por fecha
-                    List<Contrato> ConsultaContratosFecha = gestor.ListarContratosPorFecha(Utiles.ConvertirFecha("01/05/2025"), Utiles.ConvertirFecha("01/05/2025")).ToList();
+                    List<Contrato> ConsultaContratosFecha = gestor.ListarContratosPorFecha(Utiles.ConvertirFecha("01/05/2025").Value, Utiles.ConvertirFecha("01/05/2025").Value).ToList();
 
                     break;
 
