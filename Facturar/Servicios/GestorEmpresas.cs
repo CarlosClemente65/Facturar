@@ -11,34 +11,6 @@ namespace Facturar.Servicios
 {
     public class GestorEmpresas : IRepositorioEmpresas
     {
-        // Propiedades para comandos CRUD
-        private string sqlInsertarEmpresa =
-            "INSERT INTO Empresas " +
-            "(NIF, Nombre, Direccion, CodigoPostal, Poblacion, Provincia, Telefono, Email, PersonaContacto, FechaAlta, FechaBaja, SerieFactura, NumeroFacturaActual) " +
-            "VALUES (@NIF, @Nombre, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @Telefono, @Email, @PersonaContacto, @FechaAlta, @FechaBaja, @SerieFactura, @NumeroFacturaActual)";
-
-        private string sqlActualizarEmpresa =
-            "UPDATE Empresas SET " +
-            "NIF = @NIF, " +
-            "Nombre = @Nombre, " +
-            "Direccion = @Direccion, " +
-            "CodigoPostal = @CodigoPostal, " +
-            "Poblacion =@Poblacion, " +
-            "Provincia = @Provincia, " +
-            "Telefono = @Telefono, " +
-            "Email = @Email, " +
-            "PersonaContacto = @PersonaContacto, " +
-            "FechaBaja = @FechaBaja, " +
-            "SerieFactura = @SerieFactura, " +
-            "NumeroFacturaActual = @NumeroFacturaActual " +
-            "WHERE NIF = @NIF";
-
-        private string sqlEliminarEmpresa =
-            "DELETE " +
-            "FROM Empresas " +
-            "WHERE NIF = @NIF";
-
-
         //Constructor privado para evitar instanciación externa
         public GestorEmpresas()
         {
@@ -61,8 +33,6 @@ namespace Facturar.Servicios
                 //Asigna la fecha de alta
                 empresa.FechaAlta = Utiles.ValidarFecha(empresa.FechaAlta);
 
-                empresa.SerieFactura = empresa.SerieFactura ?? string.Empty; // Asigna una serie por defecto si no se proporciona
-
                 // Verifica que no exista ya una empresa con el mismo NIF
                 if(EmpresaExiste(empresa.NIF))
                 {
@@ -82,12 +52,16 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Email", empresa.Email),
                     new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
                     new SQLiteParameter("@FechaAlta", empresa.FechaAlta.Date),
-                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja.HasValue ? (object)empresa.FechaBaja.Value.Date: DBNull.Value),
                     new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
                     new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas insertadas
+                string sqlInsertarEmpresa = "INSERT INTO Empresas " +
+                    "(NIF, Nombre, Direccion, CodigoPostal, Poblacion, Provincia, Telefono, Email, PersonaContacto, FechaAlta, FechaBaja, SerieFactura, NumeroFacturaActual) " +
+                    "VALUES (@NIF, @Nombre, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @Telefono, @Email, @PersonaContacto, @FechaAlta, @FechaBaja, @SerieFactura, @NumeroFacturaActual)";
+
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarEmpresa, parametros));
 
                 if(filasInsertadas <= 0)
@@ -99,7 +73,7 @@ namespace Facturar.Servicios
 
             catch(Exception ex)
             {
-                throw new ApplicationException("Error al agregar la empresa.", ex);
+                throw new ApplicationException($"Error al agregar la empresa: {ex.Message}", ex);
             }
         }
 
@@ -124,6 +98,11 @@ namespace Facturar.Servicios
                     throw new InvalidOperationException("No existe una empresa con ese NIF.");
                 }
 
+                if(empresa.Activo)
+                {
+                    throw new InvalidOperationException("La empresa no esta activa");
+                }
+
                 // Nota: no se incluye la fecha de alta porque se graba en el alta y no se debe modificar al actualizar
                 var parametros = new[]
                 {
@@ -136,13 +115,16 @@ namespace Facturar.Servicios
                     new SQLiteParameter("@Telefono", empresa.Telefono),
                     new SQLiteParameter("@Email", empresa.Email),
                     new SQLiteParameter("@PersonaContacto", empresa.PersonaContacto),
-                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja != DateTime.MinValue ? (object)empresa.FechaBaja: DBNull.Value),
+                    new SQLiteParameter("@FechaBaja", empresa.FechaBaja.HasValue ? (object)empresa.FechaBaja.Value.Date: DBNull.Value),
                     new SQLiteParameter("@SerieFactura", empresa.SerieFactura),
                     new SQLiteParameter("@NumeroFacturaActual", empresa.NumeroFacturaActual)
                 };
 
                 // Ejecuta la actualizacion y devuelve las filas actualizadas
-                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarEmpresa, parametros);
+                string sqlActualizar = "UPDATE Empresas SET " +
+                    "NIF = @NIF, Nombre = @Nombre, Direccion = @Direccion, CodigoPostal = @CodigoPostal, Poblacion =@Poblacion, Provincia = @Provincia, Telefono = @Telefono, Email = @Email, PersonaContacto = @PersonaContacto, FechaBaja = @FechaBaja, SerieFactura = @SerieFactura, NumeroFacturaActual = @NumeroFacturaActual " +
+                    "WHERE NIF = @NIF";
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizar, parametros);
 
                 if(filasActualizadas == 0)
                 {
@@ -176,7 +158,9 @@ namespace Facturar.Servicios
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
                 var parametros = new[] { new SQLiteParameter("@NIF", empresa.NIF) };
-                int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarEmpresa, parametros);
+
+                string sqlEliminar = "DELETE FROM Empresas WHERE NIF = @NIF";
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminar, parametros);
 
                 if(filasActualizadas == 0)
                 {
@@ -211,7 +195,6 @@ namespace Facturar.Servicios
                 // Graba la fecha de baja en la propiedad de la empresa
                 empresa.FechaBaja = Utiles.ValidarFecha(fechaBaja);
                 return Actualizar(empresa);
-
             }
             catch(Exception ex)
             {
@@ -250,8 +233,17 @@ namespace Facturar.Servicios
             // Crea una lista de empresas
             var listaEmpresas = new List<Empresa>();
 
+            string sqlEmpresas = "SELECT * " + "FROM Empresas ";
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activas.HasValue)
+            {
+                sqlEmpresas += activas.Value
+                    ? " WHERE FechaBaja IS NULL"
+                    : " WHERE FechaBaja IS NOT NULL";
+            }
+
             // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarEmpresas(activas);
+            DataTable tabla = GestorDatos.EjecutarConsulta(sqlEmpresas);
 
             // Va añadiendo cada empresa a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -260,6 +252,21 @@ namespace Facturar.Servicios
                 listaEmpresas.Add(empresa);
             }
             return listaEmpresas;
+        }
+
+        public DataTable ConsultaLocalesEmpresa(string nif, bool? activas = true)
+        {
+            // Asigna parametros y consulta SQL según si se quieren locales activos o todos
+            string sql = @"SELECT * FROM Empresas";
+            var parametros = new[] { new SQLiteParameter("@NIF", nif) };
+            if(activas.HasValue)
+            {
+                sql += activas.Value
+                    ? " WHERE FechaBaja IS NULL"
+                    : " WHERE FechaBaja IS NOT NULL";
+            }
+
+            return GestorDatos.EjecutarConsulta(sql, parametros);
         }
 
 
@@ -306,41 +313,6 @@ namespace Facturar.Servicios
             {
                 throw new ArgumentException("El NIF de la empresa es obligatorio.");
             }
-        }
-
-
-        public DataTable ConsultaLocalesEmpresa(string nif, bool activas = true)
-        {
-            // Asigna parametros y consulta SQL según si se quieren locales activos o todos
-            string sql = string.Empty;
-            var parametros = new[] { new SQLiteParameter("@NIF", nif) };
-            if(activas)
-            {
-                sql = @"SELECT * FROM Empresas WHERE NIF = @NIF AND FechaBaja IS NULL";
-            }
-            else
-            {
-                sql = @"SELECT * FROM Empresas WHERE NIF = @NIF";
-            }
-            return GestorDatos.EjecutarConsulta(sql, parametros);
-        }
-
-        /// <summary>
-        /// Devuelve una tabla con todas las empresas y sus datos
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarEmpresas(bool? activas)
-        {
-            string sqlEmpresas = "SELECT * " + "FROM Empresas ";
-            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
-            if(activas.HasValue)
-            {
-                sqlEmpresas += activas.Value
-                    ? " WHERE FechaBaja IS NULL"
-                    : " WHERE FechaBaja IS NOT NULL";
-            }
-
-            return GestorDatos.EjecutarConsulta(sqlEmpresas);
         }
     }
 }

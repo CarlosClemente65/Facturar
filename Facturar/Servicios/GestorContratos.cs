@@ -69,10 +69,16 @@ namespace Facturar.Servicios
                     throw new ArgumentException("El ID del contrato es obligatorio para la actualización.");
                 }
 
-                // Valida que la fecha de fin no sea anterior a la de inicio
+                // Chequea si el contrato esta activo
+                if(!contrato.Activo)
+                {
+                    throw new InvalidOperationException("El contrato no esta activo. No se puede modificar");
+                }
+
+                // Validacion de la fecha de baja para que no sea anterior a la de inicio
                 if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date < contrato.FechaInicio.Date)
                 {
-                    throw new ArgumentException("La fecha final no puede ser anterior a la de inicio.");
+                    throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.", nameof(contrato.FechaFin));
                 }
 
                 // Inserta el nuevo contrato en la base de datos
@@ -132,7 +138,7 @@ namespace Facturar.Servicios
             }
 
             //Evitar dar de baja un contrato ya dado de baja
-            if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date <= DateTime.Today)
+            if(!contrato.Activo)
             {
                 throw new InvalidOperationException("El contrato ya está dado de baja.");
             }
@@ -201,18 +207,18 @@ namespace Facturar.Servicios
             var contrato = ObtenerPorId (nuevaRevision.ContratoId);
             if (contrato == null)
             {
-                throw new InvalidOperationException("Contrato no encontrado");
+                throw new InvalidOperationException("El contrato no existe en la base de datos");
             }
 
             if (!contrato.Activo)
             {
-                throw new InvalidOperationException("El contrato no esta activo");
+                throw new InvalidOperationException("El contrato no esta activo. No se puede agregar una revision");
             }
 
             // Valida los campos de la clase
             nuevaRevision.ValidarPropiedadesRevision();
 
-            // Valida que la fecha de revision no sea anteior a la ultima revision del contrato
+            // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
             DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.ContratoId);
 
             if (ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
@@ -267,10 +273,61 @@ namespace Facturar.Servicios
             }
         }
 
+
+        /// <summary>
+        /// Permite validar que al agregar un contrato no sea nulo y que tenga empresa y local
+        /// </summary>
+        /// <param name="cliente"></param>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentException"></exception>
+        private void ValidarContrato(Contrato contrato)
+        {
+            // Evita agregar contratos nulos
+            if(contrato == null)
+            {
+                throw new ArgumentNullException(nameof(contrato), "El contrato no puede ser nulo.");
+            }
+
+            // Validar que la empresa, el cliente y el local existan en la base de datos
+            var gestorEmpresas = new GestorEmpresas();
+            var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
+            if(empresaExistente == null)
+            {
+                throw new ArgumentException("La empresa especificada no existe.");
+            }
+
+            var gestorClientes = new GestorClientes();
+            var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
+            if(clienteExistente == null)
+            {
+                throw new ArgumentException("El cliente especificado no existe.");
+            }
+
+            var gestorLocales = new GestorLocales();
+            var localExistente = gestorLocales.ObtenerPorId(contrato.LocalId);
+            if(localExistente == null)
+            {
+                throw new ArgumentException("El local especificado no existe.");
+            }
+
+            // Validar fechas contrato e importe
+            contrato.ValidarPropiedadesContrato();
+
+            // Comprueba que no hay un contrato activo (solo puede haber un contrato activo)
+            var contratoActivo = ObtenerContratoActivoPorLocal(contrato.LocalId);
+            if(contratoActivo != null)
+            {
+                throw new InvalidOperationException(
+                    $"El local {contrato.LocalId} ya tiene un contrato activo (Id: {contratoActivo.Id}). Debe dar de baja el contrato anterior antes de crear uno nuevo");
+            }
+
+        }
+
+
         /// <summary>
         /// Obtiene todos los contratos, con opcion de filtrar por activos o inactivos
         /// </summary>
-        /// <param name="activas"></param>
+        /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarTodos(bool? activos = null)
         {
@@ -300,7 +357,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a un cliente
         /// </summary>
-        /// <param name="nif"></param>
+        /// <param name="clienteNif"></param>
+        /// <param name="clienteId"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarContratosPorCliente(int? clienteId = null, string clienteNif = null, bool? activos = null)
@@ -349,7 +407,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a una empresa
         /// </summary>
-        /// <param name="nif"></param>
+        /// <param name="empresaId"></param>
+        /// <param name="empresaNif"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarContratosPorEmpresa(int? empresaId = null, string empresaNif = null, bool? activos = null)
@@ -434,8 +493,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos dentro de un rango de fechas
         /// </summary>
-        /// <param name="fechaInicio"></param>
-        /// <param name="fechaFin"></param>
+        /// <param name="fechaDesde"></param>
+        /// <param name="fechaHasta"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarContratosPorFecha(DateTime fechaDesde, DateTime fechaHasta, bool? activos = null)
@@ -469,6 +528,41 @@ namespace Facturar.Servicios
             }
             return listaContratos;
         }
+
+        /// <summary>
+        /// Obtiene una relacion de las revisiones de un contrato
+        /// </summary>
+        /// <param name="contratoId"></param>
+        /// <returns></returns>
+        public IEnumerable<RevisionContrato> ListarRevisionesContrato(int contratoId)
+        {
+            var contrato = ObtenerPorId(contratoId);
+            if (contrato == null)
+            {
+                throw new InvalidOperationException("El contrato pasado no existe en la base de datos");
+            }
+            // Sql de consulta a la base de datos
+            string sql = "SELECT * FROM RevisionesContrato WHERE ContratoId = @ContratoId";
+
+            // Ordenar los contratros por fecha
+            sql += " ORDER BY FechaRevision DESC";
+
+            var parametros = new[]
+            {
+                new SQLiteParameter("@ContratoId", contrato.Id)
+            };
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            var listaRevisiones = new List<RevisionContrato>();
+            foreach(DataRow fila in tabla.Rows)
+            {
+                listaRevisiones.Add(Utilidades.MapeadorDatos.MapearFila<RevisionContrato>(fila));
+            }
+
+            return listaRevisiones;
+        }
+
 
 
         /// <summary>
@@ -511,55 +605,6 @@ namespace Facturar.Servicios
         public Contrato ObtenerPorNIF(string nif)
         {
             throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Permite validar que al agregar un contrato no sea nulo y que tenga empresa y local
-        /// </summary>
-        /// <param name="cliente"></param>
-        /// <exception cref="ArgumentNullException"></exception>
-        /// <exception cref="ArgumentException"></exception>
-        private void ValidarContrato(Contrato contrato)
-        {
-            // Evita agregar contratos nulos
-            if(contrato == null)
-            {
-                throw new ArgumentNullException(nameof(contrato), "El contrato no puede ser nulo.");
-            }
-
-            // Validar que la empresa, el cliente y el local existan en la base de datos
-            var gestorEmpresas = new GestorEmpresas();
-            var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
-            if(empresaExistente == null)
-            {
-                throw new ArgumentException("La empresa especificada no existe.");
-            }
-
-            var gestorClientes = new GestorClientes();
-            var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
-            if(clienteExistente == null)
-            {
-                throw new ArgumentException("El cliente especificado no existe.");
-            }
-
-            var gestorLocales = new GestorLocales();
-            var localExistente = gestorLocales.ObtenerPorId(contrato.LocalId);
-            if(localExistente == null)
-            {
-                throw new ArgumentException("El local especificado no existe.");
-            }
-
-            // Validar fechas contrato e importe
-            contrato.ValidarPropiedadesContrato();
-
-            // Comprueba que no hay un contrato activo (solo puede haber un contrato activo)
-            var contratoActivo = ObtenerContratoActivoPorLocal(contrato.LocalId);
-            if(contratoActivo != null)
-            {
-                throw new InvalidOperationException(
-                    $"El local {contrato.LocalId} ya tiene un contrato activo (Id: {contratoActivo.Id}). Debe dar de baja el contrato anterior antes de crear uno nuevo");
-            }
-
         }
 
 
