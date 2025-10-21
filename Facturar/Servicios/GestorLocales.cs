@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Linq;
 using Facturar.Entidades;
 using Facturar.Interfaces;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
@@ -59,14 +58,14 @@ namespace Facturar.Servicios
 
                 if(filasInsertadas <= 0)
                 {
-                    throw new InvalidOperationException("No se pudo insertar el local en la base de datos");
+                    throw new InvalidOperationException("No se ha podido insertar el local en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new ApplicationException("Error al agregar el local.", ex);
+                throw new ApplicationException($"Error al agregar el local a la base de datos: {ex.Message}", ex);
             }
         }
 
@@ -117,14 +116,14 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro el local para actualizar en la base de datos");
+                    throw new InvalidOperationException("No se ha podido actualizar el local en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido actualizar el local: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al actualizar el local en la base de datos: {ex.Message}", ex);
             }
 
         }
@@ -154,13 +153,13 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro el local para borrar en la base de datos");
+                    throw new InvalidOperationException("No se ha podido eliminar el local en la base de datos");
                 }
                 return true; // Indica que la eliminacion fue exitosa
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido local el cliente: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al eliminar el local: {ex.Message}", ex);
             }
         }
 
@@ -196,7 +195,7 @@ namespace Facturar.Servicios
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido dar de baja el local: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al grabar la baja del local en la base de datos: {ex.Message}", ex);
             }
         }
 
@@ -215,10 +214,10 @@ namespace Facturar.Servicios
         /// <returns>Lista con los locales de la emrpesa</returns>
         public IEnumerable<Local> ListarLocalesPorEmpresa(int empresaId, bool? activos = null)
         {
-            // Crea una lista de locales vacia
+            // Crea una lista de locales
             var listaLocales = new List<Local>();
 
-            // Asigna el parametro de empresaId a las consultas
+            // Prepara la consulta sql
             var parametros = new[]
             {
                 new SQLiteParameter("@EmpresaId", empresaId)
@@ -237,7 +236,7 @@ namespace Facturar.Servicios
             // Carga una tabla con todos los locales
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
 
-            // Va añadiendo cada local a la lista, utilizando el mapeador de filas
+            // Mapea la tabla de locales a la lista de locales a devolver
             foreach(DataRow fila in tabla.Rows)
             {
                 var local = Utilidades.MapeadorDatos.MapearFila<Local>(fila);

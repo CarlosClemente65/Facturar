@@ -4,9 +4,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using Facturar.Entidades;
-using Facturar.Infraestructura;
 using Facturar.Interfaces;
-using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Servicios
 {
@@ -47,7 +45,7 @@ namespace Facturar.Servicios
 
             if(filasInsertadas <= 0)
             {
-                throw new InvalidOperationException("No se pudo insertar el contrato en la base de datos");
+                throw new InvalidOperationException("No se ha podido insertar el contrato en la base de datos");
             }
             return true; // Indica que la inserción fue exitosa
         }
@@ -78,7 +76,7 @@ namespace Facturar.Servicios
                 // Validacion de la fecha de baja para que no sea anterior a la de inicio
                 if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date < contrato.FechaInicio.Date)
                 {
-                    throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.", nameof(contrato.FechaFin));
+                    throw new ArgumentException("La fecha fin del contrato no puede ser anterior a la fecha de inicio.", nameof(contrato.FechaFin));
                 }
 
                 // Inserta el nuevo contrato en la base de datos
@@ -97,14 +95,14 @@ namespace Facturar.Servicios
 
                 if(filasInsertadas <= 0)
                 {
-                    throw new InvalidOperationException("No se pudo actualizar el contrato en la base de datos");
+                    throw new InvalidOperationException("No se ha podido actualizar el contrato en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new ApplicationException("Error al actualizar el contrato.", ex);
+                throw new ApplicationException("Error al actualizar el contrato en la base de datos.", ex);
             }
         }
 
@@ -151,7 +149,7 @@ namespace Facturar.Servicios
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido dar de baja el contrato: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al dar de baja el contrato: {ex.Message}", ex);
             }
         }
 
@@ -191,13 +189,13 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro el contrato para borrar en la base de datos");
+                    throw new InvalidOperationException("No se ha podido eliminar el contrato en la base de datos");
                 }
                 return true; // Indica que la eliminacion fue exitosa
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido eliminar el contrato: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al eliminar el contrato de la base de datos: {ex.Message}", ex);
             }
         }
 
@@ -223,7 +221,7 @@ namespace Facturar.Servicios
 
             if (ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
             {
-                throw new InvalidOperationException($"La fecha de revision ({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser anterior o igual a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
+                throw new InvalidOperationException($"La fecha de revision del contrato({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser anterior o igual a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
             }
 
             try
@@ -247,7 +245,7 @@ namespace Facturar.Servicios
 
                 if(filasInsertadas <= 0)
                 {
-                    throw new InvalidOperationException("No se pudo insertar la revision del contrato en la base de datos");
+                    throw new InvalidOperationException("No se ha podido insertar la revision del contrato en la base de datos");
                 }
 
                 // Una vez insertada la revision, se actualiza el precio mensual en el contrato
@@ -262,7 +260,7 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas <= 0)
                 {
-                    throw new InvalidOperationException("No se pudo actualizar el precio mensual del contrato en la base de datos");
+                    throw new InvalidOperationException("No se ha podido actualizar el precio mensual del contrato en la base de datos");
                 }
 
                 return true; // Indica que la inserción fue exitosa
@@ -293,21 +291,21 @@ namespace Facturar.Servicios
             var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
             if(empresaExistente == null)
             {
-                throw new ArgumentException("La empresa especificada no existe.");
+                throw new ArgumentException("La empresa del contrato no existe en la base de datos.");
             }
 
             var gestorClientes = new GestorClientes();
             var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
             if(clienteExistente == null)
             {
-                throw new ArgumentException("El cliente especificado no existe.");
+                throw new ArgumentException("El cliente del contrato no existe en la base de datos.");
             }
 
             var gestorLocales = new GestorLocales();
             var localExistente = gestorLocales.ObtenerPorId(contrato.LocalId);
             if(localExistente == null)
             {
-                throw new ArgumentException("El local especificado no existe.");
+                throw new ArgumentException("El local del contrato no existe en la base de datos.");
             }
 
             // Validar fechas contrato e importe
@@ -414,11 +412,15 @@ namespace Facturar.Servicios
         public IEnumerable<Contrato> ListarContratosPorEmpresa(int? empresaId = null, string empresaNif = null, bool? activos = null)
         {
             // Obtiene el Id de la empresa a partir del NIF
-            var gestorEmpresas = new GestorEmpresas();
-            var empresa = gestorEmpresas.ObtenerPorNIF(empresaNif);
-            if(empresa == null)
+            if(empresaId == null && !string.IsNullOrWhiteSpace(empresaNif))
             {
-                return Enumerable.Empty<Contrato>();
+                var gestorEmpresa = new GestorEmpresas();
+                var empresa = gestorEmpresa.ObtenerPorNIF(empresaNif);
+                if(empresa == null)
+                {
+                    return Enumerable.Empty<Contrato>();
+                }
+                empresaId = empresa.Id;
             }
 
             // Sql de consulta a la base de datos
@@ -434,7 +436,7 @@ namespace Facturar.Servicios
 
             var parametros = new[]
             {
-                new SQLiteParameter("@EmpresaId", empresa.Id)
+                new SQLiteParameter("@EmpresaId", empresaId)
             };
 
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
@@ -536,10 +538,11 @@ namespace Facturar.Servicios
         /// <returns></returns>
         public IEnumerable<RevisionContrato> ListarRevisionesContrato(int contratoId)
         {
+            // Valida que el contrato exista
             var contrato = ObtenerPorId(contratoId);
             if (contrato == null)
             {
-                throw new InvalidOperationException("El contrato pasado no existe en la base de datos");
+                throw new InvalidOperationException("El contrato no existe en la base de datos");
             }
             // Sql de consulta a la base de datos
             string sql = "SELECT * FROM RevisionesContrato WHERE ContratoId = @ContratoId";
@@ -572,7 +575,14 @@ namespace Facturar.Servicios
         /// <returns>Objeto con el contrato activo</returns>
         public Contrato ObtenerContratoActivoPorLocal(int localId)
         {
-            // Consulta a la base de datos
+            // Valida que el local exista
+            var gestor = ObtenerPorId(localId);
+            if (gestor == null)
+            {
+                throw new InvalidOperationException("El local no existe en la base de datos");
+            }
+
+            // Consulta a la base de datos los contratos activos del local
             string sql = "SELECT * FROM Contratos WHERE LocalId = @LocalId AND FechaFin IS NULL LIMIT 1";
             var parametros = new[]
             {
@@ -615,6 +625,14 @@ namespace Facturar.Servicios
         /// <returns>Fecha de la ultima revision del contrato</returns>
         private DateTime? ObtenerUltimaRevision(int contratoId)
         {
+            // Valida que exista el contrato
+            var gestor = ObtenerPorId(contratoId);
+            if (gestor == null)
+            {
+                throw new InvalidOperationException("El contrato no existe en la base de datos.");
+            }
+
+            // Prepara consulta a la base de datos
             string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE ContratoId = @ContratoId";
             var parametros = new[] {
                 new SQLiteParameter("@ContratoId", contratoId)

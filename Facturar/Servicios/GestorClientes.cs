@@ -35,7 +35,7 @@ namespace Facturar.Servicios
                 // Verifica que no exista ya un cliente con el mismo NIF
                 if(ClienteExiste(cliente.NIF))
                 {
-                    throw new InvalidOperationException("Ya existe un cliente con ese NIF.");
+                    throw new InvalidOperationException("Ya existe un cliente con ese NIF en la base de datos.");
                 }
 
                 // Inserta el nuevo cliente en la base de datos
@@ -65,14 +65,14 @@ namespace Facturar.Servicios
 
                 if(filasInsertadas <= 0)
                 {
-                    throw new InvalidOperationException("No se pudo insertar el cliente en la base de datos");
+                    throw new InvalidOperationException("No se pudo agregar el cliente en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new ApplicationException($"Error al agregar el cliente. {ex.Message}", ex);
+                throw new ApplicationException($"Error al agregar el cliente a la base de datos. {ex.Message}", ex);
             }
         }
 
@@ -93,7 +93,7 @@ namespace Facturar.Servicios
                 // Verifica que exista un cliente con el NIF proporcionado
                 if(!ClienteExiste(cliente.NIF))
                 {
-                    throw new InvalidOperationException("No existe un cliente con ese NIF.");
+                    throw new InvalidOperationException("No existe un cliente con ese NIF en la base de datos.");
                 }
 
                 // Nota: no se incluye la fecha de alta porque solo se graba en el alta, no se puede modificar en la actualizacion
@@ -135,14 +135,14 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro el cliente para actualizar en la base de datos");
+                    throw new InvalidOperationException("No ha podido actualizar el cliente en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido actualizar el cliente: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al actualizar el cliente en la base de datos: {ex.Message}", ex);
             }
 
         }
@@ -170,13 +170,13 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro el cliente para borrar en la base de datos");
+                    throw new InvalidOperationException("No se ha podido eliminar el cliente en la base de datos");
                 }
                 return true; // Indica que la eliminacion fue exitosa
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido eliminar el cliente: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al eliminar el cliente en la base de datos: {ex.Message}", ex);
             }
         }
 
@@ -205,7 +205,7 @@ namespace Facturar.Servicios
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido dar de baja el cliente: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al dar de baja el cliente en la base de datos: {ex.Message}", ex);
             }
         }
 
