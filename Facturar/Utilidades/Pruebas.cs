@@ -226,13 +226,13 @@ namespace Facturar.Utilidades
                     break;
 
                 case Procesos.Modificacion:
-                    var localNuevo = gestor.ObtenerPorId(id: 4);
+                    var localNuevo = gestor.ObtenerPorId(id: 5);
                     if(localNuevo != null)
                     {
-                        localNuevo.EmpresaId = 2;
+                        localNuevo.EmpresaId = 3;
+                        resultado = gestor.Actualizar(localNuevo);
                     }
 
-                    resultado = gestor.Actualizar(localNuevo);
                     break;
 
 

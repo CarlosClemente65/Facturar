@@ -10,35 +10,6 @@ namespace Facturar.Servicios
 {
     public class GestorClientes : IRepositorioClientes
     {
-        // Propiedades para comandos CRUD
-        private string sqlInsertarCliente =
-            "INSERT INTO Clientes " +
-            "(NIF, Nombre, Direccion, CodigoPostal, Poblacion, Provincia, Telefono, Email, PersonaContacto, FechaAlta, FechaBaja, FormaPago, IBAN, Observaciones) " +
-            "VALUES (@NIF, @Nombre, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @Telefono, @Email, @PersonaContacto, @FechaAlta, @FechaBaja, @FormaPago, @IBAN, @Observaciones)";
-
-        private string sqlActualizarCliente =
-            "UPDATE Clientes SET " +
-            "NIF = @NIF, " +
-            "Nombre = @Nombre, " +
-            "Direccion = @Direccion, " +
-            "CodigoPostal = @CodigoPostal, " +
-            "Poblacion = @Poblacion, " +
-            "Provincia = @Provincia, " +
-            "Telefono = @Telefono, " +
-            "Email = @Email, " +
-            "PersonaContacto = @PersonaContacto, " +
-            "FechaBaja = @FechaBaja, " +
-            "FormaPago = @FormaPago, " +
-            "IBAN = @IBAN, " +
-            "Observaciones = @Observaciones " +
-            "WHERE NIF = @NIF";
-
-        private string sqlEliminarCliente =
-            "DELETE " +
-            "FROM Clientes " +
-            "WHERE NIF = @NIF";
-
-
         // Constructor privado para evitar instanciación externa
         public GestorClientes()
         {
@@ -60,9 +31,6 @@ namespace Facturar.Servicios
 
                 //Asigna la fecha de alta
                 cliente.FechaAlta = Utiles.ValidarFecha(cliente.FechaAlta);
-
-                // Asigna la forma de pago por defecto si no está 
-                cliente.FormaPago = cliente.FormaPago ?? FormasPago.Transferencia.ToString();
 
                 // Verifica que no exista ya un cliente con el mismo NIF
                 if(ClienteExiste(cliente.NIF))
@@ -90,6 +58,9 @@ namespace Facturar.Servicios
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas insertadas
+                string sqlInsertarCliente = "INSERT INTO Clientes " +
+                    "(NIF, Nombre, Direccion, CodigoPostal, Poblacion, Provincia, Telefono, Email, PersonaContacto, FechaAlta, FechaBaja, FormaPago, IBAN, Observaciones) " +
+                    "VALUES (@NIF, @Nombre, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @Telefono, @Email, @PersonaContacto, @FechaAlta, @FechaBaja, @FormaPago, @IBAN, @Observaciones)";
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarCliente, parametros));
 
                 if(filasInsertadas <= 0)
@@ -101,7 +72,7 @@ namespace Facturar.Servicios
 
             catch(Exception ex)
             {
-                throw new ApplicationException("Error al agregar el cliente.", ex);
+                throw new ApplicationException($"Error al agregar el cliente. {ex.Message}", ex);
             }
         }
 
@@ -144,7 +115,23 @@ namespace Facturar.Servicios
                 };
 
                 // Ejecuta la actualizacion y devuelve las filas actualizadas
-                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizarCliente, parametros);
+                string sqlActualizar = "UPDATE Clientes SET " +
+                    "NIF = @NIF, " +
+                    "Nombre = @Nombre, " +
+                    "Direccion = @Direccion, " +
+                    "CodigoPostal = @CodigoPostal, " +
+                    "Poblacion = @Poblacion, " +
+                    "Provincia = @Provincia, " +
+                    "Telefono = @Telefono, " +
+                    "Email = @Email, " +
+                    "PersonaContacto = @PersonaContacto, " +
+                    "FechaBaja = @FechaBaja, " +
+                    "FormaPago = @FormaPago, " +
+                    "IBAN = @IBAN, " +
+                    "Observaciones = @Observaciones " +
+                    "WHERE NIF = @NIF";
+
+                int filasActualizadas = GestorDatos.EjecutarComando(sqlActualizar, parametros);
 
                 if(filasActualizadas == 0)
                 {
@@ -178,6 +165,7 @@ namespace Facturar.Servicios
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
                 var parametros = new[] { new SQLiteParameter("@NIF", cliente.NIF) };
+                string sqlEliminarCliente = "DELETE FROM Clientes WHERE NIF = @NIF";
                 int filasActualizadas = GestorDatos.EjecutarComando(sqlEliminarCliente, parametros);
 
                 if(filasActualizadas == 0)
@@ -211,7 +199,7 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad del cliente
-                cliente.FechaBaja = fechaBaja ?? DateTime.Now.Date;
+                cliente.FechaBaja = Utiles.ValidarFecha(fechaBaja);
                 return Actualizar(cliente);
 
             }
@@ -250,8 +238,18 @@ namespace Facturar.Servicios
             // Crea una lista de empresas
             var listaClientes = new List<Cliente>();
 
-            // Carga una tabla con todas las empresas
-            DataTable tabla = ConsultarClientes(activos);
+            // Hace la consulta de clientes segun el parametro 'activos'
+            string sqlClientes = "SELECT * " + "FROM Clientes ";
+
+            // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
+            if(activos.HasValue)
+            {
+                sqlClientes += activos.Value
+                    ? " WHERE FechaBaja IS NULL"
+                    : " WHERE FechaBaja IS NOT NULL";
+            }
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sqlClientes);
 
             // Va añadiendo cada cliente a la lista, utilizando el mapeador de filas
             foreach(DataRow fila in tabla.Rows)
@@ -301,37 +299,6 @@ namespace Facturar.Servicios
                     return resultado > 0;
                 }
             }
-        }
-
-        /// <summary>
-        /// Devuelve una tabla con todos los clientes y sus datos
-        /// </summary>
-        /// <returns></returns>
-        public DataTable ConsultarClientes(bool? activos)
-        {
-            string sqlClientes = "SELECT * " + "FROM Clientes "; ;
-            string sqlClientesActivos = sqlClientes + " WHERE FechaBaja IS NULL";
-            string sqlClientesInactivos = sqlClientes + " WHERE FechaBaja IS NOT NULL";
-            if(activos == true)
-            {
-                return GestorDatos.EjecutarConsulta(sqlClientesActivos);
-            }
-            else if(activos == false)
-            {
-                return GestorDatos.EjecutarConsulta(sqlClientesInactivos);
-            }
-            else
-            {
-                return GestorDatos.EjecutarConsulta(sqlClientes);
-            }
-        }
-
-
-        public enum FormasPago
-        {
-            Transferencia,
-            Domiciliacion,
-            Efectivo
         }
     }
 }
