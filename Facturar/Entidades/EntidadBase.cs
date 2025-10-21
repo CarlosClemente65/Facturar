@@ -23,5 +23,16 @@ namespace Facturar.Entidades
         public bool Activo => !FechaBaja.HasValue || FechaBaja.Value.Date > DateTime.Today; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)
 
 
+        // Método seguro para establecer la fecha de fin (aplica validación)
+        public void EstablecerFechaBaja(DateTime? fechaBaja)
+        {
+            if(fechaBaja.HasValue && fechaBaja.Value.Date < FechaAlta.Date)
+            {
+                throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.");
+            }
+
+            FechaBaja = fechaBaja?.Date;
+        }
+
     }
 }

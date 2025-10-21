@@ -27,11 +27,11 @@ namespace Facturar.Servicios
         {
             try
             {
-                // Valida que la empresa no sea nula, y el NIF y nombre tengan contenido
-                ValidarEmpresa(empresa);
-
                 //Asigna la fecha de alta
                 empresa.FechaAlta = Utiles.ValidarFecha(empresa.FechaAlta);
+
+                // Valida que la empresa no sea nula, y el NIF y nombre tengan contenido
+                ValidarEmpresa(empresa);
 
                 // Verifica que no exista ya una empresa con el mismo NIF
                 if(EmpresaExiste(empresa.NIF))
@@ -85,7 +85,7 @@ namespace Facturar.Servicios
         /// <returns>True si se ha podido actualizar</returns>
         /// <exception cref="InvalidOperationException"></exception>
 
-        public bool Actualizar(Empresa empresa)
+        public bool Actualizar(Empresa empresa, bool esBaja = false)
         {
             try
             {
@@ -98,7 +98,7 @@ namespace Facturar.Servicios
                     throw new InvalidOperationException("No existe una empresa con ese NIF.");
                 }
 
-                if(empresa.Activo)
+                if(!esBaja && !empresa.Activo)
                 {
                     throw new InvalidOperationException("La empresa no esta activa");
                 }
@@ -193,8 +193,15 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad de la empresa
-                empresa.FechaBaja = Utiles.ValidarFecha(fechaBaja);
-                return Actualizar(empresa);
+                empresa.EstablecerFechaBaja(Utiles.ValidarFecha(fechaBaja));
+
+                // Chequea que la fecha de baja no sea anterior a la de alta
+                if(empresa.FechaBaja < empresa.FechaAlta)
+                {
+                    throw new InvalidOperationException("La fecha de baja no puede ser anterior a la de alta");
+                }
+
+                return Actualizar(empresa, esBaja: true);
             }
             catch(Exception ex)
             {

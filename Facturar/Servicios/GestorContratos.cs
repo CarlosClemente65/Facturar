@@ -57,7 +57,7 @@ namespace Facturar.Servicios
         /// <param name="contrato"></param>
         /// <returns></returns>
         /// <exception cref="ApplicationException"></exception>
-        public bool Actualizar(Contrato contrato)
+        public bool Actualizar(Contrato contrato, bool esBaja = false)
         {
             try
             {
@@ -68,7 +68,7 @@ namespace Facturar.Servicios
                 }
 
                 // Chequea si el contrato esta activo
-                if(!contrato.Activo)
+                if(!esBaja && !contrato.Activo)
                 {
                     throw new InvalidOperationException("El contrato no esta activo. No se puede modificar");
                 }
@@ -76,7 +76,7 @@ namespace Facturar.Servicios
                 // Validacion de la fecha de baja para que no sea anterior a la de inicio
                 if(contrato.FechaFin.HasValue && contrato.FechaFin.Value.Date < contrato.FechaInicio.Date)
                 {
-                    throw new ArgumentException("La fecha fin del contrato no puede ser anterior a la fecha de inicio.", nameof(contrato.FechaFin));
+                    throw new ArgumentException("La fecha fin del contrato no puede ser anterior a la fecha de inicio.");
                 }
 
                 // Inserta el nuevo contrato en la base de datos
@@ -145,7 +145,7 @@ namespace Facturar.Servicios
             {
                 // Graba la fecha fin en el contrato 
                 contrato.EstablecerFechaFin(fechaBaja ?? DateTime.Today);
-                return Actualizar(contrato);
+                return Actualizar(contrato,esBaja: true);
             }
             catch(Exception ex)
             {
@@ -200,15 +200,15 @@ namespace Facturar.Servicios
         }
 
 
-        public bool AgregarRevisionContrato (RevisionContrato nuevaRevision)
+        public bool AgregarRevisionContrato(RevisionContrato nuevaRevision)
         {
-            var contrato = ObtenerPorId (nuevaRevision.ContratoId);
-            if (contrato == null)
+            var contrato = ObtenerPorId(nuevaRevision.ContratoId);
+            if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos");
             }
 
-            if (!contrato.Activo)
+            if(!contrato.Activo)
             {
                 throw new InvalidOperationException("El contrato no esta activo. No se puede agregar una revision");
             }
@@ -216,10 +216,16 @@ namespace Facturar.Servicios
             // Valida los campos de la clase
             nuevaRevision.ValidarPropiedadesRevision();
 
+            // Valida que la fecha de revision no sea anterior a la fecha del contrato
+            if(nuevaRevision.FechaRevision <= contrato.FechaInicio)
+            {
+                throw new InvalidOperationException("La fecha de revision es anterior a la fecha del contrato");
+            }
+
             // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
             DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.ContratoId);
 
-            if (ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
+            if(ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
             {
                 throw new InvalidOperationException($"La fecha de revision del contrato({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser anterior o igual a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
             }
@@ -227,7 +233,7 @@ namespace Facturar.Servicios
             try
             {
                 // Asignacion de valores a parametros
-                var parametros = new[] { 
+                var parametros = new[] {
                     new SQLiteParameter("@ContratoId", nuevaRevision.ContratoId),
                     new SQLiteParameter("@FechaRevision", nuevaRevision.FechaRevision),
                     new SQLiteParameter("@PrecioAnterior", nuevaRevision.PrecioAnterior),
@@ -250,13 +256,13 @@ namespace Facturar.Servicios
 
                 // Una vez insertada la revision, se actualiza el precio mensual en el contrato
                 string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @ContratoId";
-                var parametosContrato = new[]
+                var parametrosContrato = new[]
                 {
                     new SQLiteParameter("@NuevoPrecio", nuevaRevision.PrecioRevisado),
                     new SQLiteParameter("@ContratoId", nuevaRevision.ContratoId)
                 };
 
-                var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametros));
+                var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
 
                 if(filasActualizadas <= 0)
                 {
@@ -286,37 +292,50 @@ namespace Facturar.Servicios
                 throw new ArgumentNullException(nameof(contrato), "El contrato no puede ser nulo.");
             }
 
-            // Validar que la empresa, el cliente y el local existan en la base de datos
+            // Validar que la empresa exista en la base de datos y este activa
             var gestorEmpresas = new GestorEmpresas();
             var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
-            if(empresaExistente == null)
+            if(empresaExistente == null || !empresaExistente.Activo)
             {
-                throw new ArgumentException("La empresa del contrato no existe en la base de datos.");
+                throw new InvalidOperationException("La empresa no existe en la base de datos o esta inactiva.");
             }
 
+
+            // Validar que el cliente exista en la base de datos y este activo
             var gestorClientes = new GestorClientes();
             var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
-            if(clienteExistente == null)
+            if(clienteExistente == null || !clienteExistente.Activo)
             {
-                throw new ArgumentException("El cliente del contrato no existe en la base de datos.");
+                throw new ArgumentException("El cliente del contrato no existe en la base de datos o esta inactivo.");
             }
 
+            // Validar que el local exista en la base de datos y este activo
             var gestorLocales = new GestorLocales();
             var localExistente = gestorLocales.ObtenerPorId(contrato.LocalId);
-            if(localExistente == null)
+            if(localExistente == null || !localExistente.Activo)
             {
-                throw new ArgumentException("El local del contrato no existe en la base de datos.");
+                throw new InvalidOperationException("El local del contrato no existe en la base de datos o esta inactivo.");
+            }
+
+            // Valida que el local pertenezca a la empresa
+            if(localExistente.EmpresaId != contrato.EmpresaId)
+            {
+                throw new InvalidOperationException("La empresa asignada no tiene ese local");
             }
 
             // Validar fechas contrato e importe
             contrato.ValidarPropiedadesContrato();
 
-            // Comprueba que no hay un contrato activo (solo puede haber un contrato activo)
-            var contratoActivo = ObtenerContratoActivoPorLocal(contrato.LocalId);
-            if(contratoActivo != null)
+            // Si hay algun contrato, se comprueba que no haya uno activo (solo puede haber un contrato activo)
+            var contratosLocal = ListarContratosPorLocal(localId: contrato.LocalId, activos: true);
+            if(contratosLocal.Any()) // Si hay algun contrato
             {
-                throw new InvalidOperationException(
-                    $"El local {contrato.LocalId} ya tiene un contrato activo (Id: {contratoActivo.Id}). Debe dar de baja el contrato anterior antes de crear uno nuevo");
+                var contratoActivo = ObtenerContratoActivoPorLocal(localId: contrato.Id);
+                if(contratosLocal != null)
+                {
+                    throw new InvalidOperationException(
+                        $"El local ya tiene un contrato activo. Debe dar de baja el contrato anterior antes de crear uno nuevo");
+                }
             }
 
         }
@@ -335,8 +354,8 @@ namespace Facturar.Servicios
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
             {
-                sql += activos.Value 
-                    ? " WHERE FechaFin IS NULL" 
+                sql += activos.Value
+                    ? " WHERE FechaFin IS NULL"
                     : " WHERE FechaFin IS NOT NULL";
             }
 
@@ -379,8 +398,8 @@ namespace Facturar.Servicios
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
             {
-                sql += activos.Value 
-                    ? " AND FechaFin IS NULL" 
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
                     : " AND FechaFin IS NOT NULL";
             }
 
@@ -429,8 +448,8 @@ namespace Facturar.Servicios
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
             {
-                sql += activos.Value 
-                    ? " AND FechaFin IS NULL" 
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
                     : " AND FechaFin IS NOT NULL";
             }
 
@@ -472,8 +491,8 @@ namespace Facturar.Servicios
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
             {
-                sql += activos.Value 
-                    ? " AND FechaFin IS NULL" 
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
                     : " AND FechaFin IS NOT NULL";
             }
 
@@ -507,8 +526,8 @@ namespace Facturar.Servicios
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
             {
-                sql += activos.Value 
-                    ? " AND FechaFin IS NULL" 
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
                     : " AND FechaFin IS NOT NULL";
             }
 
@@ -540,7 +559,7 @@ namespace Facturar.Servicios
         {
             // Valida que el contrato exista
             var contrato = ObtenerPorId(contratoId);
-            if (contrato == null)
+            if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos");
             }
@@ -576,10 +595,10 @@ namespace Facturar.Servicios
         public Contrato ObtenerContratoActivoPorLocal(int localId)
         {
             // Valida que el local exista
-            var gestor = ObtenerPorId(localId);
-            if (gestor == null)
+            var contratoActivo = ObtenerPorId(localId);
+            if(contratoActivo == null)
             {
-                throw new InvalidOperationException("El local no existe en la base de datos");
+                return null;
             }
 
             // Consulta a la base de datos los contratos activos del local
@@ -600,7 +619,7 @@ namespace Facturar.Servicios
             return Utilidades.MapeadorDatos.MapearFila<Contrato>(tabla.Rows[0]);
         }
 
-        
+
         /// <summary>
         /// Obtiene el contrato identificado por su id
         /// </summary>
@@ -627,7 +646,7 @@ namespace Facturar.Servicios
         {
             // Valida que exista el contrato
             var gestor = ObtenerPorId(contratoId);
-            if (gestor == null)
+            if(gestor == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos.");
             }
@@ -639,11 +658,11 @@ namespace Facturar.Servicios
                 };
             object resultado = GestorDatos.EjecutarComandoValorUnico(sql, parametros);
 
-            if (resultado == null || resultado == DBNull.Value)
+            if(resultado == null || resultado == DBNull.Value)
             {
                 return null;
             }
-            
+
             return Convert.ToDateTime(resultado);
         }
     }

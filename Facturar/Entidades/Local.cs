@@ -26,7 +26,7 @@ namespace Facturar.Entidades
         {
             if(fechaBaja.HasValue && fechaBaja.Value.Date < FechaAlta.Date)
             {
-                throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.", nameof(fechaBaja));
+                throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.");
             }
 
             FechaBaja = fechaBaja?.Date;
@@ -37,12 +37,12 @@ namespace Facturar.Entidades
             // Al agregar un local, si no se pasa una fecha de alta se le pone la actual, pero dejo el metodo por coherencia con el resto
             if(FechaAlta == default(DateTime))
             {
-                throw new ArgumentException("La fecha de alta es obligatoria.", nameof(FechaAlta));
+                throw new ArgumentException("La fecha de alta es obligatoria.");
             }
 
             if(FechaBaja.HasValue && FechaBaja.Value.Date < FechaAlta.Date)
             {
-                throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.", nameof(FechaBaja));
+                throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.");
             }
 
         }

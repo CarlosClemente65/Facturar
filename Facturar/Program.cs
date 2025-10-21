@@ -32,22 +32,21 @@ namespace Facturar
             //Pruebas.LanzaPruebas(Pruebas.Entidades.Clientes, Pruebas.Procesos.Consulta);
 
             // Locales
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Alta);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Modificacion);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Baja);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Consulta);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.ConsultaActivos);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Eliminacion);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Alta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Modificacion);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Baja);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Consulta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Locales, Pruebas.Procesos.Eliminacion);
 
             // Contratos
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Alta);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Modificacion);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Baja);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Consulta);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.ConsultaActivos);
-            Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Eliminacion);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Alta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Modificacion);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Baja);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Consulta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Eliminacion);
 
             // Revision contratos
+            Pruebas.LanzaPruebas(Pruebas.Entidades.RevisionContratos, Pruebas.Procesos.Alta);
 
 
             Environment.Exit(0);

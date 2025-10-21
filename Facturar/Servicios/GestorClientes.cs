@@ -26,11 +26,11 @@ namespace Facturar.Servicios
         {
             try
             {
-                // Valida que el cliente no sea nulo, y el NIF y nombre tengan contenido
-                ValidarCliente(cliente);
-
                 //Asigna la fecha de alta
                 cliente.FechaAlta = Utiles.ValidarFecha(cliente.FechaAlta);
+
+                // Valida que el cliente no sea nulo, y el NIF y nombre tengan contenido
+                ValidarCliente(cliente);
 
                 // Verifica que no exista ya un cliente con el mismo NIF
                 if(ClienteExiste(cliente.NIF))
@@ -83,7 +83,7 @@ namespace Facturar.Servicios
         /// <returns>True si se ha podido actualizar</returns>
         /// <exception cref="InvalidOperationException"></exception>
 
-        public bool Actualizar(Cliente cliente)
+        public bool Actualizar(Cliente cliente, bool esBaja = false)
         {
             try
             {
@@ -94,6 +94,11 @@ namespace Facturar.Servicios
                 if(!ClienteExiste(cliente.NIF))
                 {
                     throw new InvalidOperationException("No existe un cliente con ese NIF en la base de datos.");
+                }
+
+                if(!esBaja && !cliente.Activo)
+                {
+                    throw new InvalidOperationException("La empresa no esta activa");
                 }
 
                 // Nota: no se incluye la fecha de alta porque solo se graba en el alta, no se puede modificar en la actualizacion
@@ -199,8 +204,8 @@ namespace Facturar.Servicios
             try
             {
                 // Graba la fecha de baja en la propiedad del cliente
-                cliente.FechaBaja = Utiles.ValidarFecha(fechaBaja);
-                return Actualizar(cliente);
+                cliente.EstablecerFechaBaja(Utiles.ValidarFecha(fechaBaja));
+                return Actualizar(cliente, esBaja: true);
 
             }
             catch(Exception ex)

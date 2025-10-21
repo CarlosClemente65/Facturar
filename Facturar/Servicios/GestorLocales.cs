@@ -28,11 +28,11 @@ namespace Facturar.Servicios
         {
             try
             {
-                // Valida que el local no sea nulo y se pase el Id de la empresa
-                ValidarLocal(local);
-
                 // Asigna la fecha de alta si no está establecida
                 local.FechaAlta = Utiles.ValidarFecha(local.FechaAlta);
+
+                // Valida que el local no sea nulo y se pase el Id de la empresa
+                ValidarLocal(local);
 
                 // Inserta el nuevo local en la base de datos
                 var parametros = new[]
@@ -77,12 +77,18 @@ namespace Facturar.Servicios
         /// <returns>True si se ha podido actualizar</returns>
         /// <exception cref="InvalidOperationException"></exception>
 
-        public bool Actualizar(Local local)
+        public bool Actualizar(Local local, bool esBaja = false)
         {
             try
             {
                 // Valida que el local no sea nulo, y se pase el Id de la empresa
                 ValidarLocal(local);
+
+                // Valida que el local no este de baja
+                if(!esBaja && !local.Activo)
+                {
+                    throw new InvalidOperationException("La empresa no esta activa");
+                }
 
                 // Nota: no se incluye la fecha de alta porque solo se graba en el alta, no se puede modificar en la actualizacion
                 var parametros = new[]
@@ -191,7 +197,7 @@ namespace Facturar.Servicios
             {
                 // Graba la fecha de baja en la propiedad del local
                 local.FechaBaja = Utiles.ValidarFecha(fechaBaja); // Si la fecha es nula se establece la fecha actual
-                return Actualizar(local);
+                return Actualizar(local, esBaja: true);
             }
             catch(Exception ex)
             {
@@ -303,7 +309,7 @@ namespace Facturar.Servicios
             // Evita agregar locales nulos
             if(local == null)
             {
-                throw new ArgumentNullException(nameof(local), "El local no puede ser nulo.");
+                throw new ArgumentNullException(nameof(local), "El local no existe en la base de datos.");
             }
 
             // Valida que la empresa del exista

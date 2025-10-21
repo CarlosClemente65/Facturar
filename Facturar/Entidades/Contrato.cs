@@ -26,7 +26,7 @@ namespace Facturar.Entidades
         {
             if(fechaFin.HasValue && fechaFin.Value.Date < FechaInicio.Date)
             {
-                throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.", nameof(fechaFin));
+                throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.");
             }
 
             FechaFin = fechaFin?.Date;
@@ -37,17 +37,17 @@ namespace Facturar.Entidades
         {
             if(PrecioMensual <= 0m)
             {
-                throw new ArgumentException("El precio mensual debe ser mayor que cero.", nameof(PrecioMensual));
+                throw new ArgumentException("El precio mensual debe ser mayor que cero.");
             }
 
             if(FechaInicio == default(DateTime))
             {
-                throw new ArgumentException("La fecha de inicio es obligatoria.", nameof(FechaInicio));
+                throw new ArgumentException("La fecha de inicio es obligatoria.");
             }
 
             if(FechaFin.HasValue && FechaFin.Value.Date < FechaInicio.Date)
             {
-                throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.", nameof(FechaFin));
+                throw new ArgumentException("La fecha de fin no puede ser anterior a la fecha de inicio.");
             }
         }
     }
@@ -55,7 +55,7 @@ namespace Facturar.Entidades
     {
         public int ContratoId { get; set; }
         public DateTime FechaRevision { get; set; } // Fecha en que se revisa el contrato
-        public decimal PrecioAnterior { get; set; } // Precio antes de la revisión
+        public decimal? PrecioAnterior { get; set; } // Precio antes de la revisión
         public decimal? PorcentajeRevision { get; set; } // Porcentaje de revisión aplicado
         public decimal PrecioRevisado { get; set; } // Precio después de la revisión
         public string Observaciones { get; set; } // Observaciones de la revision
@@ -68,7 +68,7 @@ namespace Facturar.Entidades
                 FechaRevision = Utiles.ValidarFecha(FechaRevision);
             }
 
-            if(PrecioAnterior == 0m)
+            if (PrecioAnterior.HasValue && PrecioAnterior == 0)
             {
                 throw new ArgumentException("El importe del precio anterior es obligatorio.");
             }
