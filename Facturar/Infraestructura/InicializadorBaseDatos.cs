@@ -106,13 +106,6 @@ namespace Facturar.Infraestructura
         // Inicializar la base de datos y crea las tablas
         public static void Inicializar(string rutaBD)
         {
-            // Crear la carpeta si no existe
-            var carpeta = Path.GetDirectoryName(rutaBD);
-            if(!Directory.Exists(carpeta))
-            {
-                Directory.CreateDirectory(carpeta);
-            }
-
             SQLiteConnection.CreateFile(rutaBD);
             CrearTablas();
         }

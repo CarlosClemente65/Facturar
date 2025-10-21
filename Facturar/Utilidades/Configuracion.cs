@@ -5,52 +5,62 @@ namespace Facturar.Utilidades
 {
     public static class Configuracion
     {
+        public static string CarpetaBase
+        {
+            get
+            {
+                string Carpeta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FacturarApp");
+                return ChequeoCarpeta(Carpeta);
+            }
+        }
+
+        
+
+        public static string CarpetaBackup
+        {
+            get
+            {
+                string carpeta = Path.Combine(CarpetaBase, "Backups");
+                return ChequeoCarpeta(carpeta);
+            }
+        }
+
         public static string CarpetaDatos
         {
             get
             {
-                string carpeta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FacturarApp");
-
-                if(!System.IO.Directory.Exists(carpeta))
-                {
-                    System.IO.Directory.CreateDirectory(carpeta);
-                }
-                return carpeta;
-            }
-        }
-        public static string CarpetaCopiasSeguridad
-        {
-            get
-            {
-                string carpeta = System.IO.Path.Combine(CarpetaDatos, "Backups");
-                if(!System.IO.Directory.Exists(carpeta))
-                {
-                    System.IO.Directory.CreateDirectory(carpeta);
-                }
-                return carpeta;
+                string carpeta = Path.Combine(CarpetaBase, "Datos");
+                return ChequeoCarpeta(carpeta);
             }
         }
 
-        public static string FicheroDatos
+        public static string CarpetaLogs
         {
             get
             {
-                return System.IO.Path.Combine(CarpetaDatos, "datos.json");
+                string carpeta = Path.Combine(CarpetaBase, "Logs");
+                return ChequeoCarpeta(carpeta);
             }
         }
 
-        public static string FicheroFacturas
+        /// <summary>
+        /// Comprueba si existe la carpeta pasada y si no la crea
+        /// </summary>
+        /// <param name="Carpeta"></param>
+        /// <returns></returns>
+        private static string ChequeoCarpeta(string Carpeta)
         {
-            get
+            if(!Directory.Exists(Carpeta))
             {
-                return System.IO.Path.Combine(CarpetaDatos, "facturas.json");
+                Directory.CreateDirectory(Carpeta);
             }
+            return Carpeta;
         }
 
         public static string FicheroCopiasSeguridad(string fichero)
         {
             string timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
-            return Path.Combine(CarpetaCopiasSeguridad, $"{Path.GetFileNameWithoutExtension(fichero)}_{timestamp}.json");
+            return Path.Combine(CarpetaBackup, $"{Path.GetFileNameWithoutExtension(fichero)}_{timestamp}.json");
         }
         public static int MaximoCopiasSeguridad { get; set; } = 7; //Numero maximo de copias de seguridad a mantener
     }

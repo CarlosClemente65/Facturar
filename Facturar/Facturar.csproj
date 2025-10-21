@@ -100,7 +100,6 @@
     </Compile>
     <Compile Include="Infraestructura\Excepciones.cs" />
     <Compile Include="Infraestructura\InicializadorBaseDatos.cs" />
-    <Compile Include="Infraestructura\RepositorioDatos.cs" />
     <Compile Include="Interfaces\IRepositorioBase.cs" />
     <Compile Include="Interfaces\IRepositorioClientes.cs" />
     <Compile Include="Interfaces\IRepositorioContratos.cs" />

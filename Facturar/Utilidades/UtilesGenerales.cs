@@ -42,7 +42,7 @@ namespace Facturar.Utilidades
 
 
         /// <summary>
-        /// Asignacion de fechas validas
+        /// Asignacion de fechas validas pasadas como DateTime
         /// Si la fecha es nula o el valor por defecto, se devuelve la fecha actual
         /// </summary>
         /// <param name="fecha"></param>
@@ -52,6 +52,12 @@ namespace Facturar.Utilidades
             return (fecha.HasValue && fecha.Value != default(DateTime)) ? fecha.Value : DateTime.Today;
         }
 
+        /// <summary>
+        /// Asignacion de fechas validas pasadas como string
+        /// Si la fecha es nula o el valor por defecto, se devuelve la fecha actual
+        /// </summary>
+        /// <param name="fecha"></param>
+        /// <returns>La fecha pasada o la fecha actual</returns>
         public static DateTime ValidarFecha(string fecha)
         {
             if (DateTime.TryParseExact(fecha,"dd/MM/yyyy", null, System.Globalization.DateTimeStyles.None, out DateTime dt))
@@ -61,10 +67,15 @@ namespace Facturar.Utilidades
             return DateTime.Today;
         }
 
-        // Permite registar un log de errores o de actividad
+
+        /// <summary>
+        /// Permite registar un log de errores o de actividad 
+        /// </summary>
+        /// <param name="mensaje"></param>
+        /// <param name="tipo"></param>
         public static void RegistrarLog(string mensaje, tipoLog tipo)
         {
-            string carpeta = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs");
+            string carpeta = Path.Combine(Configuracion.CarpetaBase, "logs");
 
             // Crea la carpeta si no existe
             if(!Directory.Exists(carpeta))

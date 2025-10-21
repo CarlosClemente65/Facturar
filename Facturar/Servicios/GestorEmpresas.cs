@@ -128,14 +128,14 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro la empresa para actualizar en la base de datos");
+                    throw new InvalidOperationException("No ha podido actualizar la empresa en la base de datos");
                 }
                 return true; // Indica que la inserción fue exitosa
             }
 
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido actualizar la empresa: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al actualizar la empresa en la base de datos: {ex.Message}", ex);
             }
 
         }
@@ -164,13 +164,13 @@ namespace Facturar.Servicios
 
                 if(filasActualizadas == 0)
                 {
-                    throw new InvalidOperationException("No se encontro la empresa para borrar en la base de datos");
+                    throw new InvalidOperationException("No se ha podido eliminar la empresa en la base de datos");
                 }
                 return true; // Indica que la eliminacion fue exitosa
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido eliminar la empresa: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al eliminar la empresa en la base de datos: {ex.Message}", ex);
             }
         }
 
@@ -198,7 +198,7 @@ namespace Facturar.Servicios
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"No se ha podido dar de baja la empresa: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al dar de baja la empresa en la base de datos: {ex.Message}", ex);
             }
         }
 

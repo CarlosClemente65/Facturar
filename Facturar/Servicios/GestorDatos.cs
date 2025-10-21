@@ -9,13 +9,13 @@ namespace Facturar.Servicios
     public static class GestorDatos
     {
         // Propiedades para inicializar la base de datos
-        public static readonly string rutaBD = "./datos/facturacion.db";
+        public static readonly string rutaBD = Path.Combine(Configuracion.CarpetaDatos, "FacturarApp.db");
         public static readonly string cadenaConexion = $"Data Source={rutaBD};Version=3;";
 
 
         public static void ChequeoBaseDatos()
         {
-            if(!File.Exists(GestorDatos.rutaBD)) 
+            if(!File.Exists(rutaBD)) 
             {
                 InicializadorBaseDatos.Inicializar(rutaBD);
             }
@@ -58,7 +58,7 @@ namespace Facturar.Servicios
         /// </summary>
         public static object EjecutarComandoValorUnico(string sql, params SQLiteParameter[] parametros)
         {
-            // Sin uso actualmente pero se puede usar para contar registros o maximos (SELECT COUNT(*) FROM Clientes o SELECT MAX(FechaAlta) FROM Empresas)
+            // Se puede usar para contar registros o maximos (SELECT COUNT(*) FROM Clientes o SELECT MAX(FechaAlta) FROM Empresas)
             using(var conexion = AbrirConexion())
             {
                 using(var comando = new SQLiteCommand(sql, conexion))
@@ -70,7 +70,7 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Ejecuta una consulta SQL que devuelve un conjunto de resultados (SELECT).
+        /// Ejecuta una consulta SQL que devuelve un conjunto de resultados en una tabla (SELECT).
         /// </summary>
         public static DataTable EjecutarConsulta(string sql, params SQLiteParameter[] parametros)
         {
@@ -90,7 +90,7 @@ namespace Facturar.Servicios
         }
 
         /// <summary>
-        /// Metodo generico para mapear en un objeto pasado con 'T' segun los datos de la tabla que se obtiene de la base de datos
+        /// Obtiene los datos de la tabla pasada segun el Id
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <param name="nombreTabla"></param>
@@ -114,6 +114,14 @@ namespace Facturar.Servicios
             return MapeadorDatos.MapearFila<T>(tabla.Rows[0]);
         }
 
+
+        /// <summary>
+        /// Obtiene los datos de la tabla pasada segun el Nif
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="nombreTabla"></param>
+        /// <param name="nif"></param>
+        /// <returns></returns>
         public static T ObtenerDatosPorNIF<T>(string nombreTabla, string nif) where T : new()
         {
             // Hace la consulta a la base de datos de la tabla pasada seleccionado por el NIF
