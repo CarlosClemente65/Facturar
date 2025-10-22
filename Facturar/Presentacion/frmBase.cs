@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using Facturar.Presentacion.Controles;
+using Facturar.Presentacion.Paneles;
 
 namespace Facturar.Presentacion
 {
@@ -15,12 +11,84 @@ namespace Facturar.Presentacion
         private bool panelLateralVisible = false;
         private bool panelColapsado = true;
 
-        private int anchoPanelLateralExpandido = 120; // Ancho del panel lateral cuando está visible
-        private int anchoPanelLateralColapsado = 49;
+        private int anchoPanelLateralExpandido = 100; // Ancho del panel lateral cuando está visible
+        private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
+
+        private PanelInferiorGeneral panelGeneral;
+        private PanelInferiorEdicion panelEdicion;
         public frmBase()
         {
             InitializeComponent();
+        }
+
+        private void frmBase_Load(object sender, EventArgs e)
+        {
+
+            timerLateral.Interval = 15; // Intervalo de tiempo en milisegundos
+            timerLateral.Tick += TimerLateral_Tick;
+            panelLateral.BringToFront();  // Traer el panel lateral por encima del central
+
+            // Crear instancia para el panel inferior general y lo carga en el panel inferior
+            panelGeneral = new PanelInferiorGeneral();
+            panelEdicion = new PanelInferiorEdicion();
+
+            // Suscribir a los eventos de los userControl
+            SuscribirEventosPanelInferior(panelGeneral);
+            SuscribirEventosPanelInferior(panelEdicion);
+
+            // Carga los dos paneles
+            CargarPanelInferior(panelGeneral, dock: DockStyle.Right);
+            CargarPanelInferior(panelEdicion, dock: DockStyle.Left);
+
+            panelGeneral.Visible = true;
+            panelEdicion.Visible = false;
+
+        }
+
+        private void CargarPanelCentral(UserControl control)
+        {
+            // Limpia el contenido del panel central
+            panelCentral.Controls.Clear();
+
+            panelCentral.Controls.Add(control);
+        }
+
+        private void CargarPanelInferior(UserControl panel, DockStyle dock)
+        {
+            panel.Dock = dock;
+            //panel.Location = new Point(0, 0);
+            //control.Size = panelInferior.ClientSize;
+            //control.Anchor = AnchorStyles.Top | AnchorStyles.Right;
+
+            // Se añade el control al contenedor
+            panelInferior.Controls.Add(panel);
+        }
+
+        private void AlternarPanelInferior(UserControl mostrarPanel)
+        {
+            foreach(Control control in panelInferior.Controls)
+            {
+                control.Visible = false;
+            }
+
+            mostrarPanel.Visible = true;
+                
+        }
+
+        private void SuscribirEventosPanelInferior(UserControl panel)
+        {
+            if (panel is PanelInferiorGeneral general)
+            {
+                general.AltaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
+                general.BajaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
+                general.EditarClicked += (s, e) => AlternarPanelInferior(panelEdicion);
+            }
+            else if (panel is PanelInferiorEdicion edicion)
+            {
+                edicion.CancelarClicked += (s,e) => AlternarPanelInferior(panelGeneral);
+                edicion.ValidarClicked+= (s, e) => AlternarPanelInferior(panelGeneral);
+            }
         }
 
         private void CambiarEstadoPanelLateral()
@@ -29,16 +97,16 @@ namespace Facturar.Presentacion
             {
                 // Ocultar el panel lateral
                 panelLateral.Width = 40;
-                panelInferiorGeneral.Location = new Point(40, panelInferiorGeneral.Location.Y);
-                panelInferiorGeneral.Width = panelInferiorGeneral.Width + 160;
+                panelInferior.Location = new Point(40, panelInferior.Location.Y);
+                panelInferior.Width = panelInferior.Width + 160;
                 panelLateralVisible = false;
             }
             else
             {
                 // Mostrar el panel lateral
                 panelLateral.Width = 200;
-                panelInferiorGeneral.Location = new Point(200, panelInferiorGeneral.Location.Y);
-                panelInferiorGeneral.Width = panelInferiorGeneral.Width - 160;
+                panelInferior.Location = new Point(200, panelInferior.Location.Y);
+                panelInferior.Width = panelInferior.Width - 160;
                 panelLateralVisible = true;
             }
         }
@@ -54,23 +122,25 @@ namespace Facturar.Presentacion
 
         private void CambiarEstadoEdicion(bool enEdicion)
         {
-            // Si estamos en edición, ocultamos el panel general y mostramos el de Validar- Cancelar
-            panelInferiorGeneral.Visible = !enEdicion;
-            panelInferiorGeneralEditar.Visible = enEdicion;
+            // Este metodo estaba pensado cuando habia dos paneles, uno general y otro para edicion, pero supongo que habra que mostrar el userControl del panel inferior que corresponda.
+            
         }
 
         private void BotonGeneral_Click(object sender, EventArgs e)
         {
-            CambiarEstadoEdicion(true);
+            //CambiarEstadoEdicion(true);
+            // Estaba pensado para mostrar / ocultar los paneles inferiores
         }
 
         private void BotonEditar_Click(object sender, EventArgs e)
         {
-            CambiarEstadoEdicion(false);
+            //CambiarEstadoEdicion(false);
+            // Estaba pensado para mostrar / ocultar los paneles inferiores
         }
 
         private void btnAbrirPanel_Click(object sender, EventArgs e)
         {
+            // Animacion para expandir / ocultar panel lateral
             //CambiarEstadoPanelLateral();
             timerLateral.Start();
             panelLateral.BringToFront();
@@ -82,12 +152,7 @@ namespace Facturar.Presentacion
             }
         }
 
-        private void frmBase_Load(object sender, EventArgs e)
-        {
-            timerLateral.Interval = 15; // Intervalo de tiempo en milisegundos
-            timerLateral.Tick += TimerLateral_Tick;
-            panelLateral.BringToFront();  // Traer el panel lateral por encima del central
-        }
+        
 
         private void TimerLateral_Tick(object sender, EventArgs e)
         {
@@ -98,11 +163,13 @@ namespace Facturar.Presentacion
             {
                 // Reducir ancho (colapsar)
                 panelLateral.Width -= velocidad;
-                panelInferiorGeneral.Location = new Point(
+                panelInferior.Location = new Point(
                     panelLateral.Width, 
-                    panelInferiorGeneral.Location.Y);
+                    panelInferior.Location.Y);
                 
-                panelInferiorGeneral.Width += velocidad;
+                panelInferior.Width += velocidad;
+
+                AjustarPanelCentral();
                 
                 if(panelLateral.Width <= anchoPanelLateralColapsado)
                 {
@@ -121,11 +188,13 @@ namespace Facturar.Presentacion
             {
                 // Aumentar ancho (expandir)
                 panelLateral.Width += velocidad;
-                panelInferiorGeneral.Location = new Point(
+                panelInferior.Location = new Point(
                     panelLateral.Width, 
-                    panelInferiorGeneral.Location.Y);
+                    panelInferior.Location.Y);
 
-                panelInferiorGeneral.Width -= velocidad;
+                panelInferior.Width -= velocidad;
+
+                AjustarPanelCentral();
                 
                 if(panelLateral.Width >= anchoPanelLateralExpandido)
                 {
@@ -142,6 +211,25 @@ namespace Facturar.Presentacion
             btnEmpresas.Location = new Point(posicionX - (btnEmpresas.Width / 2),btnEmpresas.Location.Y);
             btnClientes.Location = new Point(posicionX - (btnClientes.Width / 2),btnClientes.Location.Y);
             btnLocales.Location = new Point(posicionX - (btnLocales.Width / 2),btnLocales.Location.Y);
+        }
+
+        private void AjustarPanelCentral()
+        {
+            int left = panelLateralVisible ? panelLateral.Width : panelLateral.Width;
+            int top = panelSuperior.Height;
+            int width = this.ClientSize.Width - left;
+            int height = this.ClientSize.Height - top - panelInferior.Height;
+
+            panelCentral.Location = new Point(left, top);
+            panelCentral.Size = new Size(width, height);
+        }
+
+
+        private void btnEmpresas_Click(object sender, EventArgs e)
+        {
+            var ucEmpresas = new UC_Empresas();
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs .Empty);
+            CargarPanelCentral(ucEmpresas);
         }
     }
 

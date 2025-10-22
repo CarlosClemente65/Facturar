@@ -46,10 +46,10 @@ namespace Facturar
             //Pruebas.LanzaPruebas(Pruebas.Entidades.Contratos, Pruebas.Procesos.Eliminacion);
 
             // Revision contratos
-            Pruebas.LanzaPruebas(Pruebas.Entidades.RevisionContratos, Pruebas.Procesos.Alta);
+            //Pruebas.LanzaPruebas(Pruebas.Entidades.RevisionContratos, Pruebas.Procesos.Alta);
 
 
-            Environment.Exit(0);
+            //Environment.Exit(0);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
