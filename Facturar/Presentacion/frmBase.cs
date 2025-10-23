@@ -7,6 +7,7 @@ using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
 using Facturar.Servicios;
 using Facturar.Entidades;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion
 {
@@ -22,6 +23,9 @@ namespace Facturar.Presentacion
         private PanelInferior_general panelGeneral;
         private PanelInferior_Edicion panelEdicion;
         private GestorEmpresas gestorEmpresas;
+
+        // Instancia de UserControl para empresas
+        private UC_Empresas ucEmpresas = new UC_Empresas();
         public frmBase()
         {
             InitializeComponent();
@@ -37,8 +41,6 @@ namespace Facturar.Presentacion
             // Crea instancias para los paneles inferiores y los carga en el panel inferior
             panelGeneral = new PanelInferior_general();
             panelEdicion = new PanelInferior_Edicion();
-            gestorEmpresas = new GestorEmpresas();
-
 
             // Suscribir a los eventos de los userControl
             SuscribirEventosPanelInferior(panelGeneral);
@@ -48,7 +50,7 @@ namespace Facturar.Presentacion
             CargarPanelInferior(panelGeneral, dock: DockStyle.Right);
             CargarPanelInferior(panelEdicion, dock: DockStyle.Left);
 
-            panelGeneral.Visible = true;
+            panelGeneral.Visible = false;
             panelEdicion.Visible = false;
         }
 
@@ -71,71 +73,83 @@ namespace Facturar.Presentacion
         {
             foreach(Control control in panelInferior.Controls)
             {
+                if(mostrarPanel.Name == "PanelInferior_general" && control.Name == "btnInicio")
+                {
+                    btnInicio.Visible = true;
+                    continue;
+                }
                 control.Visible = false;
             }
 
             mostrarPanel.Visible = true;
-                
+
         }
 
         private void SuscribirEventosPanelInferior(UserControl panel)
         {
-            if (panel is PanelInferior_general general)
+            if(panel is PanelInferior_general general)
             {
                 general.AltaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
                 general.BajaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
-                general.EditarClicked += (s, e) => AlternarPanelInferior(panelEdicion);
-                general.SeleccionActivos += (s, e) => 
+                general.EditarClicked += (s, e) =>
+                {
+                    AlternarPanelInferior(panelEdicion);
+
+                    //Deshabilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = false;
+
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+                };
+                general.SeleccionActivos += (s, e) =>
                 {
                     string estado = general.EstadoSeleccionado;
                     List<Empresa> lista;
                     bool? activas = null;
-                    if (estado == "Activos")
+                    if(estado == "Activos")
                     {
                         activas = true;
                     }
-                    else if (estado == "Inactivos")
+                    else if(estado == "Inactivos")
                     {
                         activas = false;
                     }
                     lista = gestorEmpresas.ListarTodos(activas).ToList();
 
-                    var ucEmpresas = panelCentral.Controls.OfType<UC_Empresas>().FirstOrDefault();
                     ucEmpresas?.CargarEmpresas(activas);
                 };
-                general.InicioClicked += (s, e) =>
+                general.EliminarClicked += (s, e) =>
                 {
-                    panelCentral.Controls.Clear();
+                    AlternarPanelInferior(panelEdicion);
                 };
 
 
             }
-            else if (panel is PanelInferior_Edicion edicion)
+            else if(panel is PanelInferior_Edicion edicion)
             {
-                edicion.CancelarClicked += (s,e) => AlternarPanelInferior(panelGeneral);
-                edicion.ValidarClicked+= (s, e) => AlternarPanelInferior(panelGeneral);
+                edicion.CancelarClicked += (s, e) =>
+                {
+                    // Habilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = true;
+
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+
+                    AlternarPanelInferior(panelGeneral);
+                };
+                edicion.ValidarClicked += (s, e) =>
+                {
+                    // Habilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = true;
+
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+
+                    AlternarPanelInferior(panelGeneral);
+                };
             }
         }
 
-        private void CambiarEstadoPanelLateral()
-        {
-            if(panelLateralVisible)
-            {
-                // Ocultar el panel lateral
-                panelLateral.Width = 40;
-                panelInferior.Location = new Point(40, panelInferior.Location.Y);
-                panelInferior.Width = panelInferior.Width + 160;
-                panelLateralVisible = false;
-            }
-            else
-            {
-                // Mostrar el panel lateral
-                panelLateral.Width = 200;
-                panelInferior.Location = new Point(200, panelInferior.Location.Y);
-                panelInferior.Width = panelInferior.Width - 160;
-                panelLateralVisible = true;
-            }
-        }
         private void imgMinimizar_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
@@ -146,11 +160,6 @@ namespace Facturar.Presentacion
             Application.Exit();
         }
 
-        private void CambiarEstadoEdicion(bool enEdicion)
-        {
-            // Este metodo estaba pensado cuando habia dos paneles, uno general y otro para edicion, pero supongo que habra que mostrar el userControl del panel inferior que corresponda.
-            
-        }
 
         private void BotonGeneral_Click(object sender, EventArgs e)
         {
@@ -191,13 +200,13 @@ namespace Facturar.Presentacion
                 // Reducir ancho (colapsar)
                 panelLateral.Width -= velocidad;
                 panelInferior.Location = new Point(
-                    panelLateral.Width, 
+                    panelLateral.Width,
                     panelInferior.Location.Y);
-                
+
                 panelInferior.Width += velocidad;
 
                 AjustarPanelCentral();
-                
+
                 if(panelLateral.Width <= anchoPanelLateralColapsado)
                 {
                     panelLateral.Width = anchoPanelLateralColapsado;
@@ -218,13 +227,13 @@ namespace Facturar.Presentacion
                 // Aumentar ancho (expandir)
                 panelLateral.Width += velocidad;
                 panelInferior.Location = new Point(
-                    panelLateral.Width, 
+                    panelLateral.Width,
                     panelInferior.Location.Y);
 
                 panelInferior.Width -= velocidad;
 
                 AjustarPanelCentral();
-                
+
                 if(panelLateral.Width >= anchoPanelLateralExpandido)
                 {
                     //panelLateral.Width = anchoPanelLateralExpandido;
@@ -234,14 +243,14 @@ namespace Facturar.Presentacion
                 }
             }
 
-            
+
             posicionX = panelLateral.Width / 2;
-            btnAbrirPanel.Location = new Point(posicionX - (btnAbrirPanel.Width / 2),btnAbrirPanel.Location.Y);
-            btnEmpresas.Location = new Point(posicionX - (btnEmpresas.Width / 2),btnEmpresas.Location.Y);
-            btnClientes.Location = new Point(posicionX - (btnClientes.Width / 2),btnClientes.Location.Y);
-            btnLocales.Location = new Point(posicionX - (btnLocales.Width / 2),btnLocales.Location.Y);
-            btnContratos.Location = new Point(posicionX - (btnContratos.Width / 2),btnContratos.Location.Y);
-            btnConfigurar.Location = new Point(posicionX - (btnConfigurar.Width / 2),btnConfigurar.Location.Y);
+            btnAbrirPanel.Location = new Point(posicionX - (btnAbrirPanel.Width / 2), btnAbrirPanel.Location.Y);
+            btnEmpresas.Location = new Point(posicionX - (btnEmpresas.Width / 2), btnEmpresas.Location.Y);
+            btnClientes.Location = new Point(posicionX - (btnClientes.Width / 2), btnClientes.Location.Y);
+            btnLocales.Location = new Point(posicionX - (btnLocales.Width / 2), btnLocales.Location.Y);
+            btnContratos.Location = new Point(posicionX - (btnContratos.Width / 2), btnContratos.Location.Y);
+            btnConfigurar.Location = new Point(posicionX - (btnConfigurar.Width / 2), btnConfigurar.Location.Y);
         }
 
         private void AjustarPanelCentral()
@@ -258,9 +267,9 @@ namespace Facturar.Presentacion
 
         private void btnEmpresas_Click(object sender, EventArgs e)
         {
-            var ucEmpresas = new UC_Empresas();
             ucEmpresas.Dock = DockStyle.Fill;
-            btnAbrirPanel_Click(btnAbrirPanel, EventArgs .Empty);
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            panelGeneral.Visible = true;
             panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucEmpresas);
         }
@@ -295,6 +304,12 @@ namespace Facturar.Presentacion
             ucConfiguracion.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
             CargarPanelCentral(ucConfiguracion);
+        }
+
+        private void btnInicio_Click(object sender, EventArgs e)
+        {
+            panelCentral.Controls.Clear();
+            panelGeneral.Visible = false;
         }
     }
 

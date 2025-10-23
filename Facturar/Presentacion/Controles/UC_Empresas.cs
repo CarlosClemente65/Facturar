@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Drawing.Text;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Facturar.Entidades;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
@@ -34,6 +29,7 @@ namespace Facturar.Presentacion.Controles
 
             // Carga las empresas en el control
             CargarEmpresas(activas: true);
+
 
         }
 
@@ -104,7 +100,7 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-        
+
 
         private void MostrarDatosEmpresa(Empresa empresa)
         {
@@ -119,7 +115,7 @@ namespace Facturar.Presentacion.Controles
             {
                 txtFechaBaja.Text = "";
             }
-                txtDireccion.Text = empresa.Direccion;
+            txtDireccion.Text = empresa.Direccion;
             txtCodigoPostal.Text = empresa.CodigoPostal;
             txtPoblacion.Text = empresa.Poblacion;
             txtProvincia.Text = empresa.Provincia;

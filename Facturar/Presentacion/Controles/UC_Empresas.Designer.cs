@@ -68,6 +68,7 @@
             // 
             this.label1.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.label1.Font = new System.Drawing.Font("Verdana", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = System.Drawing.Color.SaddleBrown;
             this.label1.Location = new System.Drawing.Point(189, 8);
             this.label1.Margin = new System.Windows.Forms.Padding(0);
             this.label1.Name = "label1";
@@ -92,18 +93,18 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvEmpresas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvEmpresas.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.ControlLight;
             dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvEmpresas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvEmpresas.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvEmpresas.ColumnHeadersHeight = 36;
             dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Window;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.ControlText;
             dataGridViewCellStyle3.SelectionBackColor = System.Drawing.Color.OldLace;
             dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
@@ -116,18 +117,20 @@
             this.dgvEmpresas.ReadOnly = true;
             dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
             dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle4.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
             dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Control;
             dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvEmpresas.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            this.dgvEmpresas.RowHeadersVisible = false;
             dataGridViewCellStyle5.BackColor = System.Drawing.Color.White;
             dataGridViewCellStyle5.ForeColor = System.Drawing.Color.Black;
             dataGridViewCellStyle5.SelectionBackColor = System.Drawing.Color.OldLace;
             dataGridViewCellStyle5.SelectionForeColor = System.Drawing.Color.Black;
             this.dgvEmpresas.RowsDefaultCellStyle = dataGridViewCellStyle5;
             this.dgvEmpresas.RowTemplate.DefaultCellStyle.BackColor = System.Drawing.Color.White;
+            this.dgvEmpresas.RowTemplate.DefaultCellStyle.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.dgvEmpresas.RowTemplate.DefaultCellStyle.ForeColor = System.Drawing.Color.Black;
             this.dgvEmpresas.RowTemplate.DefaultCellStyle.SelectionBackColor = System.Drawing.Color.OldLace;
             this.dgvEmpresas.RowTemplate.DefaultCellStyle.SelectionForeColor = System.Drawing.Color.Black;
@@ -155,18 +158,21 @@
             // 
             this.txtNif.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNif.Enabled = false;
+            this.txtNif.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNif.Location = new System.Drawing.Point(11, 289);
             this.txtNif.Name = "txtNif";
-            this.txtNif.Size = new System.Drawing.Size(100, 20);
+            this.txtNif.Size = new System.Drawing.Size(100, 22);
             this.txtNif.TabIndex = 3;
+            this.txtNif.Tag = "primerCampo";
             // 
             // txtNombreEmpresa
             // 
             this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNombreEmpresa.Enabled = false;
+            this.txtNombreEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtNombreEmpresa.Location = new System.Drawing.Point(124, 289);
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
-            this.txtNombreEmpresa.Size = new System.Drawing.Size(416, 20);
+            this.txtNombreEmpresa.Size = new System.Drawing.Size(439, 22);
             this.txtNombreEmpresa.TabIndex = 5;
             // 
             // lblNombre
@@ -185,9 +191,10 @@
             // 
             this.txtFechaAlta.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFechaAlta.Enabled = false;
-            this.txtFechaAlta.Location = new System.Drawing.Point(546, 289);
+            this.txtFechaAlta.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFechaAlta.Location = new System.Drawing.Point(569, 289);
             this.txtFechaAlta.Name = "txtFechaAlta";
-            this.txtFechaAlta.Size = new System.Drawing.Size(100, 20);
+            this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
             this.txtFechaAlta.TabIndex = 7;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -197,7 +204,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(546, 272);
+            this.label3.Location = new System.Drawing.Point(580, 272);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(67, 13);
             this.label3.TabIndex = 6;
@@ -207,9 +214,10 @@
             // 
             this.txtFechaBaja.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFechaBaja.Enabled = false;
-            this.txtFechaBaja.Location = new System.Drawing.Point(655, 289);
+            this.txtFechaBaja.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFechaBaja.Location = new System.Drawing.Point(665, 289);
             this.txtFechaBaja.Name = "txtFechaBaja";
-            this.txtFechaBaja.Size = new System.Drawing.Size(100, 20);
+            this.txtFechaBaja.Size = new System.Drawing.Size(90, 22);
             this.txtFechaBaja.TabIndex = 9;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -219,7 +227,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(655, 272);
+            this.label4.Location = new System.Drawing.Point(674, 272);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(70, 13);
             this.label4.TabIndex = 8;
@@ -229,9 +237,10 @@
             // 
             this.txtDireccion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtDireccion.Enabled = false;
+            this.txtDireccion.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDireccion.Location = new System.Drawing.Point(11, 329);
             this.txtDireccion.Name = "txtDireccion";
-            this.txtDireccion.Size = new System.Drawing.Size(398, 20);
+            this.txtDireccion.Size = new System.Drawing.Size(398, 22);
             this.txtDireccion.TabIndex = 11;
             // 
             // label5
@@ -250,9 +259,10 @@
             // 
             this.txtCodigoPostal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtCodigoPostal.Enabled = false;
+            this.txtCodigoPostal.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtCodigoPostal.Location = new System.Drawing.Point(415, 329);
             this.txtCodigoPostal.Name = "txtCodigoPostal";
-            this.txtCodigoPostal.Size = new System.Drawing.Size(68, 20);
+            this.txtCodigoPostal.Size = new System.Drawing.Size(68, 22);
             this.txtCodigoPostal.TabIndex = 13;
             // 
             // label6
@@ -271,9 +281,10 @@
             // 
             this.txtProvincia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtProvincia.Enabled = false;
+            this.txtProvincia.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtProvincia.Location = new System.Drawing.Point(625, 329);
             this.txtProvincia.Name = "txtProvincia";
-            this.txtProvincia.Size = new System.Drawing.Size(130, 20);
+            this.txtProvincia.Size = new System.Drawing.Size(130, 22);
             this.txtProvincia.TabIndex = 17;
             // 
             // label7
@@ -292,9 +303,10 @@
             // 
             this.txtPoblacion.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtPoblacion.Enabled = false;
+            this.txtPoblacion.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPoblacion.Location = new System.Drawing.Point(489, 329);
             this.txtPoblacion.Name = "txtPoblacion";
-            this.txtPoblacion.Size = new System.Drawing.Size(130, 20);
+            this.txtPoblacion.Size = new System.Drawing.Size(130, 22);
             this.txtPoblacion.TabIndex = 15;
             // 
             // label8
@@ -313,9 +325,10 @@
             // 
             this.txtTelefono.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtTelefono.Enabled = false;
+            this.txtTelefono.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtTelefono.Location = new System.Drawing.Point(11, 369);
             this.txtTelefono.Name = "txtTelefono";
-            this.txtTelefono.Size = new System.Drawing.Size(130, 20);
+            this.txtTelefono.Size = new System.Drawing.Size(130, 22);
             this.txtTelefono.TabIndex = 19;
             // 
             // label9
@@ -334,9 +347,10 @@
             // 
             this.txtEmail.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtEmail.Enabled = false;
+            this.txtEmail.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtEmail.Location = new System.Drawing.Point(147, 369);
             this.txtEmail.Name = "txtEmail";
-            this.txtEmail.Size = new System.Drawing.Size(262, 20);
+            this.txtEmail.Size = new System.Drawing.Size(262, 22);
             this.txtEmail.TabIndex = 21;
             // 
             // label10
@@ -355,9 +369,10 @@
             // 
             this.txtPersonaContacto.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtPersonaContacto.Enabled = false;
+            this.txtPersonaContacto.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtPersonaContacto.Location = new System.Drawing.Point(417, 369);
             this.txtPersonaContacto.Name = "txtPersonaContacto";
-            this.txtPersonaContacto.Size = new System.Drawing.Size(244, 20);
+            this.txtPersonaContacto.Size = new System.Drawing.Size(244, 22);
             this.txtPersonaContacto.TabIndex = 23;
             // 
             // label11
@@ -376,9 +391,10 @@
             // 
             this.txtSerieFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtSerieFactura.Enabled = false;
+            this.txtSerieFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtSerieFactura.Location = new System.Drawing.Point(668, 369);
             this.txtSerieFactura.Name = "txtSerieFactura";
-            this.txtSerieFactura.Size = new System.Drawing.Size(34, 20);
+            this.txtSerieFactura.Size = new System.Drawing.Size(34, 22);
             this.txtSerieFactura.TabIndex = 25;
             this.txtSerieFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -398,9 +414,10 @@
             // 
             this.txtFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFactura.Enabled = false;
+            this.txtFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtFactura.Location = new System.Drawing.Point(708, 369);
             this.txtFactura.Name = "txtFactura";
-            this.txtFactura.Size = new System.Drawing.Size(48, 20);
+            this.txtFactura.Size = new System.Drawing.Size(48, 22);
             this.txtFactura.TabIndex = 27;
             this.txtFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -463,7 +480,6 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.DataGridView dgvEmpresas;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNif;
         private System.Windows.Forms.TextBox txtNombreEmpresa;
@@ -490,5 +506,6 @@
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox txtFactura;
         private System.Windows.Forms.Label label13;
+        public System.Windows.Forms.DataGridView dgvEmpresas;
     }
 }

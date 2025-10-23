@@ -9,7 +9,7 @@ namespace Facturar.Presentacion.Paneles
         public event EventHandler BajaClicked;
         public event EventHandler EditarClicked;
         public event EventHandler SeleccionActivos;
-        public event EventHandler InicioClicked;
+        public event EventHandler EliminarClicked;
 
         public bool EstadoVisible
         {
@@ -38,10 +38,10 @@ namespace Facturar.Presentacion.Paneles
             SeleccionActivos?.Invoke(this, EventArgs.Empty);
         }
 
-        private void btnInicio_Click(object sender, EventArgs e)
+
+        private void btnEliminar_Click_1(object sender, EventArgs e)
         {
-            panelActivos.Visible = false;
-            InicioClicked?.Invoke(this, EventArgs.Empty);
+            EliminarClicked?.Invoke(this, EventArgs.Empty);
         }
 
         public string EstadoSeleccionado
@@ -64,7 +64,5 @@ namespace Facturar.Presentacion.Paneles
             }
             cbEstado.SelectedIndex = 0;
         }
-
-        
     }
 }

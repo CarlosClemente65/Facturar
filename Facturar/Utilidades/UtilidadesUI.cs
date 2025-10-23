@@ -1,15 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Facturar.Utilidades
 {
     public static class UtilidadesUI
     {
+
         /// <summary>
         /// Permite limpiar todos los TextBox de un formulario pasado por parametro
         /// </summary>
@@ -20,6 +20,7 @@ namespace Facturar.Utilidades
             {
                 if(ctrl is TextBox txt)
                 {
+                    // Limpiar el texto
                     txt.Text = "";
                 }
 
@@ -29,7 +30,6 @@ namespace Facturar.Utilidades
                 }
             }
         }
-
 
         /// <summary>
         /// Permite insertar las columnas en un grid segun el orden indicado
@@ -55,6 +55,41 @@ namespace Facturar.Utilidades
                 HeaderText = displayName,
                 DisplayIndex = indice
             });
+        }
+
+        /// <summary>
+        /// Habilita o bloquea todos los TextBox de un contenedor de forma recursiva
+        /// </summary>
+        /// <param name="contenedor">Control que contiene los TextBox</param>
+        /// <param name="habilitar">true para habilitar, false para bloquear</param>
+        public static void HabilitarTextBoxes(Control contenedor, bool habilitar)
+        {
+            TextBox primerCampo = null;
+            foreach (Control ctrl in contenedor.Controls)
+            {
+                if (ctrl is TextBox txt)
+                {
+                    txt.Enabled = habilitar;
+
+                    // Identificar el primer campo por Tag
+                    if(txt.Tag?.ToString() == "primerCampo" && primerCampo == null)
+                    {
+                        primerCampo = txt;
+                    }
+                }
+
+                // Recursión para controles hijos
+                if (ctrl.HasChildren)
+                {
+                    HabilitarTextBoxes(ctrl, habilitar);
+                }
+            }
+
+            // Poner foco en el primer campo si se habilita
+            if(habilitar && primerCampo != null)
+            {
+                primerCampo.Focus();
+            }
         }
     }
 }

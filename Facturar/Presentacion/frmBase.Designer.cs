@@ -42,12 +42,14 @@
             this.btnAbrirPanel = new System.Windows.Forms.Button();
             this.panelCentral = new System.Windows.Forms.Panel();
             this.panelInferior = new System.Windows.Forms.Panel();
+            this.btnInicio = new System.Windows.Forms.Button();
             this.btnNnuevo = new System.Windows.Forms.Button();
             this.panelSuperior.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).BeginInit();
             this.panelLateral.SuspendLayout();
+            this.panelInferior.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSuperior
@@ -249,13 +251,37 @@
             // 
             // panelInferior
             // 
+            this.panelInferior.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.panelInferior.BackColor = System.Drawing.Color.OldLace;
             this.panelInferior.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelInferior.Controls.Add(this.btnInicio);
             this.panelInferior.Location = new System.Drawing.Point(45, 456);
             this.panelInferior.Margin = new System.Windows.Forms.Padding(0);
             this.panelInferior.Name = "panelInferior";
             this.panelInferior.Size = new System.Drawing.Size(901, 60);
             this.panelInferior.TabIndex = 0;
+            // 
+            // btnInicio
+            // 
+            this.btnInicio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnInicio.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnInicio.FlatAppearance.BorderSize = 0;
+            this.btnInicio.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
+            this.btnInicio.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
+            this.btnInicio.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnInicio.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnInicio.Image = global::Facturar.Properties.Resources.Inicio_black;
+            this.btnInicio.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnInicio.Location = new System.Drawing.Point(824, 2);
+            this.btnInicio.Margin = new System.Windows.Forms.Padding(0);
+            this.btnInicio.Name = "btnInicio";
+            this.btnInicio.Size = new System.Drawing.Size(75, 56);
+            this.btnInicio.TabIndex = 4;
+            this.btnInicio.Text = "Inicio";
+            this.btnInicio.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnInicio.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnInicio.UseVisualStyleBackColor = true;
+            this.btnInicio.Click += new System.EventHandler(this.btnInicio_Click);
             // 
             // btnNnuevo
             // 
@@ -298,6 +324,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).EndInit();
             this.panelLateral.ResumeLayout(false);
+            this.panelInferior.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -320,5 +347,6 @@
         private System.Windows.Forms.Button btnContratos;
         private System.Windows.Forms.Button btnConfigurar;
         private System.Windows.Forms.Panel panelInferior;
+        private System.Windows.Forms.Button btnInicio;
     }
 }

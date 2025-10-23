@@ -93,6 +93,16 @@ namespace Facturar.Properties {
         /// <summary>
         ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap Borrar_black1 {
+            get {
+                object obj = ResourceManager.GetObject("Borrar_black1", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap Cancelar2_black {
             get {
                 object obj = ResourceManager.GetObject("Cancelar2_black", resourceCulture);
@@ -156,6 +166,16 @@ namespace Facturar.Properties {
         internal static System.Drawing.Bitmap Empresa_black {
             get {
                 object obj = ResourceManager.GetObject("Empresa_black", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Busca un recurso adaptado de tipo System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Inicio_black {
+            get {
+                object obj = ResourceManager.GetObject("Inicio_black", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
