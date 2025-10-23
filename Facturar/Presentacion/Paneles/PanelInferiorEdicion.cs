@@ -10,11 +10,11 @@ using System.Windows.Forms;
 
 namespace Facturar.Presentacion.Paneles
 {
-    public partial class PanelInferiorEdicion : UserControl
+    public partial class PanelInferior_Edicion : UserControl
     {
         public event EventHandler CancelarClicked;
         public event EventHandler ValidarClicked;
-        public PanelInferiorEdicion()
+        public PanelInferior_Edicion()
         {
             InitializeComponent();
             btnCancelar.Click += btnCancelar_Click;

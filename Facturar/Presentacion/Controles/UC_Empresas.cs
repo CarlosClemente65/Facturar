@@ -3,46 +3,101 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Text;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Facturar.Entidades;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Presentacion.Controles
 {
     public partial class UC_Empresas : UserControl
     {
+
+        // Almacena la lista de empresas para poder ordenar
+        private IEnumerable<Empresa> listaEmpresas;
+
+        private bool ordenAscendente = true;
+
+        Dictionary<string, string> NombresEncabezado;
+
+
         public UC_Empresas()
         {
             InitializeComponent();
-            var gestorEmpresas = new Servicios.GestorEmpresas();
-            var dtEmpresas = gestorEmpresas.ListarTodos(activas: true);
-            dgvEmpresas.DataSource = dtEmpresas;
 
-            //dgvEmpresas.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
-            //dgvEmpresas.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
-            //dgvEmpresas.ReadOnly = true;
-            dgvEmpresas.Columns["Id"].DisplayIndex = 0;
-            dgvEmpresas.Columns["NIF"].DisplayIndex = 1;
-            dgvEmpresas.Columns["Nombre"].DisplayIndex = 2;
-            dgvEmpresas.Columns["Direccion"].DisplayIndex = 3;
-            dgvEmpresas.Columns["CodigoPostal"].DisplayIndex = 4;
-            dgvEmpresas.Columns["CodigoPostal"].HeaderText = "Codigo postal";
-            dgvEmpresas.Columns["Poblacion"].DisplayIndex = 5;
-            dgvEmpresas.Columns["Provincia"].DisplayIndex = 6;
-            dgvEmpresas.Columns["Telefono"].DisplayIndex = 7;
-            dgvEmpresas.Columns["Email"].DisplayIndex = 8;
-            dgvEmpresas.Columns["PersonaContacto"].DisplayIndex = 9;
-            dgvEmpresas.Columns["PersonaContacto"].HeaderText = "Persona contacto";
-            dgvEmpresas.Columns["FechaAlta"].DisplayIndex = 10;
-            dgvEmpresas.Columns["FechaAlta"].HeaderText = "Fecha alta";
-            dgvEmpresas.Columns["FechaBaja"].DisplayIndex = 11;
-            dgvEmpresas.Columns["FechaBaja"].HeaderText = "Fecha baja";
-            dgvEmpresas.Columns["SerieFactura"].DisplayIndex = 12;
-            dgvEmpresas.Columns["SerieFactura"].HeaderText = "Serie factura";
-            dgvEmpresas.Columns["NumeroFacturaActual"].DisplayIndex = 13;
-            dgvEmpresas.Columns["NumeroFacturaActual"].HeaderText = "Ultima factura";
-            dgvEmpresas.Columns["Activo"].Visible = false;
+            // Monta las columnas por orden
+            InicializaColumnas();
+
+            // Carga las empresas en el control
+            CargarEmpresas(activas: true);
+
+        }
+
+        public void CargarEmpresas(bool? activas = true)
+        {
+            var gestorEmpresas = new Servicios.GestorEmpresas();
+            listaEmpresas = gestorEmpresas.ListarTodos(activas: activas);
+            
+            // Carga los datos de las empresas
+            dgvEmpresas.DataSource = null;
+            dgvEmpresas.DataSource = listaEmpresas;
+
+        }
+
+        private void InicializaColumnas()
+        {
+            dgvEmpresas.AutoGenerateColumns = false; // Se desactiva la autogeneracion de columnas
+            dgvEmpresas.Columns.Clear();
+
+            //// Se crea un diccionario con los nombres de las propiedades
+            //NombresEncabezado = typeof(Empresa)
+            //    .GetProperties()
+            //    .ToDictionary(
+            //        p => p.Name,
+            //        p => p.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+            //            .Cast<DisplayNameAttribute>()
+            //            .FirstOrDefault()?.DisplayName ?? p.Name);
+
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Id", 0);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "NIF", 1);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Nombre", 2);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Direccion", 3);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "CodigoPostal", 4);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Poblacion", 5);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Provincia", 6);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Telefono", 7);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Email", 8);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "PersonaContacto", 9);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "FechaAlta", 10);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "FechaBaja", 11);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "SerieFactura", 12);
+            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "NumeroFacturaActual", 13);
+
+        }
+
+
+        private void dgvEmpresas_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+        {
+            string nombreColumna = dgvEmpresas.Columns[e.ColumnIndex].DataPropertyName;
+
+            if(ordenAscendente)
+            {
+                dgvEmpresas.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
+            }
+            else
+            {
+                dgvEmpresas.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
+            }
+
+            ordenAscendente = !ordenAscendente;
+        }
+
+        private object GetPropValue(object obj, string nombreColumna)
+        {
+            return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
         }
     }
 }

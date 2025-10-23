@@ -1,6 +1,6 @@
 ﻿namespace Facturar.Presentacion.Paneles
 {
-    partial class PanelInferiorEdicion
+    partial class PanelInferior_Edicion
     {
         /// <summary> 
         /// Variable del diseñador necesaria.
@@ -88,12 +88,12 @@
             this.btnCancelar.UseVisualStyleBackColor = true;
             this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
             // 
-            // PanelInferiorEdicion
+            // PanelInferior_Edicion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.panelBotonesEdicion);
-            this.Name = "PanelInferiorEdicion";
+            this.Name = "PanelInferior_Edicion";
             this.Size = new System.Drawing.Size(150, 60);
             this.panelBotonesEdicion.ResumeLayout(false);
             this.ResumeLayout(false);

@@ -1,6 +1,6 @@
 ﻿namespace Facturar.Presentacion.Paneles
 {
-    partial class PanelInferiorGeneral
+    partial class PanelInferior_general
     {
         /// <summary> 
         /// Variable del diseñador necesaria.
@@ -32,7 +32,11 @@
             this.btnAlta = new System.Windows.Forms.Button();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnEliminar = new System.Windows.Forms.Button();
+            this.panelActivos = new System.Windows.Forms.Panel();
+            this.label1 = new System.Windows.Forms.Label();
+            this.cbEstado = new System.Windows.Forms.ComboBox();
             this.panelBotonesGeneral.SuspendLayout();
+            this.panelActivos.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelBotonesGeneral
@@ -42,7 +46,7 @@
             this.panelBotonesGeneral.Controls.Add(this.btnAlta);
             this.panelBotonesGeneral.Controls.Add(this.btnEditar);
             this.panelBotonesGeneral.Controls.Add(this.btnEliminar);
-            this.panelBotonesGeneral.Location = new System.Drawing.Point(0, 0);
+            this.panelBotonesGeneral.Location = new System.Drawing.Point(76, 0);
             this.panelBotonesGeneral.Margin = new System.Windows.Forms.Padding(0);
             this.panelBotonesGeneral.Name = "panelBotonesGeneral";
             this.panelBotonesGeneral.Size = new System.Drawing.Size(225, 56);
@@ -115,16 +119,58 @@
             this.btnEliminar.UseVisualStyleBackColor = true;
             this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             // 
-            // PanelInferiorGeneral
+            // panelActivos
+            // 
+            this.panelActivos.BackColor = System.Drawing.Color.Transparent;
+            this.panelActivos.Controls.Add(this.label1);
+            this.panelActivos.Controls.Add(this.cbEstado);
+            this.panelActivos.Location = new System.Drawing.Point(0, 0);
+            this.panelActivos.Margin = new System.Windows.Forms.Padding(0);
+            this.panelActivos.Name = "panelActivos";
+            this.panelActivos.Padding = new System.Windows.Forms.Padding(5);
+            this.panelActivos.Size = new System.Drawing.Size(91, 58);
+            this.panelActivos.TabIndex = 5;
+            this.panelActivos.Visible = false;
+            // 
+            // label1
+            // 
+            this.label1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label1.Location = new System.Drawing.Point(9, 6);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(74, 16);
+            this.label1.TabIndex = 1;
+            this.label1.Text = "Estado";
+            this.label1.TextAlign = System.Drawing.ContentAlignment.BottomLeft;
+            // 
+            // cbEstado
+            // 
+            this.cbEstado.BackColor = System.Drawing.SystemColors.Control;
+            this.cbEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEstado.DropDownWidth = 75;
+            this.cbEstado.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbEstado.FormattingEnabled = true;
+            this.cbEstado.Items.AddRange(new object[] {
+            "Activos",
+            "Inactivos",
+            "Todos"});
+            this.cbEstado.Location = new System.Drawing.Point(8, 25);
+            this.cbEstado.Name = "cbEstado";
+            this.cbEstado.Size = new System.Drawing.Size(75, 22);
+            this.cbEstado.TabIndex = 0;
+            this.cbEstado.SelectedIndexChanged += new System.EventHandler(this.cbEstado_SelectedIndexChanged);
+            // 
+            // PanelInferior_general
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
+            this.Controls.Add(this.panelActivos);
             this.Controls.Add(this.panelBotonesGeneral);
             this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "PanelInferiorGeneral";
-            this.Size = new System.Drawing.Size(225, 60);
+            this.Name = "PanelInferior_general";
+            this.Size = new System.Drawing.Size(301, 60);
             this.panelBotonesGeneral.ResumeLayout(false);
+            this.panelActivos.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -135,5 +181,8 @@
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnAlta;
         private System.Windows.Forms.FlowLayoutPanel panelBotonesGeneral;
+        private System.Windows.Forms.ComboBox cbEstado;
+        private System.Windows.Forms.Label label1;
+        public System.Windows.Forms.Panel panelActivos;
     }
 }

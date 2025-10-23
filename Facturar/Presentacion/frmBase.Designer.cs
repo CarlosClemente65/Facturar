@@ -29,25 +29,25 @@
         private void InitializeComponent()
         {
             this.panelSuperior = new System.Windows.Forms.Panel();
+            this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lbMensaje = new System.Windows.Forms.Label();
+            this.imgCerrar = new System.Windows.Forms.PictureBox();
+            this.imgMinimizar = new System.Windows.Forms.PictureBox();
             this.panelLateral = new System.Windows.Forms.Panel();
-            this.panelCentral = new System.Windows.Forms.Panel();
-            this.panelInferior = new System.Windows.Forms.Panel();
             this.btnConfigurar = new System.Windows.Forms.Button();
             this.btnContratos = new System.Windows.Forms.Button();
             this.btnLocales = new System.Windows.Forms.Button();
             this.btnClientes = new System.Windows.Forms.Button();
             this.btnEmpresas = new System.Windows.Forms.Button();
             this.btnAbrirPanel = new System.Windows.Forms.Button();
-            this.pictureBox1 = new System.Windows.Forms.PictureBox();
-            this.imgCerrar = new System.Windows.Forms.PictureBox();
-            this.imgMinimizar = new System.Windows.Forms.PictureBox();
+            this.panelCentral = new System.Windows.Forms.Panel();
+            this.panelInferior = new System.Windows.Forms.Panel();
             this.btnNnuevo = new System.Windows.Forms.Button();
             this.panelSuperior.SuspendLayout();
-            this.panelLateral.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).BeginInit();
+            this.panelLateral.SuspendLayout();
             this.SuspendLayout();
             // 
             // panelSuperior
@@ -64,6 +64,16 @@
             this.panelSuperior.Size = new System.Drawing.Size(942, 40);
             this.panelSuperior.TabIndex = 0;
             // 
+            // pictureBox1
+            // 
+            this.pictureBox1.Image = global::Facturar.Properties.Resources.Aplicacion;
+            this.pictureBox1.Location = new System.Drawing.Point(7, 3);
+            this.pictureBox1.Name = "pictureBox1";
+            this.pictureBox1.Size = new System.Drawing.Size(35, 35);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.pictureBox1.TabIndex = 4;
+            this.pictureBox1.TabStop = false;
+            // 
             // lbMensaje
             // 
             this.lbMensaje.AutoSize = true;
@@ -73,6 +83,29 @@
             this.lbMensaje.Size = new System.Drawing.Size(227, 25);
             this.lbMensaje.TabIndex = 3;
             this.lbMensaje.Text = "Facturacion de alquieres";
+            // 
+            // imgCerrar
+            // 
+            this.imgCerrar.Image = global::Facturar.Properties.Resources.cerrar;
+            this.imgCerrar.Location = new System.Drawing.Point(905, 5);
+            this.imgCerrar.Name = "imgCerrar";
+            this.imgCerrar.Size = new System.Drawing.Size(30, 30);
+            this.imgCerrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgCerrar.TabIndex = 2;
+            this.imgCerrar.TabStop = false;
+            this.imgCerrar.Click += new System.EventHandler(this.imgCerrar_Click);
+            // 
+            // imgMinimizar
+            // 
+            this.imgMinimizar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            this.imgMinimizar.Image = global::Facturar.Properties.Resources.minimizar1;
+            this.imgMinimizar.Location = new System.Drawing.Point(859, 5);
+            this.imgMinimizar.Name = "imgMinimizar";
+            this.imgMinimizar.Size = new System.Drawing.Size(30, 30);
+            this.imgMinimizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.imgMinimizar.TabIndex = 1;
+            this.imgMinimizar.TabStop = false;
+            this.imgMinimizar.Click += new System.EventHandler(this.imgMinimizar_Click);
             // 
             // panelLateral
             // 
@@ -89,26 +122,6 @@
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(45, 472);
             this.panelLateral.TabIndex = 1;
-            // 
-            // panelCentral
-            // 
-            this.panelCentral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.panelCentral.BackColor = System.Drawing.Color.Tan;
-            this.panelCentral.Location = new System.Drawing.Point(4, 44);
-            this.panelCentral.Name = "panelCentral";
-            this.panelCentral.Size = new System.Drawing.Size(942, 472);
-            this.panelCentral.TabIndex = 3;
-            // 
-            // panelInferior
-            // 
-            this.panelInferior.BackColor = System.Drawing.Color.NavajoWhite;
-            this.panelInferior.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.panelInferior.Location = new System.Drawing.Point(45, 456);
-            this.panelInferior.Margin = new System.Windows.Forms.Padding(0);
-            this.panelInferior.Name = "panelInferior";
-            this.panelInferior.Size = new System.Drawing.Size(901, 60);
-            this.panelInferior.TabIndex = 0;
             // 
             // btnConfigurar
             // 
@@ -224,38 +237,25 @@
             this.btnAbrirPanel.UseVisualStyleBackColor = true;
             this.btnAbrirPanel.Click += new System.EventHandler(this.btnAbrirPanel_Click);
             // 
-            // pictureBox1
+            // panelCentral
             // 
-            this.pictureBox1.Image = global::Facturar.Properties.Resources.Aplicacion;
-            this.pictureBox1.Location = new System.Drawing.Point(7, 3);
-            this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(35, 35);
-            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.pictureBox1.TabIndex = 4;
-            this.pictureBox1.TabStop = false;
+            this.panelCentral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.panelCentral.BackColor = System.Drawing.Color.Tan;
+            this.panelCentral.Location = new System.Drawing.Point(4, 44);
+            this.panelCentral.Name = "panelCentral";
+            this.panelCentral.Size = new System.Drawing.Size(942, 472);
+            this.panelCentral.TabIndex = 3;
             // 
-            // imgCerrar
+            // panelInferior
             // 
-            this.imgCerrar.Image = global::Facturar.Properties.Resources.cerrar;
-            this.imgCerrar.Location = new System.Drawing.Point(905, 5);
-            this.imgCerrar.Name = "imgCerrar";
-            this.imgCerrar.Size = new System.Drawing.Size(30, 30);
-            this.imgCerrar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgCerrar.TabIndex = 2;
-            this.imgCerrar.TabStop = false;
-            this.imgCerrar.Click += new System.EventHandler(this.imgCerrar_Click);
-            // 
-            // imgMinimizar
-            // 
-            this.imgMinimizar.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.imgMinimizar.Image = global::Facturar.Properties.Resources.minimizar1;
-            this.imgMinimizar.Location = new System.Drawing.Point(859, 5);
-            this.imgMinimizar.Name = "imgMinimizar";
-            this.imgMinimizar.Size = new System.Drawing.Size(30, 30);
-            this.imgMinimizar.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            this.imgMinimizar.TabIndex = 1;
-            this.imgMinimizar.TabStop = false;
-            this.imgMinimizar.Click += new System.EventHandler(this.imgMinimizar_Click);
+            this.panelInferior.BackColor = System.Drawing.Color.OldLace;
+            this.panelInferior.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelInferior.Location = new System.Drawing.Point(45, 456);
+            this.panelInferior.Margin = new System.Windows.Forms.Padding(0);
+            this.panelInferior.Name = "panelInferior";
+            this.panelInferior.Size = new System.Drawing.Size(901, 60);
+            this.panelInferior.TabIndex = 0;
             // 
             // btnNnuevo
             // 
@@ -294,10 +294,10 @@
             this.Load += new System.EventHandler(this.frmBase_Load);
             this.panelSuperior.ResumeLayout(false);
             this.panelSuperior.PerformLayout();
-            this.panelLateral.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgCerrar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.imgMinimizar)).EndInit();
+            this.panelLateral.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -317,8 +317,8 @@
         private System.Windows.Forms.Button btnEmpresas;
         private System.Windows.Forms.Button btnClientes;
         private System.Windows.Forms.Button btnLocales;
-        private System.Windows.Forms.Panel panelInferior;
         private System.Windows.Forms.Button btnContratos;
         private System.Windows.Forms.Button btnConfigurar;
+        private System.Windows.Forms.Panel panelInferior;
     }
 }

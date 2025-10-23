@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Facturar.Utilidades
 {
@@ -112,6 +114,24 @@ namespace Facturar.Utilidades
         {
             Error = 1,
             Actividad = 2
+        }
+
+        public static void InsertaColumnaDGW<T>(DataGridView dgw, string nombrePropiedad, int indice)
+        {
+            // Obtiene el nombre del atributo DisplayName (si existe)
+            var displayName = typeof(T)
+                .GetProperty(nombrePropiedad)?
+                .GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                .Cast<DisplayNameAttribute>()
+                .FirstOrDefault()?.DisplayName ?? nombrePropiedad;
+
+            // Agrega la columna
+            dgw.Columns.Add(new DataGridViewTextBoxColumn
+            {
+                DataPropertyName = nombrePropiedad,
+                HeaderText = displayName,
+                DisplayIndex = indice
+            });
         }
     }
 }

@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
+using Facturar.Servicios;
+using Facturar.Entidades;
 
 namespace Facturar.Presentacion
 {
@@ -15,8 +19,9 @@ namespace Facturar.Presentacion
         private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
 
-        private PanelInferiorGeneral panelGeneral;
-        private PanelInferiorEdicion panelEdicion;
+        private PanelInferior_general panelGeneral;
+        private PanelInferior_Edicion panelEdicion;
+        private GestorEmpresas gestorEmpresas;
         public frmBase()
         {
             InitializeComponent();
@@ -30,8 +35,10 @@ namespace Facturar.Presentacion
             panelLateral.BringToFront();  // Traer el panel lateral por encima del central
 
             // Crea instancias para los paneles inferiores y los carga en el panel inferior
-            panelGeneral = new PanelInferiorGeneral();
-            panelEdicion = new PanelInferiorEdicion();
+            panelGeneral = new PanelInferior_general();
+            panelEdicion = new PanelInferior_Edicion();
+            gestorEmpresas = new GestorEmpresas();
+
 
             // Suscribir a los eventos de los userControl
             SuscribirEventosPanelInferior(panelGeneral);
@@ -73,13 +80,31 @@ namespace Facturar.Presentacion
 
         private void SuscribirEventosPanelInferior(UserControl panel)
         {
-            if (panel is PanelInferiorGeneral general)
+            if (panel is PanelInferior_general general)
             {
                 general.AltaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
                 general.BajaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
                 general.EditarClicked += (s, e) => AlternarPanelInferior(panelEdicion);
+                general.SeleccionActivos += (s, e) => 
+                {
+                    string estado = general.EstadoSeleccionado;
+                    List<Empresa> lista;
+                    bool? activas = null;
+                    if (estado == "Activos")
+                    {
+                        activas = true;
+                    }
+                    else if (estado == "Inactivos")
+                    {
+                        activas = false;
+                    }
+                    lista = gestorEmpresas.ListarTodos(activas).ToList();
+
+                    var ucEmpresas = panelCentral.Controls.OfType<UC_Empresas>().FirstOrDefault();
+                    ucEmpresas?.CargarEmpresas(activas);
+                };
             }
-            else if (panel is PanelInferiorEdicion edicion)
+            else if (panel is PanelInferior_Edicion edicion)
             {
                 edicion.CancelarClicked += (s,e) => AlternarPanelInferior(panelGeneral);
                 edicion.ValidarClicked+= (s, e) => AlternarPanelInferior(panelGeneral);
@@ -149,7 +174,6 @@ namespace Facturar.Presentacion
             }
         }
 
-        
 
         private void TimerLateral_Tick(object sender, EventArgs e)
         {
@@ -231,6 +255,7 @@ namespace Facturar.Presentacion
             var ucEmpresas = new UC_Empresas();
             ucEmpresas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs .Empty);
+            panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucEmpresas);
         }
 

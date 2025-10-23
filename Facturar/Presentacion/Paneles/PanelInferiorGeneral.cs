@@ -1,25 +1,21 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Facturar.Presentacion.Paneles
 {
-    public partial class PanelInferiorGeneral : UserControl
+    public partial class PanelInferior_general : UserControl
     {
         public event EventHandler AltaClicked;
         public event EventHandler BajaClicked;
         public event EventHandler EditarClicked;
-        public PanelInferiorGeneral()
+        public event EventHandler SeleccionActivos;
+
+        public bool EstadoVisible
         {
-            InitializeComponent();
-            btnAlta.Click += btnAlta_Click;
+            get => panelActivos.Visible;
+            set => panelActivos.Visible = value;
         }
+
 
         private void btnAlta_Click(object sender, EventArgs e)
         {
@@ -34,6 +30,31 @@ namespace Facturar.Presentacion.Paneles
         private void btnEliminar_Click(object sender, EventArgs e)
         {
             BajaClicked?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void cbEstado_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            SeleccionActivos?.Invoke(this, EventArgs.Empty);
+        }
+
+        public string EstadoSeleccionado
+        {
+            get { return cbEstado.SelectedItem?.ToString(); }
+        }
+        public PanelInferior_general()
+        {
+            InitializeComponent();
+            btnAlta.Click += btnAlta_Click;
+            cbEstado.SelectedItem = "Activos";
+        }
+
+        public void MostrarActivos(bool visible)
+        {
+            panelActivos.Visible = visible;
+            if(visible)
+            {
+                panelActivos.BringToFront();
+            }
         }
     }
 }
