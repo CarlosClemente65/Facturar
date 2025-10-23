@@ -187,6 +187,7 @@
     <Compile Include="Utilidades\Pruebas.cs" />
     <Compile Include="Utilidades\MapeadorDatos.cs" />
     <Compile Include="Utilidades\UtilesGenerales.cs" />
+    <Compile Include="Utilidades\UtilidadesUI.cs" />
     <EmbeddedResource Include="Presentacion\Controles\UC_Clientes.resx">
       <DependentUpon>UC_Clientes.cs</DependentUpon>
     </EmbeddedResource>
@@ -232,6 +233,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Inicio.png" />
     <None Include="Resources\Utilidades2.png" />
     <None Include="Resources\Contratos2_black.png" />
     <None Include="Resources\Locales_black.png" />

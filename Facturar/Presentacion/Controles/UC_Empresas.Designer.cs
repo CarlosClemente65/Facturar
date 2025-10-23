@@ -37,8 +37,8 @@
             this.dgvEmpresas = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNif = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.txtNombreEmpresa = new System.Windows.Forms.Label();
+            this.txtNombreEmpresa = new System.Windows.Forms.TextBox();
+            this.lblNombre = new System.Windows.Forms.Label();
             this.txtFechaAlta = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtFechaBaja = new System.Windows.Forms.TextBox();
@@ -59,7 +59,7 @@
             this.label11 = new System.Windows.Forms.Label();
             this.txtSerieFactura = new System.Windows.Forms.TextBox();
             this.label12 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtFactura = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dgvEmpresas)).BeginInit();
             this.SuspendLayout();
@@ -137,6 +137,7 @@
             this.dgvEmpresas.Size = new System.Drawing.Size(743, 230);
             this.dgvEmpresas.TabIndex = 1;
             this.dgvEmpresas.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvEmpresas_ColumnHeaderMouseClick);
+            this.dgvEmpresas.SelectionChanged += new System.EventHandler(this.dgvEmpresas_SelectionChanged);
             // 
             // label2
             // 
@@ -159,26 +160,26 @@
             this.txtNif.Size = new System.Drawing.Size(100, 20);
             this.txtNif.TabIndex = 3;
             // 
-            // textBox1
-            // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox1.Enabled = false;
-            this.textBox1.Location = new System.Drawing.Point(124, 289);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(416, 20);
-            this.textBox1.TabIndex = 5;
-            // 
             // txtNombreEmpresa
             // 
-            this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNombreEmpresa.AutoSize = true;
-            this.txtNombreEmpresa.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreEmpresa.Location = new System.Drawing.Point(124, 272);
+            this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtNombreEmpresa.Enabled = false;
+            this.txtNombreEmpresa.Location = new System.Drawing.Point(124, 289);
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
-            this.txtNombreEmpresa.Size = new System.Drawing.Size(101, 13);
-            this.txtNombreEmpresa.TabIndex = 4;
-            this.txtNombreEmpresa.Text = "Nombre empresa";
+            this.txtNombreEmpresa.Size = new System.Drawing.Size(416, 20);
+            this.txtNombreEmpresa.TabIndex = 5;
+            // 
+            // lblNombre
+            // 
+            this.lblNombre.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNombre.AutoSize = true;
+            this.lblNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblNombre.Location = new System.Drawing.Point(124, 272);
+            this.lblNombre.Name = "lblNombre";
+            this.lblNombre.Size = new System.Drawing.Size(101, 13);
+            this.lblNombre.TabIndex = 4;
+            this.lblNombre.Text = "Nombre empresa";
             // 
             // txtFechaAlta
             // 
@@ -379,6 +380,7 @@
             this.txtSerieFactura.Name = "txtSerieFactura";
             this.txtSerieFactura.Size = new System.Drawing.Size(34, 20);
             this.txtSerieFactura.TabIndex = 25;
+            this.txtSerieFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label12
             // 
@@ -392,14 +394,15 @@
             this.label12.TabIndex = 24;
             this.label12.Text = "Serie";
             // 
-            // textBox2
+            // txtFactura
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.textBox2.Enabled = false;
-            this.textBox2.Location = new System.Drawing.Point(708, 369);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(48, 20);
-            this.textBox2.TabIndex = 27;
+            this.txtFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtFactura.Enabled = false;
+            this.txtFactura.Location = new System.Drawing.Point(708, 369);
+            this.txtFactura.Name = "txtFactura";
+            this.txtFactura.Size = new System.Drawing.Size(48, 20);
+            this.txtFactura.TabIndex = 27;
+            this.txtFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label13
             // 
@@ -419,7 +422,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Transparent;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.txtFactura);
             this.Controls.Add(this.label13);
             this.Controls.Add(this.txtSerieFactura);
             this.Controls.Add(this.label12);
@@ -441,8 +444,8 @@
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtFechaAlta);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.txtNombreEmpresa);
+            this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.txtNif);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.dgvEmpresas);
@@ -463,8 +466,8 @@
         private System.Windows.Forms.DataGridView dgvEmpresas;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox txtNif;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.Label txtNombreEmpresa;
+        private System.Windows.Forms.TextBox txtNombreEmpresa;
+        private System.Windows.Forms.Label lblNombre;
         private System.Windows.Forms.TextBox txtFechaAlta;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox txtFechaBaja;
@@ -485,7 +488,7 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtSerieFactura;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtFactura;
         private System.Windows.Forms.Label label13;
     }
 }

@@ -103,6 +103,12 @@ namespace Facturar.Presentacion
                     var ucEmpresas = panelCentral.Controls.OfType<UC_Empresas>().FirstOrDefault();
                     ucEmpresas?.CargarEmpresas(activas);
                 };
+                general.InicioClicked += (s, e) =>
+                {
+                    panelCentral.Controls.Clear();
+                };
+
+
             }
             else if (panel is PanelInferior_Edicion edicion)
             {
@@ -177,7 +183,7 @@ namespace Facturar.Presentacion
 
         private void TimerLateral_Tick(object sender, EventArgs e)
         {
-            int velocidad = 5; // pixeles por tick
+            int velocidad = 15; // pixeles por tick
             int posicionX = 0;
 
             if(panelLateralVisible)
