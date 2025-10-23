@@ -33,6 +33,8 @@
             this.panelLateral = new System.Windows.Forms.Panel();
             this.panelCentral = new System.Windows.Forms.Panel();
             this.panelInferior = new System.Windows.Forms.Panel();
+            this.btnConfigurar = new System.Windows.Forms.Button();
+            this.btnContratos = new System.Windows.Forms.Button();
             this.btnLocales = new System.Windows.Forms.Button();
             this.btnClientes = new System.Windows.Forms.Button();
             this.btnEmpresas = new System.Windows.Forms.Button();
@@ -74,21 +76,25 @@
             // 
             // panelLateral
             // 
-            this.panelLateral.BackColor = System.Drawing.Color.LightGray;
+            this.panelLateral.BackColor = System.Drawing.Color.Gainsboro;
             this.panelLateral.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelLateral.Controls.Add(this.btnConfigurar);
+            this.panelLateral.Controls.Add(this.btnContratos);
             this.panelLateral.Controls.Add(this.btnLocales);
             this.panelLateral.Controls.Add(this.btnClientes);
             this.panelLateral.Controls.Add(this.btnEmpresas);
             this.panelLateral.Controls.Add(this.btnAbrirPanel);
             this.panelLateral.Location = new System.Drawing.Point(4, 44);
+            this.panelLateral.Margin = new System.Windows.Forms.Padding(0);
             this.panelLateral.Name = "panelLateral";
-            this.panelLateral.Size = new System.Drawing.Size(44, 472);
+            this.panelLateral.Size = new System.Drawing.Size(45, 472);
             this.panelLateral.TabIndex = 1;
             // 
             // panelCentral
             // 
+            this.panelCentral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelCentral.BackColor = System.Drawing.Color.Tan;
-            this.panelCentral.Dock = System.Windows.Forms.DockStyle.Fill;
             this.panelCentral.Location = new System.Drawing.Point(4, 44);
             this.panelCentral.Name = "panelCentral";
             this.panelCentral.Size = new System.Drawing.Size(942, 472);
@@ -96,7 +102,6 @@
             // 
             // panelInferior
             // 
-            this.panelInferior.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.panelInferior.BackColor = System.Drawing.Color.NavajoWhite;
             this.panelInferior.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.panelInferior.Location = new System.Drawing.Point(45, 456);
@@ -105,54 +110,104 @@
             this.panelInferior.Size = new System.Drawing.Size(901, 60);
             this.panelInferior.TabIndex = 0;
             // 
+            // btnConfigurar
+            // 
+            this.btnConfigurar.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnConfigurar.FlatAppearance.BorderSize = 0;
+            this.btnConfigurar.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnConfigurar.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnConfigurar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnConfigurar.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnConfigurar.Image = global::Facturar.Properties.Resources.Utilidades2;
+            this.btnConfigurar.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnConfigurar.Location = new System.Drawing.Point(2, 370);
+            this.btnConfigurar.Name = "btnConfigurar";
+            this.btnConfigurar.Size = new System.Drawing.Size(105, 60);
+            this.btnConfigurar.TabIndex = 5;
+            this.btnConfigurar.Text = "Configuracion";
+            this.btnConfigurar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnConfigurar.UseVisualStyleBackColor = true;
+            this.btnConfigurar.Visible = false;
+            this.btnConfigurar.Click += new System.EventHandler(this.btnConfigurar_Click);
+            // 
+            // btnContratos
+            // 
+            this.btnContratos.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnContratos.FlatAppearance.BorderSize = 0;
+            this.btnContratos.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnContratos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnContratos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnContratos.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnContratos.Image = global::Facturar.Properties.Resources.Contratos2_black;
+            this.btnContratos.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnContratos.Location = new System.Drawing.Point(2, 245);
+            this.btnContratos.Name = "btnContratos";
+            this.btnContratos.Size = new System.Drawing.Size(105, 60);
+            this.btnContratos.TabIndex = 4;
+            this.btnContratos.Text = "Contratos";
+            this.btnContratos.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnContratos.UseVisualStyleBackColor = true;
+            this.btnContratos.Visible = false;
+            this.btnContratos.Click += new System.EventHandler(this.btnContratos_Click);
+            // 
             // btnLocales
             // 
             this.btnLocales.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnLocales.FlatAppearance.BorderSize = 0;
+            this.btnLocales.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnLocales.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             this.btnLocales.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLocales.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLocales.Image = global::Facturar.Properties.Resources.Locales_black;
             this.btnLocales.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnLocales.Location = new System.Drawing.Point(2, 230);
+            this.btnLocales.Location = new System.Drawing.Point(2, 180);
             this.btnLocales.Name = "btnLocales";
-            this.btnLocales.Size = new System.Drawing.Size(85, 60);
+            this.btnLocales.Size = new System.Drawing.Size(105, 60);
             this.btnLocales.TabIndex = 3;
             this.btnLocales.Text = "Locales";
             this.btnLocales.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnLocales.UseVisualStyleBackColor = true;
             this.btnLocales.Visible = false;
+            this.btnLocales.Click += new System.EventHandler(this.btnLocales_Click);
             // 
             // btnClientes
             // 
             this.btnClientes.Anchor = System.Windows.Forms.AnchorStyles.None;
             this.btnClientes.FlatAppearance.BorderSize = 0;
+            this.btnClientes.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnClientes.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             this.btnClientes.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClientes.Image = global::Facturar.Properties.Resources.Clientes_black;
             this.btnClientes.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClientes.Location = new System.Drawing.Point(2, 150);
+            this.btnClientes.Location = new System.Drawing.Point(2, 115);
             this.btnClientes.Name = "btnClientes";
-            this.btnClientes.Size = new System.Drawing.Size(85, 60);
+            this.btnClientes.Size = new System.Drawing.Size(105, 60);
             this.btnClientes.TabIndex = 2;
             this.btnClientes.Text = "Clientes";
             this.btnClientes.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnClientes.UseVisualStyleBackColor = true;
             this.btnClientes.Visible = false;
+            this.btnClientes.Click += new System.EventHandler(this.btnClientes_Click);
             // 
             // btnEmpresas
             // 
+            this.btnEmpresas.BackColor = System.Drawing.Color.Transparent;
             this.btnEmpresas.FlatAppearance.BorderSize = 0;
+            this.btnEmpresas.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnEmpresas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
             this.btnEmpresas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnEmpresas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEmpresas.Image = global::Facturar.Properties.Resources.Empresa_black;
             this.btnEmpresas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnEmpresas.Location = new System.Drawing.Point(0, 70);
+            this.btnEmpresas.Location = new System.Drawing.Point(0, 50);
+            this.btnEmpresas.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmpresas.Name = "btnEmpresas";
-            this.btnEmpresas.Size = new System.Drawing.Size(85, 60);
+            this.btnEmpresas.Size = new System.Drawing.Size(105, 60);
             this.btnEmpresas.TabIndex = 1;
             this.btnEmpresas.Text = "Empresas";
             this.btnEmpresas.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnEmpresas.UseVisualStyleBackColor = true;
+            this.btnEmpresas.UseVisualStyleBackColor = false;
             this.btnEmpresas.Visible = false;
             this.btnEmpresas.Click += new System.EventHandler(this.btnEmpresas_Click);
             // 
@@ -263,5 +318,7 @@
         private System.Windows.Forms.Button btnClientes;
         private System.Windows.Forms.Button btnLocales;
         private System.Windows.Forms.Panel panelInferior;
+        private System.Windows.Forms.Button btnContratos;
+        private System.Windows.Forms.Button btnConfigurar;
     }
 }

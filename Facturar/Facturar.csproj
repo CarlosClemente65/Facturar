@@ -115,6 +115,12 @@
     <Compile Include="Presentacion\Controles\UC_Clientes.Designer.cs">
       <DependentUpon>UC_Clientes.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Controles\UC_Configuracion.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Controles\UC_Configuracion.Designer.cs">
+      <DependentUpon>UC_Configuracion.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Controles\UC_Contratos.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -181,8 +187,20 @@
     <Compile Include="Utilidades\Pruebas.cs" />
     <Compile Include="Utilidades\MapeadorDatos.cs" />
     <Compile Include="Utilidades\UtilesGenerales.cs" />
+    <EmbeddedResource Include="Presentacion\Controles\UC_Clientes.resx">
+      <DependentUpon>UC_Clientes.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Controles\UC_Configuracion.resx">
+      <DependentUpon>UC_Configuracion.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Controles\UC_Contratos.resx">
+      <DependentUpon>UC_Contratos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Controles\UC_Empresas.resx">
       <DependentUpon>UC_Empresas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Controles\UC_Locales.resx">
+      <DependentUpon>UC_Locales.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\frmBase.resx">
       <DependentUpon>frmBase.cs</DependentUpon>
@@ -214,6 +232,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Utilidades2.png" />
+    <None Include="Resources\Contratos2_black.png" />
     <None Include="Resources\Locales_black.png" />
     <None Include="Resources\Clientes_black.png" />
     <None Include="Resources\Empresa_black.png" />

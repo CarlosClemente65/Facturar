@@ -11,7 +11,7 @@ namespace Facturar.Presentacion
         private bool panelLateralVisible = false;
         private bool panelColapsado = true;
 
-        private int anchoPanelLateralExpandido = 100; // Ancho del panel lateral cuando está visible
+        private int anchoPanelLateralExpandido = 105; // Ancho del panel lateral cuando está visible
         private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
 
@@ -24,12 +24,12 @@ namespace Facturar.Presentacion
 
         private void frmBase_Load(object sender, EventArgs e)
         {
-
+            // Variables para controlar el panel lateral al expandir y contraer
             timerLateral.Interval = 15; // Intervalo de tiempo en milisegundos
             timerLateral.Tick += TimerLateral_Tick;
             panelLateral.BringToFront();  // Traer el panel lateral por encima del central
 
-            // Crear instancia para el panel inferior general y lo carga en el panel inferior
+            // Crea instancias para los paneles inferiores y los carga en el panel inferior
             panelGeneral = new PanelInferiorGeneral();
             panelEdicion = new PanelInferiorEdicion();
 
@@ -43,23 +43,18 @@ namespace Facturar.Presentacion
 
             panelGeneral.Visible = true;
             panelEdicion.Visible = false;
-
         }
 
         private void CargarPanelCentral(UserControl control)
         {
             // Limpia el contenido del panel central
             panelCentral.Controls.Clear();
-
             panelCentral.Controls.Add(control);
         }
 
         private void CargarPanelInferior(UserControl panel, DockStyle dock)
         {
             panel.Dock = dock;
-            //panel.Location = new Point(0, 0);
-            //control.Size = panelInferior.ClientSize;
-            //control.Anchor = AnchorStyles.Top | AnchorStyles.Right;
 
             // Se añade el control al contenedor
             panelInferior.Controls.Add(panel);
@@ -149,6 +144,8 @@ namespace Facturar.Presentacion
                 btnEmpresas.Visible = true;
                 btnClientes.Visible = true;
                 btnLocales.Visible = true;
+                btnContratos.Visible = true;
+                btnConfigurar.Visible = true;
             }
         }
 
@@ -182,6 +179,8 @@ namespace Facturar.Presentacion
                     btnEmpresas.Visible = false;
                     btnClientes.Visible = false;
                     btnLocales.Visible = false;
+                    btnContratos.Visible = false;
+                    btnConfigurar.Visible = false;
                 }
             }
             else
@@ -211,13 +210,15 @@ namespace Facturar.Presentacion
             btnEmpresas.Location = new Point(posicionX - (btnEmpresas.Width / 2),btnEmpresas.Location.Y);
             btnClientes.Location = new Point(posicionX - (btnClientes.Width / 2),btnClientes.Location.Y);
             btnLocales.Location = new Point(posicionX - (btnLocales.Width / 2),btnLocales.Location.Y);
+            btnContratos.Location = new Point(posicionX - (btnContratos.Width / 2),btnContratos.Location.Y);
+            btnConfigurar.Location = new Point(posicionX - (btnConfigurar.Width / 2),btnConfigurar.Location.Y);
         }
 
         private void AjustarPanelCentral()
         {
             int left = panelLateralVisible ? panelLateral.Width : panelLateral.Width;
-            int top = panelSuperior.Height;
-            int width = this.ClientSize.Width - left;
+            int top = panelSuperior.Height + 4;
+            int width = this.ClientSize.Width - left - 4;
             int height = this.ClientSize.Height - top - panelInferior.Height;
 
             panelCentral.Location = new Point(left, top);
@@ -228,8 +229,41 @@ namespace Facturar.Presentacion
         private void btnEmpresas_Click(object sender, EventArgs e)
         {
             var ucEmpresas = new UC_Empresas();
+            ucEmpresas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs .Empty);
             CargarPanelCentral(ucEmpresas);
+        }
+
+        private void btnClientes_Click(object sender, EventArgs e)
+        {
+            var ucClientes = new UC_Clientes();
+            ucClientes.Dock = DockStyle.Fill;
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            CargarPanelCentral(ucClientes);
+        }
+
+        private void btnContratos_Click(object sender, EventArgs e)
+        {
+            var ucContratos = new UC_Contratos();
+            ucContratos.Dock = DockStyle.Fill;
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            CargarPanelCentral(ucContratos);
+        }
+
+        private void btnLocales_Click(object sender, EventArgs e)
+        {
+            var ucLocales = new UC_Locales();
+            ucLocales.Dock = DockStyle.Fill;
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            CargarPanelCentral(ucLocales);
+        }
+
+        private void btnConfigurar_Click(object sender, EventArgs e)
+        {
+            var ucConfiguracion = new UC_Configuracion();
+            ucConfiguracion.Dock = DockStyle.Fill;
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            CargarPanelCentral(ucConfiguracion);
         }
     }
 

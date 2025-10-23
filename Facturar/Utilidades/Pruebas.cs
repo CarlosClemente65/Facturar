@@ -84,7 +84,7 @@ namespace Facturar.Utilidades
                         break;
 
                     case Procesos.Baja:
-                        resultado = gestor.Baja("05100001G", Utiles.ConvertirFecha("21/10/2025"));
+                        resultado = gestor.Baja("05100001G", Utiles.ConvertirFecha("30/10/2025"));
                         break;
 
                     case Procesos.Modificacion:

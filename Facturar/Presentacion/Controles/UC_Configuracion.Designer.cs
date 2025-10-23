@@ -1,6 +1,6 @@
 ﻿namespace Facturar.Presentacion.Controles
 {
-    partial class UC_Locales
+    partial class UC_Configuracion
     {
         /// <summary> 
         /// Variable del diseñador necesaria.
@@ -38,18 +38,16 @@
             this.label1.Location = new System.Drawing.Point(8, 8);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(404, 23);
-            this.label1.TabIndex = 2;
-            this.label1.Text = "Panel gestion locales";
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Panel configuracion";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             // 
-            // UC_Locales
+            // UC_Configuracion
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(0);
-            this.Name = "UC_Locales";
-            this.Padding = new System.Windows.Forms.Padding(8);
+            this.Name = "UC_Configuracion";
             this.Size = new System.Drawing.Size(420, 150);
             this.ResumeLayout(false);
 
