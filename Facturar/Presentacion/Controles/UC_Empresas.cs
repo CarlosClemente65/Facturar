@@ -135,5 +135,32 @@ namespace Facturar.Presentacion.Controles
                 EmpresaSeleccionada = dgvEmpresas.CurrentRow.DataBoundItem as Empresa;
             }
         }
+
+        public void ActualizaPropiedadesEmpresa(Empresa empresa)
+        {
+            if (empresa == null)
+            {
+                throw new ArgumentNullException("No se han pasado datos de empresa para actualizar");
+            }
+
+            // Actualizacion de la empresa segun el contenido de los textBox
+            empresa.NIF = txtNif.Text;
+            empresa.Nombre = txtNombreEmpresa.Text;
+            empresa.Direccion = txtDireccion.Text;
+            empresa.CodigoPostal = txtCodigoPostal.Text;
+            empresa.Poblacion = txtPoblacion.Text;
+            empresa.Provincia = txtProvincia.Text;
+            empresa.Telefono = txtTelefono.Text;
+            empresa.Email = txtEmail.Text;
+            empresa.PersonaContacto = txtPersonaContacto.Text;
+            empresa.SerieFactura = txtSerieFactura.Text;
+
+            int numeroFactura;
+            if (!int.TryParse(txtFactura.Text, out numeroFactura))
+            {
+                numeroFactura = 0; // Valor por defecto por si el campo esta vacio
+            }
+            empresa.NumeroFacturaActual = numeroFactura;
+        }
     }
 }

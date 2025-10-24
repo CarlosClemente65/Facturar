@@ -368,15 +368,22 @@ namespace Facturar.Presentacion
                     // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
-                    // Vuelve a activar el grid de cada entidad
+                    // Vuelve a activar el grid de cada entidad y graba los cambios
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
                             // Habilita el grid de empresas
                             ucEmpresas.dgvEmpresas.Enabled = true;
 
-                            //Actualiza la base de datos
-                            //gestorEmpresas.Agregar(); // Pendiente de desarrollo
+                            // Se obtiene la empresa seleccioanda
+                            var empresa = ucEmpresas.EmpresaActual;
+
+                            // Se actualizan las propiedades segun los campos de la pantalla
+                            ucEmpresas.ActualizaPropiedadesEmpresa(empresa);
+
+                            // Graba los cambios en la base de datos
+                            gestorEmpresas.Actualizar(empresa);
+
                             break;
 
                         case TipoEntidad.Local:
@@ -568,6 +575,7 @@ namespace Facturar.Presentacion
             panelCentral.Controls.Clear();
             panelGeneral.Visible = false;
         }
+
     }
 
 }
