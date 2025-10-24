@@ -13,19 +13,46 @@ namespace Facturar.Presentacion
 {
     public partial class frmBase : Form
     {
+        // Variables para el control del panel lateral
         private bool panelLateralVisible = false;
         private bool panelColapsado = true;
-
         private int anchoPanelLateralExpandido = 105; // Ancho del panel lateral cuando está visible
         private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
 
+
+        // Variables de clase para gestionar paneles y entidades
         private PanelInferior_general panelGeneral;
         private PanelInferior_Edicion panelEdicion;
         private GestorEmpresas gestorEmpresas;
+        private GestorLocales gestorLocales;
+        private GestorClientes gestorClientes;
+        private GestorContratos gestorContratos;
+        private GestorConfiguracion gestorConfiguracion;
 
-        // Instancia de UserControl para empresas
+
+        // Instancias de UserControl para empresas
         private UC_Empresas ucEmpresas = new UC_Empresas();
+        private UC_Locales ucLocales = new UC_Locales();
+        private UC_Clientes ucClientes = new UC_Clientes();
+        private UC_Contratos ucContratos = new UC_Contratos();
+        private UC_Configuracion ucConfiguracion = new UC_Configuracion();
+
+        // Control de entidad cargada en el panel central
+        private UserControl panelCentralActivo; // Permite despues acceder acceder al panel para habilitar controles o refrescar el grid
+        private TipoEntidad entidadActiva = TipoEntidad.Ninguno; // Al inicio no se ha cargado ninguna
+        private object gestorActual; // Almacena el gestor que debe gestionarse en el formulario (se cambia al acceder a las opciones de cada tipo de entidad)
+
+        public enum TipoEntidad
+        {
+            Ninguno,
+            Empresa,
+            Cliente,
+            Local,
+            Contrato,
+            Configurar
+        }
+
         public frmBase()
         {
             InitializeComponent();
@@ -41,6 +68,7 @@ namespace Facturar.Presentacion
             // Crea instancias para los paneles inferiores y los carga en el panel inferior
             panelGeneral = new PanelInferior_general();
             panelEdicion = new PanelInferior_Edicion();
+            gestorEmpresas = new GestorEmpresas(); // Instancia para acceder a los metodos de empresas
 
             // Suscribir a los eventos de los userControl
             SuscribirEventosPanelInferior(panelGeneral);
@@ -54,11 +82,38 @@ namespace Facturar.Presentacion
             panelEdicion.Visible = false;
         }
 
-        private void CargarPanelCentral(UserControl control)
+        private void CargarPanelCentral(UserControl panel, TipoEntidad tipo)
         {
             // Limpia el contenido del panel central
             panelCentral.Controls.Clear();
-            panelCentral.Controls.Add(control);
+            panelCentral.Controls.Add(panel);
+
+            // Control de tipo de entidad cargada en el panel
+            panelCentralActivo = panel;
+            entidadActiva = tipo;
+
+            switch(entidadActiva)
+            {
+                case TipoEntidad.Empresa:
+                    gestorActual = gestorEmpresas;
+                    break;
+
+                case TipoEntidad.Local:
+                    gestorActual = gestorLocales;
+                    break;
+
+                case TipoEntidad.Cliente:
+                    gestorActual = gestorClientes;
+                    break;
+
+                case TipoEntidad.Contrato:
+                    gestorActual = gestorContratos;
+                    break;
+
+                case TipoEntidad.Configurar:
+                    gestorActual = gestorConfiguracion;
+                    break;
+            }
         }
 
         private void CargarPanelInferior(UserControl panel, DockStyle dock)
@@ -85,67 +140,239 @@ namespace Facturar.Presentacion
 
         }
 
+        /// <summary>
+        /// Suscribe los eventos de los paneles inferiores (general y edicion)
+        /// y define el comportamiento segun la entidad activa y el gestor actual
+        /// </summary>
+        /// <param name="panel"></param>
         private void SuscribirEventosPanelInferior(UserControl panel)
         {
             if(panel is PanelInferior_general general)
             {
-                general.AltaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
-                general.BajaClicked += (s, e) => AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
+                // Procesos de alta
+                general.AltaClicked += (s, e) =>
+                {
+                    AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true); // Activa los campos para la entrada de datos 
+
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            //gestorEmpresas.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Local:
+                            //gestorLocales.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            //gestorClientes.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            //gestorContratos.Agregar(); // Pendiente de desarrollo
+                            break;
+                    }
+                };
+
+                // Procesos de baja
+                general.BajaClicked += (s, e) =>
+                {
+                    AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
+
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            //gestorEmpresas.Baja(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Local:
+                            //gestorLocales.Baja(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            //gestorClientes.Baja(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            //gestorContratos.Baja(); // Pendiente de desarrollo
+                            break;
+
+                    }
+                };
+
+                // Proceso de edicion
                 general.EditarClicked += (s, e) =>
                 {
                     AlternarPanelInferior(panelEdicion);
 
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+
                     //Deshabilita el grid de empresas
                     ucEmpresas.dgvEmpresas.Enabled = false;
 
-                    // Habilitar los TextBox y poner el foco en el primer campo
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            //gestorEmpresas.Actualizar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Local:
+                            //gestorLocales.Actualizar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            //gestorClientes.Actualizar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            //gestorContratos.Actualizar(); // Pendiente de desarrollo
+                            break;
+                    }
                 };
+
+                // Proceso al seleccionar estado
                 general.SeleccionActivos += (s, e) =>
                 {
-                    string estado = general.EstadoSeleccionado;
-                    List<Empresa> lista;
-                    bool? activas = null;
-                    if(estado == "Activos")
+                    string seleccionEstado = general.EstadoSeleccionado;
+                    bool? estado = null;
+                    if(seleccionEstado == "Activos")
                     {
-                        activas = true;
+                        estado = true;
                     }
-                    else if(estado == "Inactivos")
+                    else if(seleccionEstado == "Inactivos")
                     {
-                        activas = false;
+                        estado = false;
                     }
-                    lista = gestorEmpresas.ListarTodos(activas).ToList();
 
-                    ucEmpresas?.CargarEmpresas(activas);
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            ucEmpresas?.CargarEmpresas(activas: estado);
+                            break;
+
+                        case TipoEntidad.Local:
+                            ucLocales?.CargarLocales(activos: estado);
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            ucClientes?.CargarClientes(activos: estado);
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            ucContratos?.CargarContratos(activos: estado);
+                            //gestorContratos.Actualizar(); // Pendiente de desarrollo
+                            break;
+                    }
                 };
+
+                // Procesos para eliminar
                 general.EliminarClicked += (s, e) =>
                 {
                     AlternarPanelInferior(panelEdicion);
+
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            //gestorEmpresas.Eliminar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Local:
+                            //gestorLocales.Eliminar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            //gestorClientes.Eliminar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            //gestorContratos.Eliminar(); // Pendiente de desarrollo
+                            break;
+                    }
                 };
 
 
             }
             else if(panel is PanelInferior_Edicion edicion)
             {
+                // Procesos al cancelar la edicion
                 edicion.CancelarClicked += (s, e) =>
                 {
-                    // Habilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = true;
+                    AlternarPanelInferior(panelGeneral);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
-                    AlternarPanelInferior(panelGeneral);
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            // Habilita el grid de empresas
+                            ucEmpresas.dgvEmpresas.Enabled = true;
+                            break;
+
+                        case TipoEntidad.Local:
+                            // Habilita el grid de locales
+                            //ucLocales.dgvLocales.Enabled = true; // Pendiente desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            // Habilita el grid de clientes
+                            //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            // Habilita el grid de contratos
+                            //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
+                            break;
+                    }
                 };
+
+                // Procesos al validar la edicion
                 edicion.ValidarClicked += (s, e) =>
                 {
-                    // Habilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = true;
+                    AlternarPanelInferior(panelGeneral);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
-                    AlternarPanelInferior(panelGeneral);
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            // Habilita el grid de empresas
+                            ucEmpresas.dgvEmpresas.Enabled = true;
+
+                            //Actualiza la base de datos
+                            //gestorEmpresas.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Local:
+                            // Habilita el grid de locales
+                            //ucLocales.dgvLocales.Enabled = true; // Pendiente desarrollo
+
+                            //Actualiza la base de datos
+                            //gestorLocales.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            // Habilita el grid de clientes
+                            //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
+
+                            //Actualiza la base de datos
+                            //gestorClientes.Agregar(); // Pendiente de desarrollo
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            // Habilita el grid de contratos
+                            //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
+
+                            //Actualiza la base de datos
+                            //gestorContratos.Agregar(); // Pendiente de desarrollo
+                            break;
+                    }
+
+
+
                 };
             }
         }
@@ -271,7 +498,7 @@ namespace Facturar.Presentacion
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
             panelGeneral.Visible = true;
             panelGeneral.MostrarActivos(visible: true);
-            CargarPanelCentral(ucEmpresas);
+            CargarPanelCentral(ucEmpresas, TipoEntidad.Empresa);
         }
 
         private void btnClientes_Click(object sender, EventArgs e)
@@ -279,7 +506,7 @@ namespace Facturar.Presentacion
             var ucClientes = new UC_Clientes();
             ucClientes.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            CargarPanelCentral(ucClientes);
+            CargarPanelCentral(ucClientes, TipoEntidad.Cliente);
         }
 
         private void btnContratos_Click(object sender, EventArgs e)
@@ -287,7 +514,7 @@ namespace Facturar.Presentacion
             var ucContratos = new UC_Contratos();
             ucContratos.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            CargarPanelCentral(ucContratos);
+            CargarPanelCentral(ucContratos, TipoEntidad.Contrato);
         }
 
         private void btnLocales_Click(object sender, EventArgs e)
@@ -295,7 +522,7 @@ namespace Facturar.Presentacion
             var ucLocales = new UC_Locales();
             ucLocales.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            CargarPanelCentral(ucLocales);
+            CargarPanelCentral(ucLocales, TipoEntidad.Local);
         }
 
         private void btnConfigurar_Click(object sender, EventArgs e)
@@ -303,7 +530,7 @@ namespace Facturar.Presentacion
             var ucConfiguracion = new UC_Configuracion();
             ucConfiguracion.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            CargarPanelCentral(ucConfiguracion);
+            CargarPanelCentral(ucConfiguracion, TipoEntidad.Configurar);
         }
 
         private void btnInicio_Click(object sender, EventArgs e)

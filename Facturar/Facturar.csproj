@@ -177,6 +177,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="Servicios\GestorClientes.cs" />
+    <Compile Include="Servicios\GestorConfiguracion.cs" />
     <Compile Include="Servicios\GestorContratos.cs" />
     <Compile Include="Servicios\GestorDatos.cs" />
     <Compile Include="Servicios\GestorEmpresas.cs" />

@@ -41,8 +41,6 @@ namespace Facturar.Presentacion.Controles
             // Carga los datos de las empresas
             dgvEmpresas.DataSource = null;
             dgvEmpresas.DataSource = listaEmpresas;
-
-
         }
 
         private void InicializaColumnas()
