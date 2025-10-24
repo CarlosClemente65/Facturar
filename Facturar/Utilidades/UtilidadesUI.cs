@@ -62,6 +62,7 @@ namespace Facturar.Utilidades
         /// </summary>
         /// <param name="contenedor">Control que contiene los TextBox</param>
         /// <param name="habilitar">true para habilitar, false para bloquear</param>
+        /// <param name="limpiar">true para que ademas de habilitar se borre el contenido (en alta); defecto = false</param>
         public static void HabilitarTextBoxes(Control contenedor, bool habilitar)
         {
             TextBox primerCampo = null;
@@ -84,6 +85,7 @@ namespace Facturar.Utilidades
                     HabilitarTextBoxes(ctrl, habilitar);
                 }
             }
+
 
             // Poner foco en el primer campo si se habilita
             if(habilitar && primerCampo != null)

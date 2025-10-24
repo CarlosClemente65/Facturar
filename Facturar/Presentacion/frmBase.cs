@@ -31,17 +31,19 @@ namespace Facturar.Presentacion
         private GestorConfiguracion gestorConfiguracion;
 
 
-        // Instancias de UserControl para empresas
+        // Instancias de UserControl 
         private UC_Empresas ucEmpresas = new UC_Empresas();
         private UC_Locales ucLocales = new UC_Locales();
         private UC_Clientes ucClientes = new UC_Clientes();
         private UC_Contratos ucContratos = new UC_Contratos();
         private UC_Configuracion ucConfiguracion = new UC_Configuracion();
 
+
         // Control de entidad cargada en el panel central
         private UserControl panelCentralActivo; // Permite despues acceder acceder al panel para habilitar controles o refrescar el grid
         private TipoEntidad entidadActiva = TipoEntidad.Ninguno; // Al inicio no se ha cargado ninguna
         private object gestorActual; // Almacena el gestor que debe gestionarse en el formulario (se cambia al acceder a las opciones de cada tipo de entidad)
+        
 
         public enum TipoEntidad
         {
@@ -152,8 +154,18 @@ namespace Facturar.Presentacion
                 // Procesos de alta
                 general.AltaClicked += (s, e) =>
                 {
-                    AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de alta, sustituirlo en esta llamada
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true); // Activa los campos para la entrada de datos 
+                    AlternarPanelInferior(panelEdicion);
+
+                    //Deshabilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = false;
+
+                    /* Pendiente de desarrollo el proceso de alta
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+
+                    // Limpiar los TextBoxes para poder introducir datos del alta
+                    Utiles.LimpiarTextBoxes(contenedor: this);
+                    */
 
                     switch(entidadActiva)
                     {
@@ -180,22 +192,30 @@ namespace Facturar.Presentacion
                 {
                     AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
 
+                    //Deshabilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = false;
+
+                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder al Id que tenga el objeto
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
-                            //gestorEmpresas.Baja(); // Pendiente de desarrollo
+                            // Actualiza la empresa seleccionada en UC_Empresa
+                            ucEmpresas.ActualizaEmpresaSeleccionada();
                             break;
 
                         case TipoEntidad.Local:
-                            //gestorLocales.Baja(); // Pendiente de desarrollo
+                            // Actualiza el local seleccionada en UC_Local
+                            ucLocales.ActualizarLocalSeleccionado();// Pendiente de desarrollo
                             break;
 
                         case TipoEntidad.Cliente:
-                            //gestorClientes.Baja(); // Pendiente de desarrollo
+                            // Actualiza el cliente seleccionada en UC_Clientes
+                            ucClientes.ActualizarClienteSeleccionado();// Pendiente de desarrollo
                             break;
 
                         case TipoEntidad.Contrato:
-                            //gestorContratos.Baja(); // Pendiente de desarrollo
+                            // Actualiza el contrato seleccionado en UC_Contratos
+                            ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
                             break;
 
                     }
@@ -212,22 +232,28 @@ namespace Facturar.Presentacion
                     //Deshabilita el grid de empresas
                     ucEmpresas.dgvEmpresas.Enabled = false;
 
+                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
-                            //gestorEmpresas.Actualizar(); // Pendiente de desarrollo
+                            // Actualiza la empresa seleccionada en UC_Empresa
+                            ucEmpresas.ActualizaEmpresaSeleccionada();
+
                             break;
 
                         case TipoEntidad.Local:
-                            //gestorLocales.Actualizar(); // Pendiente de desarrollo
+                            // Actualiza el local seleccionado en UC_Local
+                            ucLocales.ActualizarLocalSeleccionado();// Pendiente de desarrollo
                             break;
 
                         case TipoEntidad.Cliente:
-                            //gestorClientes.Actualizar(); // Pendiente de desarrollo
+                            // Actualiza el cliente seleccionada en UC_Clientes
+                            ucClientes.ActualizarClienteSeleccionado();// Pendiente de desarrollo
                             break;
 
                         case TipoEntidad.Contrato:
-                            //gestorContratos.Actualizar(); // Pendiente de desarrollo
+                            // Actualiza el contrato seleccionado en UC_Contratos
+                            ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
                             break;
                     }
                 };
@@ -235,6 +261,7 @@ namespace Facturar.Presentacion
                 // Proceso al seleccionar estado
                 general.SeleccionActivos += (s, e) =>
                 {
+                    // Carga el estado que tiene el ComboBox de estados
                     string seleccionEstado = general.EstadoSeleccionado;
                     bool? estado = null;
                     if(seleccionEstado == "Activos")
@@ -246,6 +273,7 @@ namespace Facturar.Presentacion
                         estado = false;
                     }
 
+                    // Carga los datos correspondiente en funcion del tipo de entidad 
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
@@ -272,6 +300,10 @@ namespace Facturar.Presentacion
                 {
                     AlternarPanelInferior(panelEdicion);
 
+                    //Deshabilita el grid de empresas
+                    ucEmpresas.dgvEmpresas.Enabled = false;
+
+                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
@@ -291,8 +323,6 @@ namespace Facturar.Presentacion
                             break;
                     }
                 };
-
-
             }
             else if(panel is PanelInferior_Edicion edicion)
             {
@@ -301,14 +331,16 @@ namespace Facturar.Presentacion
                 {
                     AlternarPanelInferior(panelGeneral);
 
-                    // Habilitar los TextBox y poner el foco en el primer campo
+                    // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
+                    // Vuelve a activar el grid de cada entidad
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
                             // Habilita el grid de empresas
                             ucEmpresas.dgvEmpresas.Enabled = true;
+                            
                             break;
 
                         case TipoEntidad.Local:
@@ -333,9 +365,10 @@ namespace Facturar.Presentacion
                 {
                     AlternarPanelInferior(panelGeneral);
 
-                    // Habilitar los TextBox y poner el foco en el primer campo
+                    // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
+                    // Vuelve a activar el grid de cada entidad
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
@@ -370,9 +403,6 @@ namespace Facturar.Presentacion
                             //gestorContratos.Agregar(); // Pendiente de desarrollo
                             break;
                     }
-
-
-
                 };
             }
         }

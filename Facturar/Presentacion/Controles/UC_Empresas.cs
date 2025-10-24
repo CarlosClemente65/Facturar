@@ -10,14 +10,14 @@ namespace Facturar.Presentacion.Controles
 {
     public partial class UC_Empresas : UserControl
     {
+        // Propiedad privada para almacenar la empresa seleccionada en el grid
+        private Empresa EmpresaSeleccionada;
 
         // Almacena la lista de empresas para poder ordenar
         private IEnumerable<Empresa> listaEmpresas;
 
         private bool ordenAscendente = true;
 
-        private Empresa EmpresaSeleccionada;
-        //Dictionary<string, string> NombresEncabezado;
 
 
         public UC_Empresas()
@@ -31,6 +31,11 @@ namespace Facturar.Presentacion.Controles
             CargarEmpresas(activas: true);
 
 
+        }
+
+        public Empresa EmpresaActual
+        {
+            get => EmpresaSeleccionada;
         }
 
         public void CargarEmpresas(bool? activas = true)
@@ -66,7 +71,6 @@ namespace Facturar.Presentacion.Controles
 
         }
 
-
         private void dgvEmpresas_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
             string nombreColumna = dgvEmpresas.Columns[e.ColumnIndex].DataPropertyName;
@@ -99,7 +103,6 @@ namespace Facturar.Presentacion.Controles
         }
 
 
-
         private void MostrarDatosEmpresa(Empresa empresa)
         {
             txtNif.Text = empresa.NIF;
@@ -122,8 +125,15 @@ namespace Facturar.Presentacion.Controles
             txtPersonaContacto.Text = empresa.PersonaContacto;
             txtSerieFactura.Text = empresa.SerieFactura;
             txtFactura.Text = empresa.NumeroFacturaActual.ToString();
+        }
 
-
+        public void ActualizaEmpresaSeleccionada()
+        {
+            if(dgvEmpresas.CurrentRow != null)
+            {
+                // Carga el objeto empresa segun la fila seleccionada.
+                EmpresaSeleccionada = dgvEmpresas.CurrentRow.DataBoundItem as Empresa;
+            }
         }
     }
 }
