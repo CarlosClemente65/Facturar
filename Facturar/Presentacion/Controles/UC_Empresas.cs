@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
@@ -18,11 +19,13 @@ namespace Facturar.Presentacion.Controles
 
         private bool ordenAscendente = true;
 
-
-
         public UC_Empresas()
         {
             InitializeComponent();
+
+            // Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
+            dgvEmpresas.DefaultCellStyle.SelectionBackColor = Color.OldLace;
+            dgvEmpresas.DefaultCellStyle.SelectionForeColor = Color.Black;
 
             // Monta las columnas por orden
             InicializaColumnas();
@@ -138,7 +141,7 @@ namespace Facturar.Presentacion.Controles
 
         public void ActualizaPropiedadesEmpresa(Empresa empresa)
         {
-            if (empresa == null)
+            if(empresa == null)
             {
                 throw new ArgumentNullException("No se han pasado datos de empresa para actualizar");
             }
@@ -156,11 +159,13 @@ namespace Facturar.Presentacion.Controles
             empresa.SerieFactura = txtSerieFactura.Text;
 
             int numeroFactura;
-            if (!int.TryParse(txtFactura.Text, out numeroFactura))
+            if(!int.TryParse(txtFactura.Text, out numeroFactura))
             {
                 numeroFactura = 0; // Valor por defecto por si el campo esta vacio
             }
             empresa.NumeroFacturaActual = numeroFactura;
         }
+
+        
     }
 }

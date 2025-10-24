@@ -43,7 +43,7 @@ namespace Facturar.Presentacion
         private UserControl panelCentralActivo; // Permite despues acceder acceder al panel para habilitar controles o refrescar el grid
         private TipoEntidad entidadActiva = TipoEntidad.Ninguno; // Al inicio no se ha cargado ninguna
         private object gestorActual; // Almacena el gestor que debe gestionarse en el formulario (se cambia al acceder a las opciones de cada tipo de entidad)
-        
+
 
         public enum TipoEntidad
         {
@@ -229,8 +229,6 @@ namespace Facturar.Presentacion
                     // Habilitar los TextBox y poner el foco en el primer campo
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
 
-                    //Deshabilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = false;
 
                     // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
                     switch(entidadActiva)
@@ -238,6 +236,16 @@ namespace Facturar.Presentacion
                         case TipoEntidad.Empresa:
                             // Actualiza la empresa seleccionada en UC_Empresa
                             ucEmpresas.ActualizaEmpresaSeleccionada();
+                            
+                            // Deshabilita los TextBox que no se pueden editar
+                            ucEmpresas.txtNif.Enabled = false;
+                            ucEmpresas.txtNombreEmpresa.Enabled = false;
+                            ucEmpresas.txtFechaAlta.Enabled = false;
+                            ucEmpresas.txtFechaBaja.Enabled = false;
+                            ucEmpresas.txtFactura.Enabled = false;
+
+                            // Aplica el efecto de bloqueo de edicion
+                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: true);
 
                             break;
 
@@ -340,7 +348,10 @@ namespace Facturar.Presentacion
                         case TipoEntidad.Empresa:
                             // Habilita el grid de empresas
                             ucEmpresas.dgvEmpresas.Enabled = true;
-                            
+
+                            // Quita el efecto de bloqueo de edicion
+                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
+
                             break;
 
                         case TipoEntidad.Local:
@@ -374,6 +385,9 @@ namespace Facturar.Presentacion
                         case TipoEntidad.Empresa:
                             // Habilita el grid de empresas
                             ucEmpresas.dgvEmpresas.Enabled = true;
+
+                            // Quita el efecto de bloqueo de edicion
+                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
 
                             // Se obtiene la empresa seleccioanda
                             var empresa = ucEmpresas.EmpresaActual;

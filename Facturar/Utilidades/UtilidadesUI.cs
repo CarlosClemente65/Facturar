@@ -9,6 +9,18 @@ namespace Facturar.Utilidades
 {
     public static class UtilidadesUI
     {
+        // Control del color original del DataGridView (BloqueoEdicionDgv)
+        private static bool coloresOriginalesGuardados = false;
+
+        private static Color colorOriginalFondo;
+        private static Color colorOriginalEncabezado;
+        private static Color colorOriginalEncabezadoSeleccionado;
+        private static Color colorOriginalTextoEncabezado;
+        private static Color colorOriginalFondoCeldas;
+        private static Color colorOriginalFuenteCeldas;
+        private static Color colorOriginalFondoCeldasSeleccionadas;
+        private static Color colorOriginalFuenteCeldasSeleccionadas;
+
 
         /// <summary>
         /// Permite limpiar todos los TextBox de un formulario pasado por parametro
@@ -66,9 +78,9 @@ namespace Facturar.Utilidades
         public static void HabilitarTextBoxes(Control contenedor, bool habilitar)
         {
             TextBox primerCampo = null;
-            foreach (Control ctrl in contenedor.Controls)
+            foreach(Control ctrl in contenedor.Controls)
             {
-                if (ctrl is TextBox txt)
+                if(ctrl is TextBox txt)
                 {
                     txt.Enabled = habilitar;
 
@@ -80,7 +92,7 @@ namespace Facturar.Utilidades
                 }
 
                 // Recursión para controles hijos
-                if (ctrl.HasChildren)
+                if(ctrl.HasChildren)
                 {
                     HabilitarTextBoxes(ctrl, habilitar);
                 }
@@ -92,6 +104,64 @@ namespace Facturar.Utilidades
             {
                 primerCampo.Focus();
             }
+        }
+
+
+        public static void BloqueoEdicionDgv(DataGridView _grid, bool bloquear)
+        {
+            var dgv = _grid;
+            Color grisClaro = Color.FromArgb(230, 230, 230);
+            Color grisOscuro = Color.FromArgb(200, 200, 200);
+
+            // Guardar los colores originales solo la primera vez
+            if(coloresOriginalesGuardados == false)
+            {
+                // Guardamos los colores originales
+                colorOriginalFondo = dgv.BackgroundColor;
+                colorOriginalEncabezado = dgv.ColumnHeadersDefaultCellStyle.BackColor;
+                colorOriginalEncabezadoSeleccionado = dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor;
+                colorOriginalTextoEncabezado = dgv.ColumnHeadersDefaultCellStyle.ForeColor;
+                colorOriginalFondoCeldas = dgv.DefaultCellStyle.BackColor;
+                colorOriginalFuenteCeldas = dgv.DefaultCellStyle.ForeColor;
+                colorOriginalFondoCeldasSeleccionadas = dgv.DefaultCellStyle.SelectionBackColor;
+                colorOriginalFuenteCeldasSeleccionadas = dgv.DefaultCellStyle.SelectionForeColor;
+
+                // Controla que no se vuelva a guardar
+                coloresOriginalesGuardados = true;
+            }
+
+            if(bloquear)
+            {
+                // Efecto "deshabilitado": tonos grises
+                dgv.BackgroundColor = grisClaro;
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = grisOscuro;
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = Color.DarkSlateGray;
+                dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = grisOscuro;
+                dgv.DefaultCellStyle.BackColor = grisClaro;
+                dgv.DefaultCellStyle.ForeColor = Color.DarkGray;
+                dgv.DefaultCellStyle.SelectionBackColor = grisClaro;
+                dgv.DefaultCellStyle.SelectionForeColor = Color.DarkGray;
+                dgv.EnableHeadersVisualStyles = false; // Necesario para que se apliquen los colores
+                dgv.Enabled = false;
+            }
+            else
+            {
+                // Restaurar colores originales
+                dgv.BackgroundColor = colorOriginalFondo;
+                dgv.ColumnHeadersDefaultCellStyle.BackColor = colorOriginalEncabezado;
+                dgv.ColumnHeadersDefaultCellStyle.ForeColor = colorOriginalTextoEncabezado;
+                dgv.ColumnHeadersDefaultCellStyle.SelectionBackColor = colorOriginalEncabezadoSeleccionado;
+                dgv.DefaultCellStyle.BackColor = colorOriginalFondoCeldas;
+                dgv.DefaultCellStyle.ForeColor = colorOriginalFuenteCeldas;
+                dgv.DefaultCellStyle.SelectionBackColor = colorOriginalFondoCeldasSeleccionadas;
+                dgv.DefaultCellStyle.SelectionForeColor = colorOriginalFuenteCeldasSeleccionadas;
+                dgv.Enabled = true;
+
+                coloresOriginalesGuardados = false; // Permite guardar de nuevo si se vuelve a bloquear
+            }
+
+
+            dgv.Refresh();
         }
     }
 }
