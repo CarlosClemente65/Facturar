@@ -106,7 +106,11 @@ namespace Facturar.Utilidades
             }
         }
 
-
+        /// <summary>
+        /// Permite aplicar un efecto de bloqueo de edicion en un DataGridView
+        /// </summary>
+        /// <param name="_grid"></param>
+        /// <param name="bloquear"></param>
         public static void BloqueoEdicionDgv(DataGridView _grid, bool bloquear)
         {
             var dgv = _grid;
@@ -159,7 +163,6 @@ namespace Facturar.Utilidades
 
                 coloresOriginalesGuardados = false; // Permite guardar de nuevo si se vuelve a bloquear
             }
-
 
             dgv.Refresh();
         }

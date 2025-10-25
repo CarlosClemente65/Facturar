@@ -9,6 +9,29 @@ namespace Facturar.Entidades
 {
     public class EntidadBase
     {
+        // Constructor por defecto
+        public EntidadBase() 
+        {
+
+        }
+
+        // Constructor para crear una copia de una entidad existente
+        public EntidadBase(EntidadBase copiaEntidad)
+        {
+            Id = copiaEntidad.Id;
+            NIF = copiaEntidad.NIF;
+            Nombre = copiaEntidad.Nombre;
+            Direccion = copiaEntidad.Direccion;
+            CodigoPostal = copiaEntidad.CodigoPostal;
+            Poblacion = copiaEntidad.Poblacion;
+            Provincia = copiaEntidad.Provincia;
+            Telefono = copiaEntidad.Telefono;
+            Email = copiaEntidad.Email;
+            PersonaContacto = copiaEntidad.PersonaContacto;
+            FechaAlta = copiaEntidad.FechaAlta;
+            FechaBaja = copiaEntidad.FechaBaja;
+        }
+
         public int Id { get; set; }
         public string NIF { get; set; }
         public string Nombre { get; set; }

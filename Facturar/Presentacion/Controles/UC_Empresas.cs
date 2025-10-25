@@ -39,6 +39,7 @@ namespace Facturar.Presentacion.Controles
         public Empresa EmpresaActual
         {
             get => EmpresaSeleccionada;
+            set => EmpresaSeleccionada = value;
         }
 
         public void CargarEmpresas(bool? activas = true)
@@ -105,7 +106,6 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-
         private void MostrarDatosEmpresa(Empresa empresa)
         {
             txtNif.Text = empresa.NIF;
@@ -147,8 +147,8 @@ namespace Facturar.Presentacion.Controles
             }
 
             // Actualizacion de la empresa segun el contenido de los textBox
-            empresa.NIF = txtNif.Text;
-            empresa.Nombre = txtNombreEmpresa.Text;
+            //empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
+            //empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
             empresa.Direccion = txtDireccion.Text;
             empresa.CodigoPostal = txtCodigoPostal.Text;
             empresa.Poblacion = txtPoblacion.Text;
@@ -157,13 +157,15 @@ namespace Facturar.Presentacion.Controles
             empresa.Email = txtEmail.Text;
             empresa.PersonaContacto = txtPersonaContacto.Text;
             empresa.SerieFactura = txtSerieFactura.Text;
-
+            
+            /* No se permite modificar el numero de factura actual
             int numeroFactura;
             if(!int.TryParse(txtFactura.Text, out numeroFactura))
             {
                 numeroFactura = 0; // Valor por defecto por si el campo esta vacio
             }
             empresa.NumeroFacturaActual = numeroFactura;
+            */
         }
 
         

@@ -224,11 +224,11 @@ namespace Facturar.Presentacion
                 // Proceso de edicion
                 general.EditarClicked += (s, e) =>
                 {
+                    // Habilita el panel de edicion
                     AlternarPanelInferior(panelEdicion);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
-
 
                     // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
                     switch(entidadActiva)
@@ -236,7 +236,7 @@ namespace Facturar.Presentacion
                         case TipoEntidad.Empresa:
                             // Actualiza la empresa seleccionada en UC_Empresa
                             ucEmpresas.ActualizaEmpresaSeleccionada();
-                            
+
                             // Deshabilita los TextBox que no se pueden editar
                             ucEmpresas.txtNif.Enabled = false;
                             ucEmpresas.txtNombreEmpresa.Enabled = false;
@@ -337,11 +337,6 @@ namespace Facturar.Presentacion
                 // Procesos al cancelar la edicion
                 edicion.CancelarClicked += (s, e) =>
                 {
-                    AlternarPanelInferior(panelGeneral);
-
-                    // Deshabilitar los TextBox
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
-
                     // Vuelve a activar el grid de cada entidad
                     switch(entidadActiva)
                     {
@@ -351,6 +346,9 @@ namespace Facturar.Presentacion
 
                             // Quita el efecto de bloqueo de edicion
                             Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
+
+                            // Refresca el grid de empresas
+                            ucEmpresas.CargarEmpresas();
 
                             break;
 
@@ -369,35 +367,62 @@ namespace Facturar.Presentacion
                             //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
                             break;
                     }
-                };
 
-                // Procesos al validar la edicion
-                edicion.ValidarClicked += (s, e) =>
-                {
+                    // Muestra el panel de botones estandard
                     AlternarPanelInferior(panelGeneral);
 
                     // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
-                    // Vuelve a activar el grid de cada entidad y graba los cambios
+                };
+
+                // Procesos al validar la edicion
+                edicion.ValidarClicked += (s, e) =>
+                {
+                    bool errorProceso = false;
+                    // Procoses segun tipo de entidad
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
-                            // Habilita el grid de empresas
-                            ucEmpresas.dgvEmpresas.Enabled = true;
-
-                            // Quita el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
-
                             // Se obtiene la empresa seleccioanda
                             var empresa = ucEmpresas.EmpresaActual;
 
-                            // Se actualizan las propiedades segun los campos de la pantalla
-                            ucEmpresas.ActualizaPropiedadesEmpresa(empresa);
+                            // Hacemos una copia de la empresa actual por si la edicion falla
+                            Empresa copiaEmpresa = new Empresa(empresa);
 
-                            // Graba los cambios en la base de datos
-                            gestorEmpresas.Actualizar(empresa);
+                            try
+                            {
+                                // Se actualizan las propiedades segun los campos de la pantalla
+                                ucEmpresas.ActualizaPropiedadesEmpresa(empresa);
 
+                                // Graba los cambios en la base de datos
+                                gestorEmpresas.Actualizar(empresa);
+
+                                // Muestra mensaje de proceso correcto
+                                MessageBox.Show("Empresa actualizada correctamente.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                                // Habilita el grid de empresas
+                                ucEmpresas.dgvEmpresas.Enabled = true;
+
+                                // Quita el efecto de bloqueo de edicion
+                                Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
+
+                                // Refresca el grid de empresas
+                                ucEmpresas.CargarEmpresas(); // Refresca el grid
+
+                            }
+                            catch(Exception ex)
+                            {
+                                // Muestra mensaje de error
+                                MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                                // Restaura la empresa original 
+                                ucEmpresas.EmpresaActual = copiaEmpresa;
+
+                                // Refresca el grid de empresas
+                                ucEmpresas.CargarEmpresas();
+                                errorProceso = true;
+                            }
                             break;
 
                         case TipoEntidad.Local:
@@ -424,6 +449,16 @@ namespace Facturar.Presentacion
                             //gestorContratos.Agregar(); // Pendiente de desarrollo
                             break;
                     }
+
+                    if(!errorProceso)
+                    {
+                        // Muestra el panel de botones estandard
+                        AlternarPanelInferior(panelGeneral);
+
+                        // Deshabilitar los TextBox
+                        Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+                    }
+
                 };
             }
         }
