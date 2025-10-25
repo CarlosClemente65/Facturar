@@ -28,10 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.label1 = new System.Windows.Forms.Label();
-            this.dgvEmpresas = new System.Windows.Forms.DataGridView();
             this.label2 = new System.Windows.Forms.Label();
             this.txtNif = new System.Windows.Forms.TextBox();
             this.txtNombreEmpresa = new System.Windows.Forms.TextBox();
@@ -58,7 +55,7 @@
             this.label12 = new System.Windows.Forms.Label();
             this.txtFactura = new System.Windows.Forms.TextBox();
             this.label13 = new System.Windows.Forms.Label();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEmpresas)).BeginInit();
+            this.panelDgv = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // label1
@@ -73,48 +70,6 @@
             this.label1.TabIndex = 0;
             this.label1.Text = "Panel gestion empresas";
             this.label1.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            // 
-            // dgvEmpresas
-            // 
-            this.dgvEmpresas.AllowUserToAddRows = false;
-            this.dgvEmpresas.AllowUserToDeleteRows = false;
-            this.dgvEmpresas.AllowUserToOrderColumns = true;
-            this.dgvEmpresas.AllowUserToResizeRows = false;
-            this.dgvEmpresas.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.dgvEmpresas.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
-            this.dgvEmpresas.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvEmpresas.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
-            this.dgvEmpresas.ColumnHeadersHeight = 36;
-            this.dgvEmpresas.EnableHeadersVisualStyles = false;
-            this.dgvEmpresas.Location = new System.Drawing.Point(12, 35);
-            this.dgvEmpresas.MultiSelect = false;
-            this.dgvEmpresas.Name = "dgvEmpresas";
-            this.dgvEmpresas.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvEmpresas.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
-            this.dgvEmpresas.RowHeadersVisible = false;
-            this.dgvEmpresas.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvEmpresas.ShowEditingIcon = false;
-            this.dgvEmpresas.ShowRowErrors = false;
-            this.dgvEmpresas.Size = new System.Drawing.Size(743, 230);
-            this.dgvEmpresas.TabIndex = 1;
-            this.dgvEmpresas.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvEmpresas_ColumnHeaderMouseClick);
-            this.dgvEmpresas.SelectionChanged += new System.EventHandler(this.dgvEmpresas_SelectionChanged);
             // 
             // label2
             // 
@@ -407,6 +362,15 @@
             this.label13.TabIndex = 26;
             this.label13.Text = "Factura";
             // 
+            // panelDgv
+            // 
+            this.panelDgv.Anchor = System.Windows.Forms.AnchorStyles.Top;
+            this.panelDgv.Location = new System.Drawing.Point(12, 35);
+            this.panelDgv.Margin = new System.Windows.Forms.Padding(0);
+            this.panelDgv.Name = "panelDgv";
+            this.panelDgv.Size = new System.Drawing.Size(743, 195);
+            this.panelDgv.TabIndex = 28;
+            // 
             // UC_Empresas
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -439,13 +403,41 @@
             this.Controls.Add(this.lblNombre);
             this.Controls.Add(this.txtNif);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.dgvEmpresas);
             this.Controls.Add(this.label1);
+            this.Controls.Add(this.panelDgv);
             this.Margin = new System.Windows.Forms.Padding(5);
             this.Name = "UC_Empresas";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(767, 400);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvEmpresas)).EndInit();
+            this.Load += new System.EventHandler(this.UC_Empresas_Load);
+            this.Controls.SetChildIndex(this.panelDgv, 0);
+            this.Controls.SetChildIndex(this.label1, 0);
+            this.Controls.SetChildIndex(this.label2, 0);
+            this.Controls.SetChildIndex(this.txtNif, 0);
+            this.Controls.SetChildIndex(this.lblNombre, 0);
+            this.Controls.SetChildIndex(this.txtNombreEmpresa, 0);
+            this.Controls.SetChildIndex(this.label3, 0);
+            this.Controls.SetChildIndex(this.txtFechaAlta, 0);
+            this.Controls.SetChildIndex(this.label4, 0);
+            this.Controls.SetChildIndex(this.txtFechaBaja, 0);
+            this.Controls.SetChildIndex(this.label5, 0);
+            this.Controls.SetChildIndex(this.txtDireccion, 0);
+            this.Controls.SetChildIndex(this.label6, 0);
+            this.Controls.SetChildIndex(this.txtCodigoPostal, 0);
+            this.Controls.SetChildIndex(this.label8, 0);
+            this.Controls.SetChildIndex(this.txtPoblacion, 0);
+            this.Controls.SetChildIndex(this.label7, 0);
+            this.Controls.SetChildIndex(this.txtProvincia, 0);
+            this.Controls.SetChildIndex(this.label9, 0);
+            this.Controls.SetChildIndex(this.txtTelefono, 0);
+            this.Controls.SetChildIndex(this.label10, 0);
+            this.Controls.SetChildIndex(this.txtEmail, 0);
+            this.Controls.SetChildIndex(this.label11, 0);
+            this.Controls.SetChildIndex(this.txtPersonaContacto, 0);
+            this.Controls.SetChildIndex(this.label12, 0);
+            this.Controls.SetChildIndex(this.txtSerieFactura, 0);
+            this.Controls.SetChildIndex(this.label13, 0);
+            this.Controls.SetChildIndex(this.txtFactura, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -475,11 +467,11 @@
         private System.Windows.Forms.TextBox txtSerieFactura;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        public System.Windows.Forms.DataGridView dgvEmpresas;
         public System.Windows.Forms.TextBox txtNif;
         public System.Windows.Forms.TextBox txtNombreEmpresa;
         public System.Windows.Forms.TextBox txtFechaAlta;
         public System.Windows.Forms.TextBox txtFechaBaja;
         public System.Windows.Forms.TextBox txtFactura;
+        private System.Windows.Forms.Panel panelDgv;
     }
 }

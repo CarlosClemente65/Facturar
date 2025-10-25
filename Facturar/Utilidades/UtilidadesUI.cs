@@ -51,7 +51,7 @@ namespace Facturar.Utilidades
         /// <param name="dgw"></param>
         /// <param name="nombrePropiedad"></param>
         /// <param name="indice"></param>
-        public static void InsertaColumnaDGW<T>(DataGridView dgw, string nombrePropiedad, int indice)
+        public static void InsertaColumnaDGV<T>(DataGridView dgw, string nombrePropiedad, int indice)
         {
             // Obtiene el nombre del atributo DisplayName (si existe)
             var displayName = typeof(T)

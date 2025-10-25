@@ -9,7 +9,7 @@ using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
-    public partial class UC_Empresas : UserControl
+    public partial class UC_Empresas : UC_GridBase
     {
         // Propiedad privada para almacenar la empresa seleccionada en el grid
         private Empresa EmpresaSeleccionada;
@@ -23,9 +23,18 @@ namespace Facturar.Presentacion.Controles
         {
             InitializeComponent();
 
-            // Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
-            dgvEmpresas.DefaultCellStyle.SelectionBackColor = Color.OldLace;
-            dgvEmpresas.DefaultCellStyle.SelectionForeColor = Color.Black;
+            // Carga el grid base en el panel correspondiente
+            GridBase.Location = new Point(0, 0);
+            GridBase.Size = panelDgv.Size;
+
+            
+            GridBase.Dock = DockStyle.None;
+            GridBase.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
+            panelDgv.Controls.Add(GridBase);
+
+            //// Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
+            //dgvEmpresas.DefaultCellStyle.SelectionBackColor = Color.OldLace;
+            //dgvEmpresas.DefaultCellStyle.SelectionForeColor = Color.Black;
 
             // Monta las columnas por orden
             InicializaColumnas();
@@ -48,47 +57,69 @@ namespace Facturar.Presentacion.Controles
             listaEmpresas = gestorEmpresas.ListarTodos(activas: activas);
 
             // Carga los datos de las empresas
-            dgvEmpresas.DataSource = null;
-            dgvEmpresas.DataSource = listaEmpresas;
+            GridBase.DataSource = null;
+            GridBase.DataSource = listaEmpresas;
         }
 
         private void InicializaColumnas()
         {
-            dgvEmpresas.AutoGenerateColumns = false; // Se desactiva la autogeneracion de columnas
-            dgvEmpresas.Columns.Clear();
+            var columnas = new (string nombrePropiedad, int orden)[]
+            {
+                ("Id", 0),
+                ("NIF", 1),
+                ("Nombre", 2),
+                ("Direccion", 3),
+                ("CodigoPostal", 4),
+                ("Poblacion", 5),
+                ("Provincia", 6),
+                ("Telefono", 7),
+                ("Email", 8),
+                ("PersonaContacto", 9),
+                ("FechaAlta", 10),
+                ("FechaBaja", 11),
+                ("SerieFactura", 12),
+                ("NumeroFacturaActual", 13)
+            };
 
-            // Inserta las columnas en el grid segun el orden indicado
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Id", 0);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "NIF", 1);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Nombre", 2);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Direccion", 3);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "CodigoPostal", 4);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Poblacion", 5);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Provincia", 6);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Telefono", 7);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "Email", 8);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "PersonaContacto", 9);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "FechaAlta", 10);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "FechaBaja", 11);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "SerieFactura", 12);
-            Utiles.InsertaColumnaDGW<Empresa>(dgw: dgvEmpresas, "NumeroFacturaActual", 13);
+            ConfigurarColumnas<Empresa>(columnas);
+
+
+
+            //dgvEmpresas.AutoGenerateColumns = false; // Se desactiva la autogeneracion de columnas
+            //dgvEmpresas.Columns.Clear();
+
+            //// Inserta las columnas en el grid segun el orden indicado
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Id", 0);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "NIF", 1);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Nombre", 2);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Direccion", 3);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "CodigoPostal", 4);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Poblacion", 5);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Provincia", 6);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Telefono", 7);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Email", 8);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "PersonaContacto", 9);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "FechaAlta", 10);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "FechaBaja", 11);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "SerieFactura", 12);
+            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "NumeroFacturaActual", 13);
 
         }
 
         private void dgvEmpresas_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            string nombreColumna = dgvEmpresas.Columns[e.ColumnIndex].DataPropertyName;
+            //string nombreColumna = dgvEmpresas.Columns[e.ColumnIndex].DataPropertyName;
 
-            if(ordenAscendente)
-            {
-                dgvEmpresas.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
-            }
-            else
-            {
-                dgvEmpresas.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
-            }
+            //if(ordenAscendente)
+            //{
+            //    dgvEmpresas.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
+            //}
+            //else
+            //{
+            //    dgvEmpresas.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
+            //}
 
-            ordenAscendente = !ordenAscendente;
+            //ordenAscendente = !ordenAscendente;
         }
 
         private object GetPropValue(object obj, string nombreColumna)
@@ -98,12 +129,12 @@ namespace Facturar.Presentacion.Controles
 
         private void dgvEmpresas_SelectionChanged(object sender, EventArgs e)
         {
-            if(dgvEmpresas.CurrentRow != null && dgvEmpresas.CurrentRow.DataBoundItem is Empresa empresa)
-            {
-                EmpresaSeleccionada = empresa;
-                Utiles.LimpiarTextBoxes(this);
-                MostrarDatosEmpresa(empresa);
-            }
+            //if(dgvEmpresas.CurrentRow != null && dgvEmpresas.CurrentRow.DataBoundItem is Empresa empresa)
+            //{
+            //    EmpresaSeleccionada = empresa;
+            //    Utiles.LimpiarTextBoxes(this);
+            //    MostrarDatosEmpresa(empresa);
+            //}
         }
 
         private void MostrarDatosEmpresa(Empresa empresa)
@@ -132,11 +163,11 @@ namespace Facturar.Presentacion.Controles
 
         public void ActualizaEmpresaSeleccionada()
         {
-            if(dgvEmpresas.CurrentRow != null)
-            {
-                // Carga el objeto empresa segun la fila seleccionada.
-                EmpresaSeleccionada = dgvEmpresas.CurrentRow.DataBoundItem as Empresa;
-            }
+            //if(dgvEmpresas.CurrentRow != null)
+            //{
+            //    // Carga el objeto empresa segun la fila seleccionada.
+            //    EmpresaSeleccionada = dgvEmpresas.CurrentRow.DataBoundItem as Empresa;
+            //}
         }
 
         public void ActualizaPropiedadesEmpresa(Empresa empresa)
@@ -168,6 +199,10 @@ namespace Facturar.Presentacion.Controles
             */
         }
 
-        
+        private void UC_Empresas_Load(object sender, EventArgs e)
+        {
+
+            
+        }
     }
 }

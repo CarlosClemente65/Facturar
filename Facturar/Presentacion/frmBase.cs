@@ -154,10 +154,8 @@ namespace Facturar.Presentacion
                 // Procesos de alta
                 general.AltaClicked += (s, e) =>
                 {
+                    // Habilita el panel de edicion
                     AlternarPanelInferior(panelEdicion);
-
-                    //Deshabilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = false;
 
                     /* Pendiente de desarrollo el proceso de alta
                     // Habilitar los TextBox y poner el foco en el primer campo
@@ -170,6 +168,8 @@ namespace Facturar.Presentacion
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
+                            //Deshabilita el grid de empresas
+                            ucEmpresas.GridBase.Enabled = false;
                             //gestorEmpresas.Agregar(); // Pendiente de desarrollo
                             break;
 
@@ -190,15 +190,15 @@ namespace Facturar.Presentacion
                 // Procesos de baja
                 general.BajaClicked += (s, e) =>
                 {
-                    AlternarPanelInferior(panelEdicion); // Cuando se desarrolle el metodo de baja, sustituirlo en esta llamada
-
-                    //Deshabilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = false;
+                    // Habilita el panel de edicion
+                    AlternarPanelInferior(panelEdicion);
 
                     // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder al Id que tenga el objeto
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
+                            //Deshabilita el grid de empresas
+                            ucEmpresas.GridBase.Enabled = false;
                             // Actualiza la empresa seleccionada en UC_Empresa
                             ucEmpresas.ActualizaEmpresaSeleccionada();
                             break;
@@ -245,7 +245,7 @@ namespace Facturar.Presentacion
                             ucEmpresas.txtFactura.Enabled = false;
 
                             // Aplica el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: true);
+                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
 
                             break;
 
@@ -309,7 +309,7 @@ namespace Facturar.Presentacion
                     AlternarPanelInferior(panelEdicion);
 
                     //Deshabilita el grid de empresas
-                    ucEmpresas.dgvEmpresas.Enabled = false;
+                    ucEmpresas.GridBase.Enabled = false;
 
                     // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
                     switch(entidadActiva)
@@ -342,10 +342,10 @@ namespace Facturar.Presentacion
                     {
                         case TipoEntidad.Empresa:
                             // Habilita el grid de empresas
-                            ucEmpresas.dgvEmpresas.Enabled = true;
+                            ucEmpresas.GridBase.Enabled = true;
 
                             // Quita el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
+                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: false);
 
                             // Refresca el grid de empresas
                             ucEmpresas.CargarEmpresas();
@@ -402,10 +402,10 @@ namespace Facturar.Presentacion
                                 MessageBox.Show("Empresa actualizada correctamente.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                                 // Habilita el grid de empresas
-                                ucEmpresas.dgvEmpresas.Enabled = true;
+                                ucEmpresas.GridBase.Enabled = true;
 
                                 // Quita el efecto de bloqueo de edicion
-                                Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.dgvEmpresas, bloquear: false);
+                                Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: false);
 
                                 // Refresca el grid de empresas
                                 ucEmpresas.CargarEmpresas(); // Refresca el grid

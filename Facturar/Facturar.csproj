@@ -145,6 +145,12 @@
     <Compile Include="Presentacion\Controles\UC_Locales.Designer.cs">
       <DependentUpon>UC_Locales.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Controles\UC_GridBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Controles\UC_GridBase.Designer.cs">
+      <DependentUpon>UC_GridBase.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Formularios\frmGenerarFactura.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -200,6 +206,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Controles\UC_Empresas.resx">
       <DependentUpon>UC_Empresas.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Controles\UC_GridBase.resx">
+      <DependentUpon>UC_GridBase.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Controles\UC_Locales.resx">
       <DependentUpon>UC_Locales.cs</DependentUpon>
