@@ -5,7 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
+using Facturar.Utilidades;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
+using Enumerador = Facturar.Utilidades.Enumeradores;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -172,13 +174,29 @@ namespace Facturar.Presentacion.Controles
 
 
         // Actualiza las propiedades de la empresa segun el contenido de los textBox
-        public void ActualizaPropiedadesEmpresa(Empresa empresa)
+        public void ActualizaPropiedadesEmpresa(Empresa empresa, Enumerador.TipoProceso tipoProceso)
         {
             if(empresa == null)
             {
                 throw new ArgumentNullException("No se han pasado datos de empresa para actualizar");
             }
 
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
+                empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
+                empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
+
+                // El campo NumeroFacturaActual es la ultima factura emitida, por lo que en el alta se permite indicar por si empieza por un numero diferente
+                int numeroFactura;
+                if(!int.TryParse(txtFactura.Text, out numeroFactura))
+                {
+                    numeroFactura = 0; // Valor por defecto por si el campo esta vacio
+                }
+                empresa.NumeroFacturaActual = numeroFactura;
+            }
+
+            // Campos comunes en el alta y edicion
             empresa.Direccion = txtDireccion.Text;
             empresa.CodigoPostal = txtCodigoPostal.Text;
             empresa.Poblacion = txtPoblacion.Text;
@@ -188,17 +206,9 @@ namespace Facturar.Presentacion.Controles
             empresa.PersonaContacto = txtPersonaContacto.Text;
             empresa.SerieFactura = txtSerieFactura.Text;
 
-            /* Los siguientes campos no se permiten modificar 
-            empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
-            empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
+            /* Los siguientes campos no se permiten modificar
             
-            // El campo NumeroFacturaActual es la ultima factura emitida, por lo que no se permite modificar
-            int numeroFactura; 
-            if(!int.TryParse(txtFactura.Text, out numeroFactura))
-            {
-                numeroFactura = 0; // Valor por defecto por si el campo esta vacio
-            }
-            empresa.NumeroFacturaActual = numeroFactura;
+
             */
         }
     }

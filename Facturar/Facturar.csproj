@@ -190,6 +190,7 @@
     <Compile Include="Servicios\GestorFacturas.cs" />
     <Compile Include="Servicios\GestorLocales.cs" />
     <Compile Include="Utilidades\Configuracion.cs" />
+    <Compile Include="Utilidades\Enumeradores.cs" />
     <Compile Include="Utilidades\MetodosExtension.cs" />
     <Compile Include="Utilidades\Pruebas.cs" />
     <Compile Include="Utilidades\MapeadorDatos.cs" />
