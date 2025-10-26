@@ -234,15 +234,15 @@ namespace Facturar.Presentacion
                     switch(entidadActiva)
                     {
                         case TipoEntidad.Empresa:
-                            // Actualiza la empresa seleccionada en UC_Empresa
-                            ucEmpresas.ActualizaEmpresaSeleccionada();
-
                             // Deshabilita los TextBox que no se pueden editar
                             ucEmpresas.txtNif.Enabled = false;
                             ucEmpresas.txtNombreEmpresa.Enabled = false;
                             ucEmpresas.txtFechaAlta.Enabled = false;
                             ucEmpresas.txtFechaBaja.Enabled = false;
                             ucEmpresas.txtFactura.Enabled = false;
+
+                            // Actualiza la empresa seleccionada en UC_Empresa
+                            ucEmpresas.ActualizaEmpresaSeleccionada();
 
                             // Aplica el efecto de bloqueo de edicion
                             Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
@@ -473,7 +473,6 @@ namespace Facturar.Presentacion
             Application.Exit();
         }
 
-
         private void BotonGeneral_Click(object sender, EventArgs e)
         {
             //CambiarEstadoEdicion(true);
@@ -501,7 +500,6 @@ namespace Facturar.Presentacion
                 btnConfigurar.Visible = true;
             }
         }
-
 
         private void TimerLateral_Tick(object sender, EventArgs e)
         {
@@ -576,7 +574,6 @@ namespace Facturar.Presentacion
             panelCentral.Location = new Point(left, top);
             panelCentral.Size = new Size(width, height);
         }
-
 
         private void btnEmpresas_Click(object sender, EventArgs e)
         {

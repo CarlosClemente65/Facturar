@@ -1,67 +1,53 @@
-﻿using System.Collections.Generic;
-using System.Data;
+﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
-using Facturar.Entidades;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
     public partial class UC_GridBase : UserControl
     {
-        public DataGridView GridBase => dgvBase; // Exposición pública del grid
+        // Exposición pública del grid base para si fuera necesario usar alguna propiedad o método específico
+        public DataGridView GridBase => dgvBase;
 
-        // Propiedades para gestionar y ordenar los datos
-        private IEnumerable<Empresa> listaDatos;
-        private bool ordenAscendente = true;
+        // Expone eventos protegidos para que las clases derivadas puedan suscribirse
+        protected event EventHandler<object> FilaSeleccionada;
+        protected event EventHandler<int> ColumnaOrdenada;
 
-        public UC_GridBase()
+        protected UC_GridBase()
         {
             InitializeComponent();
             ConfigurarGrid();
         }
 
+
+        // Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
         private void ConfigurarGrid()
         {
-            // Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
             GridBase.DefaultCellStyle.SelectionBackColor = Color.OldLace;
             GridBase.DefaultCellStyle.SelectionForeColor = Color.Black;
         }
 
-        public void EstablecerDatos<T>(IEnumerable<T> datos)
-        {
-            GridBase.DataSource = null;
-            GridBase.DataSource = datos.ToList();
-        }
-        public void Mostrar()
-        {
-            this.Visible = true;
-        }
-
+        // Evento que se dispara al hacer clic en el encabezado de una columna para ordenar
         private void dgvBase_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
         {
-            string nombreColumna = GridBase.Columns[e.ColumnIndex].DataPropertyName;
-
-            if(ordenAscendente)
-            {
-                GridBase.DataSource = listaDatos.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
-            }
-            else
-            {
-                GridBase.DataSource = listaDatos.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
-            }
-
-            ordenAscendente = !ordenAscendente;
+            ColumnaOrdenada?.Invoke(this, e.ColumnIndex);
         }
 
-
-        private object GetPropValue(object obj, string nombreColumna)
+        // Evento que se dispara al cambiar la selección de fila en el grid
+        private void dgvBase_SelectionChanged(object sender, System.EventArgs e)
         {
-            return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
+            if(dgvBase.CurrentRow != null)
+            {
+                var entidadSeleccionada = GridBase.CurrentRow.DataBoundItem;
+                FilaSeleccionada?.Invoke(this, entidadSeleccionada);
+            }
         }
 
-        public void ConfigurarColumnas<T>(IEnumerable<(string nombrePropiedad, int orden)> columnas)
+
+        // Configura las columnas del grid según las propiedades y el orden indicados
+        protected void ConfigurarColumnas<T>(IEnumerable<(string nombrePropiedad, int orden)> columnas)
         {
             GridBase.AutoGenerateColumns = false;
             GridBase.Columns.Clear();

@@ -23,25 +23,26 @@ namespace Facturar.Presentacion.Controles
         {
             InitializeComponent();
 
+            // Suscripcion a los eventos del grid base
+            FilaSeleccionada += GridBase_FilaSeleccionada;
+            ColumnaOrdenada += GridBase_Columnaseleccionada;
+
             // Carga el grid base en el panel correspondiente
             GridBase.Location = new Point(0, 0);
             GridBase.Size = panelDgv.Size;
 
-            
+            // Establece el dock y el anclaje para que se ajuste al panel
             GridBase.Dock = DockStyle.None;
             GridBase.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
-            panelDgv.Controls.Add(GridBase);
 
-            //// Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
-            //dgvEmpresas.DefaultCellStyle.SelectionBackColor = Color.OldLace;
-            //dgvEmpresas.DefaultCellStyle.SelectionForeColor = Color.Black;
+            // Añade el grid al panel
+            panelDgv.Controls.Add(GridBase);
 
             // Monta las columnas por orden
             InicializaColumnas();
 
             // Carga las empresas en el control
             CargarEmpresas(activas: true);
-
 
         }
 
@@ -56,11 +57,13 @@ namespace Facturar.Presentacion.Controles
             var gestorEmpresas = new Servicios.GestorEmpresas();
             listaEmpresas = gestorEmpresas.ListarTodos(activas: activas);
 
-            // Carga los datos de las empresas
+            // Carga los datos de las empresas en el gridBase
             GridBase.DataSource = null;
-            GridBase.DataSource = listaEmpresas;
+            GridBase.DataSource = listaEmpresas.ToList();
+
         }
 
+        // Define las columnas a mostrar en el grid base y el orden que tendran
         private void InicializaColumnas()
         {
             var columnas = new (string nombrePropiedad, int orden)[]
@@ -81,67 +84,62 @@ namespace Facturar.Presentacion.Controles
                 ("NumeroFacturaActual", 13)
             };
 
+            // Pasa las columnas al grid base para que las configure
             ConfigurarColumnas<Empresa>(columnas);
 
-
-
-            //dgvEmpresas.AutoGenerateColumns = false; // Se desactiva la autogeneracion de columnas
-            //dgvEmpresas.Columns.Clear();
-
-            //// Inserta las columnas en el grid segun el orden indicado
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Id", 0);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "NIF", 1);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Nombre", 2);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Direccion", 3);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "CodigoPostal", 4);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Poblacion", 5);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Provincia", 6);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Telefono", 7);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "Email", 8);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "PersonaContacto", 9);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "FechaAlta", 10);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "FechaBaja", 11);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "SerieFactura", 12);
-            //Utiles.InsertaColumnaDGV<Empresa>(dgw: dgvEmpresas, "NumeroFacturaActual", 13);
-
         }
 
-        private void dgvEmpresas_ColumnHeaderMouseClick(object sender, DataGridViewCellMouseEventArgs e)
+
+        // Evento que se lanza al seleccionar una fila en el grid base
+        private void GridBase_FilaSeleccionada(object sender, object entidad)
         {
-            //string nombreColumna = dgvEmpresas.Columns[e.ColumnIndex].DataPropertyName;
+            // Como recibe un objeto genérico, se chequea que sea del tipo Empresa
+            if(entidad is Empresa empresa)
+            {
+                // Actualiza la empresa seleccionada
+                EmpresaSeleccionada = empresa;
 
-            //if(ordenAscendente)
-            //{
-            //    dgvEmpresas.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
-            //}
-            //else
-            //{
-            //    dgvEmpresas.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
-            //}
+                // Limpia los textBox y muestra los datos de la empresa seleccionada
+                Utiles.LimpiarTextBoxes(this);
 
-            //ordenAscendente = !ordenAscendente;
+                // Muestra los datos de la empresa seleccionada
+                MostrarDatosEmpresa(empresa);
+            }
         }
 
+        // Evento que se lanza al ordenar una columna en el grid base
+        private void GridBase_Columnaseleccionada(object sender, int columnaIndex)
+        {
+            string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
+
+            if(ordenAscendente)
+            {
+                GridBase.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
+            }
+            else
+            {
+                GridBase.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
+            }
+
+            ordenAscendente = !ordenAscendente;
+        }
+
+
+        // Devuelve el valor de una propiedad de un objeto por su nombre
         private object GetPropValue(object obj, string nombreColumna)
         {
             return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
         }
 
-        private void dgvEmpresas_SelectionChanged(object sender, EventArgs e)
-        {
-            //if(dgvEmpresas.CurrentRow != null && dgvEmpresas.CurrentRow.DataBoundItem is Empresa empresa)
-            //{
-            //    EmpresaSeleccionada = empresa;
-            //    Utiles.LimpiarTextBoxes(this);
-            //    MostrarDatosEmpresa(empresa);
-            //}
-        }
 
+        // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosEmpresa(Empresa empresa)
         {
             txtNif.Text = empresa.NIF;
             txtNombreEmpresa.Text = empresa.Nombre;
             txtFechaAlta.Text = empresa.FechaAlta.ToShortDateString();
+
+            // La fecha de baja puede ser nula
             if(empresa.FechaBaja.HasValue)
             {
                 txtFechaBaja.Text = empresa.FechaBaja.Value.ToShortDateString();
@@ -150,6 +148,7 @@ namespace Facturar.Presentacion.Controles
             {
                 txtFechaBaja.Text = "";
             }
+
             txtDireccion.Text = empresa.Direccion;
             txtCodigoPostal.Text = empresa.CodigoPostal;
             txtPoblacion.Text = empresa.Poblacion;
@@ -161,15 +160,18 @@ namespace Facturar.Presentacion.Controles
             txtFactura.Text = empresa.NumeroFacturaActual.ToString();
         }
 
+
+        // Actualiza la empresa seleccionada segun la fila activa del grid
         public void ActualizaEmpresaSeleccionada()
         {
-            //if(dgvEmpresas.CurrentRow != null)
-            //{
-            //    // Carga el objeto empresa segun la fila seleccionada.
-            //    EmpresaSeleccionada = dgvEmpresas.CurrentRow.DataBoundItem as Empresa;
-            //}
+            if(dgvBase.CurrentRow != null)
+            {
+                EmpresaSeleccionada = dgvBase.CurrentRow.DataBoundItem as Empresa;
+            }
         }
 
+
+        // Actualiza las propiedades de la empresa segun el contenido de los textBox
         public void ActualizaPropiedadesEmpresa(Empresa empresa)
         {
             if(empresa == null)
@@ -177,9 +179,6 @@ namespace Facturar.Presentacion.Controles
                 throw new ArgumentNullException("No se han pasado datos de empresa para actualizar");
             }
 
-            // Actualizacion de la empresa segun el contenido de los textBox
-            //empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
-            //empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
             empresa.Direccion = txtDireccion.Text;
             empresa.CodigoPostal = txtCodigoPostal.Text;
             empresa.Poblacion = txtPoblacion.Text;
@@ -188,21 +187,19 @@ namespace Facturar.Presentacion.Controles
             empresa.Email = txtEmail.Text;
             empresa.PersonaContacto = txtPersonaContacto.Text;
             empresa.SerieFactura = txtSerieFactura.Text;
+
+            /* Los siguientes campos no se permiten modificar 
+            empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
+            empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
             
-            /* No se permite modificar el numero de factura actual
-            int numeroFactura;
+            // El campo NumeroFacturaActual es la ultima factura emitida, por lo que no se permite modificar
+            int numeroFactura; 
             if(!int.TryParse(txtFactura.Text, out numeroFactura))
             {
                 numeroFactura = 0; // Valor por defecto por si el campo esta vacio
             }
             empresa.NumeroFacturaActual = numeroFactura;
             */
-        }
-
-        private void UC_Empresas_Load(object sender, EventArgs e)
-        {
-
-            
         }
     }
 }

@@ -75,6 +75,7 @@
             this.dgvBase.Size = new System.Drawing.Size(743, 200);
             this.dgvBase.TabIndex = 2;
             this.dgvBase.ColumnHeaderMouseClick += new System.Windows.Forms.DataGridViewCellMouseEventHandler(this.dgvBase_ColumnHeaderMouseClick);
+            this.dgvBase.SelectionChanged += new System.EventHandler(this.dgvBase_SelectionChanged);
             // 
             // UC_GridBase
             // 
@@ -91,6 +92,6 @@
 
         #endregion
 
-        public System.Windows.Forms.DataGridView dgvBase;
+        protected System.Windows.Forms.DataGridView dgvBase;
     }
 }
