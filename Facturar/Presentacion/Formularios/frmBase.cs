@@ -1,15 +1,9 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Security.Cryptography;
 using System.Windows.Forms;
-using Facturar.Entidades;
 using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
 using Facturar.Servicios;
-using static Facturar.Utilidades.Pruebas;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using Proceso = Facturar.Presentacion.Procesos;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
@@ -25,7 +19,7 @@ namespace Facturar.Presentacion
         private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
 
-        // Propiedad privada para gestionar si se produce un error en la gestion de procesos al validar y grabar en el base de datos
+        // Propiedad publica para gestionar si se produce un error en la gestion de procesos al validar y grabar en el base de datos
         public bool errorProceso { get; set; }
 
         // Variables de clase para gestionar paneles y entidades
@@ -178,15 +172,15 @@ namespace Facturar.Presentacion
                 // Boton Baja
                 general.BajaClicked += (s, e) =>
                 {
-                    // Habilita el panel de edicion
-                    AlternarPanelInferior(panelEdicion);
-
                     // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Baja;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos);
-                    botonBaja.Ejecutar(entidadActiva);
+                    botonBaja.Ejecutar(entidadActiva: entidadActiva);
+
+                    // Deja el proceso libre para siguientes procesos
+                    tipoProceso = Enumerador.TipoProceso.Ninguno;
                 };
 
                 // Boton edicion
@@ -275,7 +269,7 @@ namespace Facturar.Presentacion
 
                         // Deshabilitar los TextBox
                         Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
-                        
+
                         // Inicializa el tipo de proceso para siguientes acciones.
                         tipoProceso = Enumerador.TipoProceso.Ninguno;
                     }
