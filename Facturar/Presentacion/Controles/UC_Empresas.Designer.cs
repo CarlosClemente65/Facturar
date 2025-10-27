@@ -193,6 +193,7 @@
             this.txtCodigoPostal.Name = "txtCodigoPostal";
             this.txtCodigoPostal.Size = new System.Drawing.Size(68, 22);
             this.txtCodigoPostal.TabIndex = 13;
+            this.txtCodigoPostal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
             // 

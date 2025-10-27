@@ -1,14 +1,18 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Windows.Forms;
+using Facturar.Entidades;
 using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
 using Facturar.Servicios;
-using Facturar.Entidades;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using static Facturar.Utilidades.Pruebas;
 using Enumerador = Facturar.Utilidades.Enumeradores;
+using Proceso = Facturar.Presentacion.Procesos;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion
 {
@@ -21,6 +25,8 @@ namespace Facturar.Presentacion
         private int anchoPanelLateralColapsado = 45;
         private Timer timerLateral = new Timer();
 
+        // Propiedad privada para gestionar si se produce un error en la gestion de procesos al validar y grabar en el base de datos
+        public bool errorProceso { get; set; }
 
         // Variables de clase para gestionar paneles y entidades
         private PanelInferior_general panelGeneral;
@@ -30,6 +36,12 @@ namespace Facturar.Presentacion
         private GestorClientes gestorClientes;
         private GestorContratos gestorContratos;
         private GestorConfiguracion gestorConfiguracion;
+
+        // Propiedades publicas de los gestores para acceso desde fuera de la clase
+        public GestorEmpresas GestorEmpresas => gestorEmpresas;
+        public GestorLocales GestorLocales => gestorLocales;
+        public GestorClientes GestorClientes => gestorClientes;
+        public GestorContratos GestorContratos => gestorContratos;
 
 
         // Instancias de UserControl 
@@ -46,10 +58,7 @@ namespace Facturar.Presentacion
         private object gestorActual; // Almacena el gestor que debe gestionarse en el formulario (se cambia al acceder a las opciones de cada tipo de entidad)
         private Enumerador.TipoProceso tipoProceso = Enumerador.TipoProceso.Ninguno; // Controla el tipo de proceso que se está realizando (alta, baja, edicion, eliminacion) 
 
-
-       
-
-        
+        public Enumerador.TipoProceso TipoProceso => tipoProceso;
 
         public frmBase()
         {
@@ -147,7 +156,7 @@ namespace Facturar.Presentacion
         {
             if(panel is PanelInferior_general general)
             {
-                // Procesos de alta
+                // Boton Alta
                 general.AltaClicked += (s, e) =>
                 {
                     // Habilita el panel de edicion
@@ -160,32 +169,13 @@ namespace Facturar.Presentacion
                     Utiles.LimpiarTextBoxes(contenedor: this);
 
                     tipoProceso = Enumerador.TipoProceso.Alta;
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            // Aplica el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
 
-                            // Actualiza la empresa seleccionada en UC_Empresa
-                            ucEmpresas.ActualizaEmpresaSeleccionada();
-
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            //gestorLocales.Agregar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            //gestorClientes.Agregar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            //gestorContratos.Agregar(); // Pendiente de desarrollo
-                            break;
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonAlta.Ejecutar(entidadActiva);
                 };
 
-                // Procesos de baja
+                // Boton Baja
                 general.BajaClicked += (s, e) =>
                 {
                     // Habilita el panel de edicion
@@ -194,36 +184,12 @@ namespace Facturar.Presentacion
                     // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Baja;
 
-                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder al Id que tenga el objeto
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            //Deshabilita el grid de empresas
-                            ucEmpresas.GridBase.Enabled = false;
-
-                            // Actualiza la empresa seleccionada en UC_Empresa
-                            ucEmpresas.ActualizaEmpresaSeleccionada();
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            // Actualiza el local seleccionada en UC_Local
-                            ucLocales.ActualizarLocalSeleccionado();// Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            // Actualiza el cliente seleccionada en UC_Clientes
-                            ucClientes.ActualizarClienteSeleccionado();// Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            // Actualiza el contrato seleccionado en UC_Contratos
-                            ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
-                            break;
-
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonBaja.Ejecutar(entidadActiva);
                 };
 
-                // Proceso de edicion
+                // Boton edicion
                 general.EditarClicked += (s, e) =>
                 {
                     // Habilita el panel de edicion
@@ -235,40 +201,9 @@ namespace Facturar.Presentacion
                     // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Edicion;
 
-                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            // Deshabilita los TextBox que no se pueden editar
-                            ucEmpresas.txtNif.Enabled = false;
-                            ucEmpresas.txtNombreEmpresa.Enabled = false;
-                            ucEmpresas.txtFechaAlta.Enabled = false;
-                            ucEmpresas.txtFechaBaja.Enabled = false;
-                            ucEmpresas.txtFactura.Enabled = false;
-
-                            // Actualiza la empresa seleccionada en UC_Empresa
-                            ucEmpresas.ActualizaEmpresaSeleccionada();
-
-                            // Aplica el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
-
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            // Actualiza el local seleccionado en UC_Local
-                            ucLocales.ActualizarLocalSeleccionado();// Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            // Actualiza el cliente seleccionada en UC_Clientes
-                            ucClientes.ActualizarClienteSeleccionado();// Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            // Actualiza el contrato seleccionado en UC_Contratos
-                            ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
-                            break;
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonEditar.Ejecutar(entidadActiva);
                 };
 
                 // Proceso al seleccionar estado
@@ -286,26 +221,9 @@ namespace Facturar.Presentacion
                         estado = false;
                     }
 
-                    // Carga los datos correspondiente en funcion del tipo de entidad 
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            ucEmpresas?.CargarEmpresas(activas: estado);
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            ucLocales?.CargarLocales(activos: estado);
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            ucClientes?.CargarClientes(activos: estado);
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            ucContratos?.CargarContratos(activos: estado);
-                            //gestorContratos.Actualizar(); // Pendiente de desarrollo
-                            break;
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonSeleccionActivos = new Proceso.SeleccionActivos(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonSeleccionActivos.Ejecutar(entidadActiva, estado);
                 };
 
                 // Procesos para eliminar
@@ -319,28 +237,9 @@ namespace Facturar.Presentacion
                     // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Eliminacion;
 
-                    // Se debe grabar la entidad seleccionada en el UserControl correspondiente para poder acceder a las propiedades que tenga el objeto y hacer la modificacion en la base de datos
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            // Actualiza la empresa seleccionada en UC_Empresa
-                            ucEmpresas.ActualizaEmpresaSeleccionada();
-
-                            //gestorEmpresas.Eliminar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            //gestorLocales.Eliminar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            //gestorClientes.Eliminar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            //gestorContratos.Eliminar(); // Pendiente de desarrollo
-                            break;
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonEliminar.Ejecutar(entidadActiva);
                 };
             }
             else if(panel is PanelInferior_Edicion edicion)
@@ -348,142 +247,27 @@ namespace Facturar.Presentacion
                 // Procesos al cancelar la edicion
                 edicion.CancelarClicked += (s, e) =>
                 {
-                    // Vuelve a activar el grid de cada entidad
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            // Habilita el grid de empresas
-                            ucEmpresas.GridBase.Enabled = true;
-
-                            // Quita el efecto de bloqueo de edicion
-                            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: false);
-
-                            // Refresca el grid de empresas
-                            ucEmpresas.CargarEmpresas();
-
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            // Habilita el grid de locales
-                            //ucLocales.dgvLocales.Enabled = true; // Pendiente desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            // Habilita el grid de clientes
-                            //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            // Habilita el grid de contratos
-                            //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
-                            break;
-                    }
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonCancelar = new Proceso.BotonCancelar(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    botonCancelar.Ejecutar(entidadActiva);
 
                     // Muestra el panel de botones estandard
                     AlternarPanelInferior(panelGeneral);
 
                     // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
-
                 };
 
                 // Procesos al validar la edicion
                 edicion.ValidarClicked += (s, e) =>
                 {
-                    bool errorProceso = false;
-                    // Procesos segun tipo de entidad
-                    switch(entidadActiva)
-                    {
-                        case Enumerador.TipoEntidad.Empresa:
-                            Empresa copiaEmpresa = null; // Copia de la empresa por si hay error en la edicion
-                            Empresa empresa = null; // Empresa que se va a crear
-                            try
-                            {
-                                string mensajeCorrecto = string.Empty;
-                                if(tipoProceso == Enumerador.TipoProceso.Edicion)
-                                {
-                                    // Se obtiene la empresa seleccioanda
-                                    empresa = ucEmpresas.EmpresaActual;
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonValidar = new Proceso.BotonValidar(ucEmpresas, ucLocales, ucClientes, ucContratos, formulario: this);
 
-                                    // Hacemos una copia de la empresa actual por si la edicion falla
-                                    copiaEmpresa = new Empresa(empresa);
+                    // Ejecuta las acciones establecidas en el boton
+                    botonValidar.Ejecutar(entidadActiva);
 
-                                    // Se actualizan las propiedades segun los campos de la pantalla
-                                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, Enumerador.TipoProceso.Edicion);
-
-                                    // Graba los cambios en la base de datos
-                                    gestorEmpresas.Actualizar(empresa);
-
-                                    // Mensaje de proceso correcto
-                                    mensajeCorrecto = "Empresa actualizada correctamente.";
-                                }
-                                else if(tipoProceso == Enumerador.TipoProceso.Alta)
-                                {
-                                    // Crea una nueva empresa
-                                    empresa = new Empresa();
-
-                                    // Se graban las propiedades segun los campos de la pantalla
-                                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, Enumerador.TipoProceso.Alta);
-
-                                    // Agrega la nueva empresa a la base de datos
-                                    gestorEmpresas.Agregar(empresa);
-
-                                    // Mensaje de proceso correcto
-                                    mensajeCorrecto = "Empresa creada correctamente.";
-                                }
-
-                                // Muestra mensaje de proceso correcto
-                                MessageBox.Show(mensajeCorrecto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
-
-                                // Habilita el grid de empresas
-                                ucEmpresas.GridBase.Enabled = true;
-
-                                // Quita el efecto de bloqueo de edicion
-                                Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: false);
-
-                                // Refresca el grid de empresas
-                                ucEmpresas.CargarEmpresas(); // Refresca el grid
-
-                            }
-                            catch(Exception ex)
-                            {
-                                // Muestra mensaje de error
-                                MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                                // Restaura la empresa original 
-                                ucEmpresas.EmpresaActual = copiaEmpresa;
-
-                                // Refresca el grid de empresas
-                                ucEmpresas.CargarEmpresas();
-                                errorProceso = true;
-                            }
-                            break;
-
-                        case Enumerador.TipoEntidad.Local:
-                            // Habilita el grid de locales
-                            //ucLocales.dgvLocales.Enabled = true; // Pendiente desarrollo
-
-                            //Actualiza la base de datos
-                            //gestorLocales.Agregar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Cliente:
-                            // Habilita el grid de clientes
-                            //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
-
-                            //Actualiza la base de datos
-                            //gestorClientes.Agregar(); // Pendiente de desarrollo
-                            break;
-
-                        case Enumerador.TipoEntidad.Contrato:
-                            // Habilita el grid de contratos
-                            //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
-
-                            //Actualiza la base de datos
-                            //gestorContratos.Agregar(); // Pendiente de desarrollo
-                            break;
-                    }
-
+                    // Controla si se ha producido algun error en el try-catch interno
                     if(!errorProceso)
                     {
                         // Muestra el panel de botones estandard
@@ -491,10 +275,10 @@ namespace Facturar.Presentacion
 
                         // Deshabilitar los TextBox
                         Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+                        
+                        // Inicializa el tipo de proceso para siguientes acciones.
+                        tipoProceso = Enumerador.TipoProceso.Ninguno;
                     }
-
-                    tipoProceso = Enumerador.TipoProceso.Ninguno;
-
                 };
             }
         }
