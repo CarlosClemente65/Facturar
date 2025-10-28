@@ -176,7 +176,7 @@ namespace Facturar.Presentacion
                     tipoProceso = Enumerador.TipoProceso.Baja;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos, this);
                     botonBaja.Ejecutar(entidadActiva: entidadActiva);
 
                     // Deja el proceso libre para siguientes procesos

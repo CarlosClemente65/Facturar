@@ -1,6 +1,4 @@
-﻿using System.Windows.Forms;
-using Facturar.Interfaces;
-using Facturar.Presentacion.Controles;
+﻿using Facturar.Presentacion.Controles;
 using Facturar.Utilidades;
 
 namespace Facturar.Presentacion.Procesos
