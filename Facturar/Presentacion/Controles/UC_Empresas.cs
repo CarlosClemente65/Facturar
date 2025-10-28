@@ -5,7 +5,6 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Facturar.Utilidades;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 

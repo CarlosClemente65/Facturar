@@ -77,6 +77,7 @@ namespace Facturar.Presentacion.Procesos
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
+
                         // Habilita el grid de empresas
                         ucEmpresas.GridBase.Enabled = true;
 
@@ -98,8 +99,6 @@ namespace Facturar.Presentacion.Procesos
                             ucEmpresas.EmpresaActual = copiaEmpresa;
                         }
 
-                        //// Refresca el grid de empresas
-                        //ucEmpresas.CargarEmpresas();
                         formulario.errorProceso = true;
                     }
                     break;

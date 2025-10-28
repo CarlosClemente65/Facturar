@@ -113,7 +113,7 @@ namespace Facturar.Servicios
         /// <param name="fechaBaja"></param>
         /// <returns></returns>
         /// <exception cref="NotImplementedException"></exception>
-        public bool Baja(string nif, DateTime? fechaBaja)
+        public bool Baja(string nif, DateTime? fechaBaja = null)
         {
             // Este metodo no se implementa porque los contratos se identifican por Id y no por NIF
             throw new NotImplementedException();

@@ -4,7 +4,7 @@ using Facturar.Entidades;
 
 namespace Facturar.Presentacion.Controles
 {
-    public partial class UC_Locales : UserControl
+    public partial class UC_Locales : UC_GridBase
     {
         // Propiedad privada para almacenar el local seleccionado en el grid
         private Local LocalSeleccionado;
@@ -22,7 +22,7 @@ namespace Facturar.Presentacion.Controles
             get => LocalSeleccionado;
         }
 
-        public void CargarLocales(bool? activos)
+        public void CargarLocales(bool? activos = true)
         {
             var gestorLocales = new Servicios.GestorLocales();
             listaLocales = gestorLocales.ListarTodos(activos: activos);

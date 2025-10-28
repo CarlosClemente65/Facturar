@@ -1,9 +1,10 @@
-﻿using System;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using static System.Net.Mime.MediaTypeNames;
+using Facturar.Interfaces;
+using Facturar.Utilidades;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Utilidades
 {
@@ -165,6 +166,15 @@ namespace Facturar.Utilidades
             }
 
             dgv.Refresh();
+        }
+
+        public static void RestablecerPaneles<TGestor, TEntidad>(DataGridView grid, bool bloquear, TGestor gestor) where TGestor : IRepositorioBase<TEntidad>
+        {
+            // Quita el efecto de bloqueo de edicion
+            BloqueoEdicionDgv(_grid: grid, bloquear: bloquear);
+
+            // Habilita el grid de empresas
+            grid.Enabled = true;
         }
     }
 }

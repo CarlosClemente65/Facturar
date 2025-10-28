@@ -5,7 +5,7 @@ using Facturar.Entidades;
 
 namespace Facturar.Presentacion.Controles
 {
-    public partial class UC_Clientes : UserControl
+    public partial class UC_Clientes : UC_GridBase
     {
         // Propiedad privada para almacenar el cliente seleccionado en el grid
         private Cliente ClienteSeleccionado;
@@ -23,7 +23,7 @@ namespace Facturar.Presentacion.Controles
             get => ClienteSeleccionado;
         }
 
-        public void CargarClientes(bool? activos)
+        public void CargarClientes(bool? activos = true)
         {
             var gestorClientes = new Servicios.GestorClientes();
             listaClientes = gestorClientes.ListarTodos(activos: activos);

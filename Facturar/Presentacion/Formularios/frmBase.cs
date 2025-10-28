@@ -167,6 +167,9 @@ namespace Facturar.Presentacion
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos);
                     botonAlta.Ejecutar(entidadActiva);
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
                 };
 
                 // Boton Baja
@@ -181,6 +184,9 @@ namespace Facturar.Presentacion
 
                     // Deja el proceso libre para siguientes procesos
                     tipoProceso = Enumerador.TipoProceso.Ninguno;
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
                 };
 
                 // Boton edicion
@@ -223,17 +229,17 @@ namespace Facturar.Presentacion
                 // Procesos para eliminar
                 general.EliminarClicked += (s, e) =>
                 {
-                    AlternarPanelInferior(panelEdicion);
-
-                    //Deshabilita el grid de empresas
-                    ucEmpresas.GridBase.Enabled = false;
-
-                    // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Eliminacion;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos);
-                    botonEliminar.Ejecutar(entidadActiva);
+                    var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos, this);
+                    botonEliminar.Ejecutar(entidadActiva: entidadActiva);
+
+                    // Deja el proceso libre para siguientes procesos
+                    tipoProceso = Enumerador.TipoProceso.Ninguno;
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
                 };
             }
             else if(panel is PanelInferior_Edicion edicion)
