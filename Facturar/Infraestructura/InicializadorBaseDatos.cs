@@ -29,7 +29,7 @@ namespace Facturar.Infraestructura
         static string sqlLocales = @"
                     CREATE TABLE IF NOT EXISTS Locales (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        EmpresaId INTEGER NOT NULL,
+                        IdEmpresa INTEGER NOT NULL,
                         Descripcion TEXT NOT NULL,
                         Direccion TEXT,
                         CodigoPostal TEXT,

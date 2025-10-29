@@ -1,25 +1,47 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Facturar.Servicios;
+using System.ComponentModel;
+
 
 namespace Facturar.Entidades
 {
     public class Local
     {
+        [DisplayName("Nº Reg.")]
         public int Id { get; set; }
-        public int EmpresaId { get; set; } // Empresa a la que pertenece el local
+
+        public int IdEmpresa { get; set; }   // Id de la empresa a la que pertenece el local
+        public Empresa Empresa { get; set; }   // Objeto empresa emisora
+
+        [DisplayName("NIF empresa")]
+        public string NIFEmpresa => Empresa?.NIF ?? string.Empty; // NIF de la empresa emisora
+
+        [DisplayName("Nombre empresa")]
+        public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
         public string Descripcion { get; set; } // Descripcion a incluir en la factura del local
         public string Direccion { get; set; }
+
+        [DisplayName("Codigo postal")]
         public string CodigoPostal { get; set; }
         public string Poblacion { get; set; }
         public string Provincia { get; set; }
+
+        [DisplayName("Importe mensual alquiler")]
         public decimal ImporteAlquiler { get; set; } = 0m;// Importe mensual actual del alquiler (se establece a cero inicialmente y se atualizara con los contratos
         public string Observaciones { get; set; } // Notas del local
+
+        [DisplayName("Fecha alta")]
         public DateTime FechaAlta { get; set; }
+
+        [DisplayName("Fecha baja")]
         public DateTime? FechaBaja { get; set; } // Nullable para permitir que no tenga fecha de baja
+
+        [Browsable(false)] // Evita mostrarlo en el grid
         public bool Activo => !FechaBaja.HasValue || FechaBaja.Value.Date > DateTime.Today; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)
 
         public void EstablecerFechaBaja(DateTime? fechaBaja)

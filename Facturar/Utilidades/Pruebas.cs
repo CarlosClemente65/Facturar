@@ -210,7 +210,7 @@ namespace Facturar.Utilidades
                 switch(proceso)
                 {
                     case Procesos.Alta:
-                        local.EmpresaId = 2;
+                        local.IdEmpresa = 2;
                         local.Descripcion = "Local empresa uno";
                         local.Direccion = "POLIGONO CAMPOLLANO C/B, 1";
                         local.CodigoPostal = "02007";
@@ -221,7 +221,7 @@ namespace Facturar.Utilidades
 
                         resultado = gestor.Agregar(local);
 
-                        local.EmpresaId = 1;
+                        local.IdEmpresa = 1;
                         local.Descripcion = "Local empresa dos";
                         local.Direccion = "POLIGONO CAMPOLLANO C/B, 1";
                         local.CodigoPostal = "02007";
@@ -240,7 +240,7 @@ namespace Facturar.Utilidades
 
                     case Procesos.Modificacion:
                         var localNuevo = gestor.ObtenerPorId(id: 4);
-                        localNuevo.EmpresaId = 2;
+                        localNuevo.IdEmpresa = 2;
                         resultado = gestor.Actualizar(localNuevo);
 
                         break;

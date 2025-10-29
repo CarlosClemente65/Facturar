@@ -21,12 +21,12 @@ namespace Facturar.Servicios
 
         }
 
-        public bool Actualizar(Factura entidad, bool esBaja = false)
+        public bool Actualizar(Factura factura, bool esBaja = false)
         {
             throw new NotImplementedException();
         }
 
-        public bool Agregar(Factura entidad)
+        public bool Agregar(Factura factura)
         {
             throw new NotImplementedException();
         }

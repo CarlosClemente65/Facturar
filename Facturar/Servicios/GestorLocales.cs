@@ -37,7 +37,7 @@ namespace Facturar.Servicios
                 // Inserta el nuevo local en la base de datos
                 var parametros = new[]
                 {
-                    new SQLiteParameter("@EmpresaId", local.EmpresaId),
+                    new SQLiteParameter("@EmpresaId", local.IdEmpresa),
                     new SQLiteParameter("@Descripcion", local.Descripcion),
                     new SQLiteParameter("@Direccion", local.Direccion),
                     new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
@@ -94,7 +94,7 @@ namespace Facturar.Servicios
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", local.Id),
-                    new SQLiteParameter("@EmpresaId", local.EmpresaId),
+                    new SQLiteParameter("@EmpresaId", local.IdEmpresa),
                     new SQLiteParameter("@Descripcion", local.Descripcion),
                     new SQLiteParameter("@Direccion", local.Direccion),
                     new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
@@ -280,6 +280,9 @@ namespace Facturar.Servicios
             foreach(DataRow fila in tabla.Rows)
             {
                 var local = Utilidades.MapeadorDatos.MapearFila<Local>(fila);
+
+                // Carga el objeto Empresa para acceder a sus propiedades
+                local.Empresa = new GestorEmpresas().ObtenerPorId(local.IdEmpresa);
                 listaLocales.Add(local);
             }
 
@@ -312,16 +315,16 @@ namespace Facturar.Servicios
                 throw new ArgumentNullException(nameof(local), "El local no existe en la base de datos.");
             }
 
-            // Valida que la empresa del exista
+            // Valida que la empresa del local exista
             var gestor = new GestorEmpresas();
-            var empresa = local.EmpresaId;
+            var empresa = local.IdEmpresa;
             if(gestor.ObtenerPorId(empresa) == null)
             {
                 throw new ArgumentException("La empresa asignada al local no existe");
             }
 
             // Validar campos obligatorios
-            if(local.EmpresaId == 0)
+            if(local.IdEmpresa == 0)
             {
                 throw new ArgumentException("El codigo de empresa es obligatorio.");
             }

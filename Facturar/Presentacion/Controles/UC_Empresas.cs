@@ -27,6 +27,7 @@ namespace Facturar.Presentacion.Controles
             InitializeComponent();
         }
 
+        // Propiedad publica para ver la empresa seleccionada en el grid
         public Empresa EmpresaActual
         {
             get => EmpresaSeleccionada;
@@ -126,21 +127,14 @@ namespace Facturar.Presentacion.Controles
 
             if(ordenAscendente)
             {
-                GridBase.DataSource = listaEmpresas.OrderBy(emp => GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaEmpresas.OrderBy(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
             }
             else
             {
-                GridBase.DataSource = listaEmpresas.OrderByDescending(emp => GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaEmpresas.OrderByDescending(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
             }
 
             ordenAscendente = !ordenAscendente;
-        }
-
-
-        // Devuelve el valor de una propiedad de un objeto por su nombre
-        private object GetPropValue(object obj, string nombreColumna)
-        {
-            return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
         }
 
 

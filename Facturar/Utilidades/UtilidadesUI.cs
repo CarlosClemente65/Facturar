@@ -176,5 +176,11 @@ namespace Facturar.Utilidades
             // Habilita el grid de empresas
             grid.Enabled = true;
         }
+
+        // Devuelve el valor de una propiedad de un objeto por su nombre
+        public static object GetPropValue(object obj, string nombreColumna)
+        {
+            return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
+        }
     }
 }

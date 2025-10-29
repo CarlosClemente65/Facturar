@@ -39,6 +39,7 @@ namespace Facturar.Presentacion
         public GestorLocales GestorLocales => gestorLocales;
         public GestorClientes GestorClientes => gestorClientes;
         public GestorContratos GestorContratos => gestorContratos;
+        public GestorFacturas GestorFacturas => gestorFacturas;
 
 
         // Instancias de UserControl 
@@ -439,7 +440,6 @@ namespace Facturar.Presentacion
 
         private void btnEmpresas_Click(object sender, EventArgs e)
         {
-            //panelGeneral.Visible = false; // Se oculta para evitar suponerlo a otro que pueda haberse abierto
             ucEmpresas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
 

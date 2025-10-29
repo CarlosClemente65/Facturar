@@ -318,7 +318,7 @@ namespace Facturar.Servicios
             }
 
             // Valida que el local pertenezca a la empresa
-            if(localExistente.EmpresaId != contrato.EmpresaId)
+            if(localExistente.IdEmpresa != contrato.EmpresaId)
             {
                 throw new InvalidOperationException("La empresa asignada no tiene ese local");
             }

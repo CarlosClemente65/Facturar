@@ -56,5 +56,10 @@ namespace Facturar.Entidades
         public decimal TotalFactura { get; set; }
 
         public string Observaciones { get; set; } // notas internas o para el cliente
+
+        // Constructor por defecto
+        public Factura()
+        {
+        }
     }
 }
