@@ -32,6 +32,7 @@ namespace Facturar.Entidades
             FechaBaja = copiaEntidad.FechaBaja;
         }
 
+        [DisplayName("Nº Reg.")]
         public int Id { get; set; }
         public string NIF { get; set; }
         public string Nombre { get; set; }
@@ -42,6 +43,8 @@ namespace Facturar.Entidades
         public string Poblacion { get; set; }
         public string Provincia { get; set; }
         public string Telefono { get; set; }
+
+        [DisplayName("Correo electrónico")]
         public string Email { get; set; }
 
         [DisplayName("Persona contacto")]
@@ -53,7 +56,7 @@ namespace Facturar.Entidades
         [DisplayName("Fecha baja")]
         public DateTime? FechaBaja { get; set; } // Nullable para permitir que no tenga fecha de baja
 
-        [Browsable(false)]
+        [Browsable(false)] // Evita mostrarlo en el grid
         public bool Activo => !FechaBaja.HasValue || FechaBaja.Value.Date > DateTime.Today; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)
 
 

@@ -19,13 +19,25 @@ namespace Facturar.Presentacion.Controles
         private IEnumerable<Factura> listaFacturas;
 
         private bool ordenAscendente = true;
+
+        private bool datosCargados = false; // Evita que se recargue el control innecesariamente
         public UC_Facturas()
         {
             InitializeComponent();
+        }
 
+        public Factura FacturaActual
+        {
+            get => FacturaSeleccionada;
+            set => FacturaSeleccionada = value;
+        }
+
+        private void UC_Facturas_Load(object sender, EventArgs e)
+        {
             // Suscripcion a los eventos del grid base
             FilaSeleccionada += GridBase_FilaSeleccionada;
             ColumnaOrdenada += GridBase_Columnaseleccionada;
+
 
             // Carga el grid base en el panel correspondiente
             GridBase.Location = new Point(0, 0);
@@ -38,14 +50,13 @@ namespace Facturar.Presentacion.Controles
             // Añade el grid al panel
             panelDgv.Controls.Add(GridBase);
 
-            // Monta las columnas por orden
-            InicializaColumnas();
-        }
-
-        public Factura FacturaActual
-        {
-            get => FacturaSeleccionada;
-            set => FacturaSeleccionada = value;
+            if(!datosCargados)
+            {
+                // Monta las columnas por orden
+                InicializaColumnas();
+                CargarFacturas();
+                datosCargados = true;
+            }
         }
 
         public void CargarFacturas()
@@ -128,7 +139,7 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos de la factura en los textBox correspondientes
         private void MostrarDatosFactura(Factura factura)
         {
-            txtFechaFactura.Text = factura.FechaFactura.ToShortDateString();
+            txtFechaFactura.Text = factura.FechaFactura.ToString("dd.MM.yyyy");
             txtSerieFactura.Text = factura.SerieFactura;
             txtNumeroFactura.Text = factura.NumeroFactura;
             txtBaseFactura.Text = factura.TotalBase.ToString("N2");
@@ -156,29 +167,36 @@ namespace Facturar.Presentacion.Controles
         {
             if(GridBase.Columns.Count == 0) return; // Protege contra columnas vacías
 
-            // Columnas de importes alineadas a la derecha y con formato numérico
+            // Lista con los nombres de las propiedades a ajustar
             string[] columnasImportes = { "TotalBase", "TotalIVA", "TotalIRPF", "TotalFactura" };
-            foreach(var nombre in columnasImportes)
+            string[] columnasCentradas = { "FechaFactura", "SerieFactura", "NumeroFactura" };
+            string[] columnasFecha = { "FechaFactura" };
+
+            // Aplica formatos
+            foreach(DataGridViewColumn columna in GridBase.Columns)
             {
-                var col = GridBase.Columns.Cast<DataGridViewColumn>().FirstOrDefault(c => c.DataPropertyName == nombre);
-                if (col != null)
+                // Aplica formato de importe y alineado a la derecha
+                if(columnasImportes.Contains(columna.DataPropertyName))
                 {
-                    col.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                    col.DefaultCellStyle.Format = "N2";
+                    columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    columna.DefaultCellStyle.Format = "N2";
+                }
+
+                // Centrado del texto
+                if(columnasCentradas.Contains(columna.DataPropertyName))
+                {
+                    columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                // Aplica formato de fecha
+                if(columnasFecha.Contains(columna.DataPropertyName))
+                {
+                    columna.DefaultCellStyle.Format = "dd.MM.yyyy";
                 }
             }
 
-            // Formatea las columnas de tipo decimal para que muestren 2 decimales
-            //GridBase.Columns["TotalBase"].DefaultCellStyle.Format = "N2";
-            //GridBase.Columns["TotalIVA"].DefaultCellStyle.Format = "N2";
-            //GridBase.Columns["TotalIRPF"].DefaultCellStyle.Format = "N2";
-            //GridBase.Columns["TotalFactura"].DefaultCellStyle.Format = "N2";
-
-            //// Alinea a la derecha las columnas de tipo decimal
-            //GridBase.Columns["TotalBase"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //GridBase.Columns["TotalIVA"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //GridBase.Columns["TotalIRPF"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-            //GridBase.Columns["TotalFactura"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+            // Ajuste al contenido
+            GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
 
@@ -220,5 +238,7 @@ namespace Facturar.Presentacion.Controles
 
             */
         }
+
+
     }
 }

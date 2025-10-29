@@ -444,7 +444,7 @@ namespace Facturar.Presentacion
             panelGeneral.Visible = true;
             CargarPanelCentral(ucFacturas, Enumerador.TipoEntidad.Factura);
 
-            ucFacturas.CargarFacturas();
+            
         }
 
         private void btnConfigurar_Click(object sender, EventArgs e)

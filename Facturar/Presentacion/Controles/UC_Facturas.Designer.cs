@@ -70,7 +70,7 @@
             this.txtNumeroFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNumeroFactura.Enabled = false;
             this.txtNumeroFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNumeroFactura.Location = new System.Drawing.Point(147, 295);
+            this.txtNumeroFactura.Location = new System.Drawing.Point(134, 369);
             this.txtNumeroFactura.Name = "txtNumeroFactura";
             this.txtNumeroFactura.Size = new System.Drawing.Size(48, 22);
             this.txtNumeroFactura.TabIndex = 55;
@@ -82,7 +82,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label13.AutoSize = true;
             this.label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label13.Location = new System.Drawing.Point(147, 279);
+            this.label13.Location = new System.Drawing.Point(134, 353);
             this.label13.Name = "label13";
             this.label13.Size = new System.Drawing.Size(50, 13);
             this.label13.TabIndex = 54;
@@ -93,7 +93,7 @@
             this.txtSerieFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtSerieFactura.Enabled = false;
             this.txtSerieFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtSerieFactura.Location = new System.Drawing.Point(107, 295);
+            this.txtSerieFactura.Location = new System.Drawing.Point(94, 369);
             this.txtSerieFactura.Name = "txtSerieFactura";
             this.txtSerieFactura.Size = new System.Drawing.Size(34, 22);
             this.txtSerieFactura.TabIndex = 53;
@@ -105,7 +105,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(105, 279);
+            this.label12.Location = new System.Drawing.Point(92, 353);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(36, 13);
             this.label12.TabIndex = 52;
@@ -116,7 +116,7 @@
             this.txtCuotaIVA.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtCuotaIVA.Enabled = false;
             this.txtCuotaIVA.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCuotaIVA.Location = new System.Drawing.Point(287, 295);
+            this.txtCuotaIVA.Location = new System.Drawing.Point(274, 369);
             this.txtCuotaIVA.Name = "txtCuotaIVA";
             this.txtCuotaIVA.Size = new System.Drawing.Size(80, 22);
             this.txtCuotaIVA.TabIndex = 45;
@@ -127,7 +127,7 @@
             this.label7.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(289, 279);
+            this.label7.Location = new System.Drawing.Point(274, 353);
             this.label7.Name = "label7";
             this.label7.Size = new System.Drawing.Size(80, 13);
             this.label7.TabIndex = 44;
@@ -139,7 +139,7 @@
             this.txtBaseFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtBaseFactura.Enabled = false;
             this.txtBaseFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtBaseFactura.Location = new System.Drawing.Point(201, 295);
+            this.txtBaseFactura.Location = new System.Drawing.Point(188, 369);
             this.txtBaseFactura.Name = "txtBaseFactura";
             this.txtBaseFactura.Size = new System.Drawing.Size(80, 22);
             this.txtBaseFactura.TabIndex = 43;
@@ -150,7 +150,7 @@
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(203, 279);
+            this.label8.Location = new System.Drawing.Point(188, 353);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(80, 13);
             this.label8.TabIndex = 42;
@@ -162,9 +162,9 @@
             this.txtFechaFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFechaFactura.Enabled = false;
             this.txtFechaFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFechaFactura.Location = new System.Drawing.Point(11, 295);
+            this.txtFechaFactura.Location = new System.Drawing.Point(8, 369);
             this.txtFechaFactura.Name = "txtFechaFactura";
-            this.txtFechaFactura.Size = new System.Drawing.Size(90, 22);
+            this.txtFechaFactura.Size = new System.Drawing.Size(80, 22);
             this.txtFechaFactura.TabIndex = 35;
             this.txtFechaFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -174,7 +174,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label3.AutoSize = true;
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label3.Location = new System.Drawing.Point(11, 279);
+            this.label3.Location = new System.Drawing.Point(8, 353);
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(42, 13);
             this.label3.TabIndex = 34;
@@ -185,9 +185,9 @@
             this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNombreEmpresa.Enabled = false;
             this.txtNombreEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreEmpresa.Location = new System.Drawing.Point(175, 338);
+            this.txtNombreEmpresa.Location = new System.Drawing.Point(175, 293);
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
-            this.txtNombreEmpresa.Size = new System.Drawing.Size(341, 22);
+            this.txtNombreEmpresa.Size = new System.Drawing.Size(352, 22);
             this.txtNombreEmpresa.TabIndex = 33;
             // 
             // lblNombre
@@ -196,7 +196,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.Location = new System.Drawing.Point(8, 342);
+            this.lblNombre.Location = new System.Drawing.Point(8, 297);
             this.lblNombre.Name = "lblNombre";
             this.lblNombre.Size = new System.Drawing.Size(55, 13);
             this.lblNombre.TabIndex = 32;
@@ -207,7 +207,7 @@
             this.txtNifEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNifEmpresa.Enabled = false;
             this.txtNifEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNifEmpresa.Location = new System.Drawing.Point(69, 338);
+            this.txtNifEmpresa.Location = new System.Drawing.Point(69, 293);
             this.txtNifEmpresa.Name = "txtNifEmpresa";
             this.txtNifEmpresa.Size = new System.Drawing.Size(100, 22);
             this.txtNifEmpresa.TabIndex = 31;
@@ -219,7 +219,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label2.AutoSize = true;
             this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label2.Location = new System.Drawing.Point(8, 370);
+            this.label2.Location = new System.Drawing.Point(8, 325);
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(46, 13);
             this.label2.TabIndex = 30;
@@ -230,9 +230,9 @@
             this.txtNombreCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNombreCliente.Enabled = false;
             this.txtNombreCliente.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreCliente.Location = new System.Drawing.Point(175, 366);
+            this.txtNombreCliente.Location = new System.Drawing.Point(175, 321);
             this.txtNombreCliente.Name = "txtNombreCliente";
-            this.txtNombreCliente.Size = new System.Drawing.Size(341, 22);
+            this.txtNombreCliente.Size = new System.Drawing.Size(352, 22);
             this.txtNombreCliente.TabIndex = 59;
             // 
             // label1
@@ -241,7 +241,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(172, 322);
+            this.label1.Location = new System.Drawing.Point(172, 277);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(50, 13);
             this.label1.TabIndex = 58;
@@ -252,7 +252,7 @@
             this.txtNifCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtNifCliente.Enabled = false;
             this.txtNifCliente.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNifCliente.Location = new System.Drawing.Point(69, 366);
+            this.txtNifCliente.Location = new System.Drawing.Point(69, 321);
             this.txtNifCliente.Name = "txtNifCliente";
             this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
             this.txtNifCliente.TabIndex = 57;
@@ -264,7 +264,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label4.AutoSize = true;
             this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(70, 322);
+            this.label4.Location = new System.Drawing.Point(66, 277);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(27, 13);
             this.label4.TabIndex = 56;
@@ -275,7 +275,7 @@
             this.txtCuotaIRPF.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtCuotaIRPF.Enabled = false;
             this.txtCuotaIRPF.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtCuotaIRPF.Location = new System.Drawing.Point(374, 295);
+            this.txtCuotaIRPF.Location = new System.Drawing.Point(361, 369);
             this.txtCuotaIRPF.Name = "txtCuotaIRPF";
             this.txtCuotaIRPF.Size = new System.Drawing.Size(80, 22);
             this.txtCuotaIRPF.TabIndex = 61;
@@ -286,7 +286,7 @@
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(374, 279);
+            this.label5.Location = new System.Drawing.Point(361, 353);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(80, 13);
             this.label5.TabIndex = 60;
@@ -298,7 +298,7 @@
             this.txtTotalFactura.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtTotalFactura.Enabled = false;
             this.txtTotalFactura.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTotalFactura.Location = new System.Drawing.Point(460, 295);
+            this.txtTotalFactura.Location = new System.Drawing.Point(447, 369);
             this.txtTotalFactura.Name = "txtTotalFactura";
             this.txtTotalFactura.Size = new System.Drawing.Size(80, 22);
             this.txtTotalFactura.TabIndex = 65;
@@ -309,7 +309,7 @@
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(460, 279);
+            this.label9.Location = new System.Drawing.Point(447, 353);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(80, 13);
             this.label9.TabIndex = 64;
@@ -334,7 +334,7 @@
             this.txtObservaciones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtObservaciones.Enabled = false;
             this.txtObservaciones.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtObservaciones.Location = new System.Drawing.Point(536, 338);
+            this.txtObservaciones.Location = new System.Drawing.Point(536, 294);
             this.txtObservaciones.Multiline = true;
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(218, 49);
@@ -346,7 +346,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label10.AutoSize = true;
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label10.Location = new System.Drawing.Point(533, 322);
+            this.label10.Location = new System.Drawing.Point(533, 277);
             this.label10.Name = "label10";
             this.label10.Size = new System.Drawing.Size(91, 13);
             this.label10.TabIndex = 68;
@@ -388,6 +388,7 @@
             this.Name = "UC_Facturas";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(765, 398);
+            this.Load += new System.EventHandler(this.UC_Facturas_Load);
             this.Controls.SetChildIndex(this.panelDgv, 0);
             this.Controls.SetChildIndex(this.label2, 0);
             this.Controls.SetChildIndex(this.txtNifEmpresa, 0);

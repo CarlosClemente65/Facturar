@@ -179,6 +179,16 @@ namespace Facturar.Infraestructura
                 {
                     comando.ExecuteNonQuery();
                 }
+
+                using(var comando = new SQLiteCommand(sqlFacturas, conexion))
+                {
+                    comando.ExecuteNonQuery();
+                }
+
+                using(var comando = new SQLiteCommand(sqlLineasFactura, conexion))
+                {
+                    comando.ExecuteNonQuery();
+                }
             }
         }
     }

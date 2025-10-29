@@ -410,6 +410,7 @@
             this.Name = "UC_Empresas";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(767, 400);
+            this.Load += new System.EventHandler(this.UC_Empresas_Load);
             this.Controls.SetChildIndex(this.panelDgv, 0);
             this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.label2, 0);

@@ -20,10 +20,22 @@ namespace Facturar.Presentacion.Controles
 
         private bool ordenAscendente = true;
 
+        private bool datosCargados = false;
+
         public UC_Empresas()
         {
             InitializeComponent();
+        }
 
+        public Empresa EmpresaActual
+        {
+            get => EmpresaSeleccionada;
+            set => EmpresaSeleccionada = value;
+        }
+
+
+        private void UC_Empresas_Load(object sender, EventArgs e)
+        {
             // Suscripcion a los eventos del grid base
             FilaSeleccionada += GridBase_FilaSeleccionada;
             ColumnaOrdenada += GridBase_Columnaseleccionada;
@@ -39,18 +51,15 @@ namespace Facturar.Presentacion.Controles
             // Añade el grid al panel
             panelDgv.Controls.Add(GridBase);
 
-            // Monta las columnas por orden
-            InicializaColumnas();
+            if(!datosCargados)
+            {
+                // Monta las columnas por orden
+                InicializaColumnas();
 
-            // Carga las empresas en el control
-            CargarEmpresas(activas: true);
-
-        }
-
-        public Empresa EmpresaActual
-        {
-            get => EmpresaSeleccionada;
-            set => EmpresaSeleccionada = value;
+                // Carga las empresas en el control
+                CargarEmpresas(activas: true);
+                datosCargados = true;
+            }
         }
 
         public void CargarEmpresas(bool? activas = true)
@@ -61,6 +70,8 @@ namespace Facturar.Presentacion.Controles
             // Carga los datos de las empresas en el gridBase
             GridBase.DataSource = null;
             GridBase.DataSource = listaEmpresas.ToList();
+
+            AplicarFormatoColumnas();
 
         }
 
@@ -138,12 +149,12 @@ namespace Facturar.Presentacion.Controles
         {
             txtNif.Text = empresa.NIF;
             txtNombreEmpresa.Text = empresa.Nombre;
-            txtFechaAlta.Text = empresa.FechaAlta.ToShortDateString();
+            txtFechaAlta.Text = empresa.FechaAlta.ToString("dd.MM.yyyy");
 
             // La fecha de baja puede ser nula
             if(empresa.FechaBaja.HasValue)
             {
-                txtFechaBaja.Text = empresa.FechaBaja.Value.ToShortDateString();
+                txtFechaBaja.Text = empresa.FechaBaja.Value.ToString("dd.MM.yyyy");
             }
             else
             {
@@ -209,6 +220,35 @@ namespace Facturar.Presentacion.Controles
             
 
             */
+        }
+
+        private void AplicarFormatoColumnas()
+        {
+            if(GridBase.Columns.Count == 0) return; // Protege contra columnas vacías
+
+
+            // Lista con los nombres de las propiedades a ajustar
+            string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja", "SerieFactura", "NumeroFacturaActual" };
+            string[] columnasFecha = { "FechaAlta", "FechaBaja" };
+
+            // Aplica formato de fecha
+            foreach(DataGridViewColumn columna in GridBase.Columns)
+            {
+                // Ajuste al centro
+                if(columnasCentradas.Contains(columna.DataPropertyName))
+                {
+                    columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                }
+
+                // Ajuste formato fecha
+                if(columnasFecha.Contains(columna.DataPropertyName))
+                {
+                    columna.DefaultCellStyle.Format = "dd.MM.yyyy";
+                }
+            }
+
+            // Ajuste al contenido
+            GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
     }
 }
