@@ -8,7 +8,7 @@ namespace Facturar.Presentacion.Procesos
     public class BotonEditar : ProcesoBotonBase
     {
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
-        public BotonEditar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos) : base(empresas, locales, clientes, contratos)
+        public BotonEditar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas) : base(empresas, locales, clientes, contratos, facturas)
         {
 
         }

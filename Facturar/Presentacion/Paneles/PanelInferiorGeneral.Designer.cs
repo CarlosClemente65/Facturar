@@ -74,7 +74,7 @@
             this.btnEliminar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnEliminar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnEliminar.UseVisualStyleBackColor = true;
-            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click_1);
+            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
             // 
             // btnBaja
             // 
@@ -96,7 +96,7 @@
             this.btnBaja.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnBaja.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnBaja.UseVisualStyleBackColor = true;
-            this.btnBaja.Click += new System.EventHandler(this.btnEliminar_Click);
+            this.btnBaja.Click += new System.EventHandler(this.btnBaja_Click);
             // 
             // btnEditar
             // 

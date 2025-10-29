@@ -182,6 +182,12 @@
     <Compile Include="Presentacion\Paneles\PanelInferiorGeneral.Designer.cs">
       <DependentUpon>PanelInferiorGeneral.cs</DependentUpon>
     </Compile>
+    <Compile Include="Presentacion\Paneles\PanelInferiorFacturas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Paneles\PanelInferiorFacturas.Designer.cs">
+      <DependentUpon>PanelInferiorFacturas.cs</DependentUpon>
+    </Compile>
     <Compile Include="Presentacion\Procesos\BotonAlta.cs" />
     <Compile Include="Presentacion\Procesos\BotonBaja.cs" />
     <Compile Include="Presentacion\Procesos\BotonCancelar.cs" />
@@ -241,6 +247,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Paneles\PanelInferiorGeneral.resx">
       <DependentUpon>PanelInferiorGeneral.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Paneles\PanelInferiorFacturas.resx">
+      <DependentUpon>PanelInferiorFacturas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Windows.Forms;
 using Facturar.Presentacion.Controles;
@@ -25,6 +26,7 @@ namespace Facturar.Presentacion
         // Variables de clase para gestionar paneles y entidades
         private PanelInferior_general panelGeneral;
         private PanelInferior_Edicion panelEdicion;
+        private PanelInferiorFacturas panelFacturas;
         private GestorEmpresas gestorEmpresas;
         private GestorLocales gestorLocales;
         private GestorClientes gestorClientes;
@@ -71,18 +73,22 @@ namespace Facturar.Presentacion
             // Crea instancias para los paneles inferiores y los carga en el panel inferior
             panelGeneral = new PanelInferior_general();
             panelEdicion = new PanelInferior_Edicion();
+            panelFacturas = new PanelInferiorFacturas();
             gestorEmpresas = new GestorEmpresas(); // Instancia para acceder a los metodos de empresas
 
             // Suscribir a los eventos de los userControl
             SuscribirEventosPanelInferior(panelGeneral);
             SuscribirEventosPanelInferior(panelEdicion);
+            SuscribirEventosPanelInferior(panelFacturas);
 
             // Carga los dos paneles
             CargarPanelInferior(panelGeneral, dock: DockStyle.Right);
             CargarPanelInferior(panelEdicion, dock: DockStyle.Left);
+            CargarPanelInferior(panelFacturas, dock: DockStyle.Right);
 
             panelGeneral.Visible = false;
             panelEdicion.Visible = false;
+            panelFacturas.Visible = false;
         }
 
         private void CargarPanelCentral(UserControl panel, Enumerador.TipoEntidad tipo)
@@ -171,7 +177,7 @@ namespace Facturar.Presentacion
                     tipoProceso = Enumerador.TipoProceso.Alta;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonAlta.Ejecutar(entidadActiva);
 
                     // Deja el estado de los registros como activo
@@ -185,7 +191,7 @@ namespace Facturar.Presentacion
                     tipoProceso = Enumerador.TipoProceso.Baja;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos, this);
+                    var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
                     botonBaja.Ejecutar(entidadActiva: entidadActiva);
 
                     // Deja el proceso libre para siguientes procesos
@@ -208,7 +214,7 @@ namespace Facturar.Presentacion
                     tipoProceso = Enumerador.TipoProceso.Edicion;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonEditar.Ejecutar(entidadActiva);
                 };
 
@@ -228,7 +234,7 @@ namespace Facturar.Presentacion
                     }
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonSeleccionActivos = new Proceso.SeleccionActivos(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    var botonSeleccionActivos = new Proceso.SeleccionActivos(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonSeleccionActivos.Ejecutar(entidadActiva, estado);
                 };
 
@@ -238,7 +244,7 @@ namespace Facturar.Presentacion
                     tipoProceso = Enumerador.TipoProceso.Eliminacion;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos, this);
+                    var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
                     botonEliminar.Ejecutar(entidadActiva: entidadActiva);
 
                     // Deja el proceso libre para siguientes procesos
@@ -254,7 +260,7 @@ namespace Facturar.Presentacion
                 edicion.CancelarClicked += (s, e) =>
                 {
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonCancelar = new Proceso.BotonCancelar(ucEmpresas, ucLocales, ucClientes, ucContratos);
+                    var botonCancelar = new Proceso.BotonCancelar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonCancelar.Ejecutar(entidadActiva);
 
                     // Muestra el panel de botones estandard
@@ -268,7 +274,7 @@ namespace Facturar.Presentacion
                 edicion.ValidarClicked += (s, e) =>
                 {
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
-                    var botonValidar = new Proceso.BotonValidar(ucEmpresas, ucLocales, ucClientes, ucContratos, formulario: this);
+                    var botonValidar = new Proceso.BotonValidar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, formulario: this);
 
                     // Ejecuta las acciones establecidas en el boton
                     botonValidar.Ejecutar(entidadActiva);
@@ -286,6 +292,33 @@ namespace Facturar.Presentacion
                         tipoProceso = Enumerador.TipoProceso.Ninguno;
                     }
                 };
+
+            }
+
+            else if(panel is PanelInferiorFacturas facturas)
+            {
+                // Boton Alta
+                facturas.AltaClicked += (s, e) =>
+                {
+                    // Habilita el panel de edicion
+                    AlternarPanelInferior(panelEdicion);
+
+                    // Habilitar los TextBox y poner el foco en el primer campo
+                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+
+                    // Limpiar los TextBoxes para poder introducir datos del alta
+                    Utiles.LimpiarTextBoxes(contenedor: this);
+
+                    tipoProceso = Enumerador.TipoProceso.Alta;
+
+                    // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
+                    var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
+                    botonAlta.Ejecutar(entidadActiva);
+
+                    //// Deja el estado de los registros como activo
+                    //panelGeneral.MostrarActivos(visible: true);
+                };
+
             }
         }
 
@@ -406,55 +439,83 @@ namespace Facturar.Presentacion
 
         private void btnEmpresas_Click(object sender, EventArgs e)
         {
+            //panelGeneral.Visible = false; // Se oculta para evitar suponerlo a otro que pueda haberse abierto
             ucEmpresas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            panelGeneral.Visible = true;
+
+            // Evita abrir varias veces el panelGeneral
+            if(panelGeneral.Visible == false)
+            {
+                panelGeneral.Visible = true;
+            }
             panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucEmpresas, Enumerador.TipoEntidad.Empresa);
         }
 
         private void btnClientes_Click(object sender, EventArgs e)
         {
-            var ucClientes = new UC_Clientes();
             ucClientes.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            
+            // Evita abrir varias veces el panelGeneral
+            if(panelGeneral.Visible == false)
+            {
+                panelGeneral.Visible = true;
+            }
+            panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucClientes, Enumerador.TipoEntidad.Cliente);
         }
 
         private void btnContratos_Click(object sender, EventArgs e)
         {
-            var ucContratos = new UC_Contratos();
             ucContratos.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+
+            // Evita abrir varias veces el panelGeneral
+            if(panelGeneral.Visible == false)
+            {
+                panelGeneral.Visible = true;
+            }
+            panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucContratos, Enumerador.TipoEntidad.Contrato);
         }
 
         private void btnLocales_Click(object sender, EventArgs e)
         {
-            var ucLocales = new UC_Locales();
             ucLocales.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+
+            // Evita abrir varias veces el panelGeneral
+            if(panelGeneral.Visible == false)
+            {
+                panelGeneral.Visible = true;
+            }
+            panelGeneral.MostrarActivos(visible: true);
             CargarPanelCentral(ucLocales, Enumerador.TipoEntidad.Local);
         }
 
         private void btnFacturas_Click(object sender, EventArgs e)
         {
+            //panelGeneral.Visible = false; // Se oculta para evitar suponerlo a otro que pueda haberse abierto
             ucFacturas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            panelGeneral.Visible = true;
+            if(panelGeneral.Visible == false)
+            {
+                panelGeneral.Visible = true;
+            }
             CargarPanelCentral(ucFacturas, Enumerador.TipoEntidad.Factura);
 
-            
         }
 
         private void btnConfigurar_Click(object sender, EventArgs e)
         {
+            panelGeneral.Visible = false; // Se oculta para evitar suponerlo a otro que pueda haberse abierto
             var ucConfiguracion = new UC_Configuracion();
             ucConfiguracion.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            panelGeneral.Visible = true;
             CargarPanelCentral(ucConfiguracion, Enumerador.TipoEntidad.Configurar);
         }
-
 
 
         private void btnInicio_Click(object sender, EventArgs e)

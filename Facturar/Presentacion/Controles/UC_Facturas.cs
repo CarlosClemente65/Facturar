@@ -57,6 +57,17 @@ namespace Facturar.Presentacion.Controles
                 CargarFacturas();
                 datosCargados = true;
             }
+
+            //BloqueoTextBox();
+        }
+
+        public void BloqueoTextBox()
+        {
+            // Deshabilita los textBox de importes de la factura
+            txtBaseFactura.Enabled = false;
+            txtCuotaIVA.Enabled = false;
+            txtCuotaIRPF.Enabled = false;
+            txtTotalFactura.Enabled = false;
         }
 
         public void CargarFacturas()

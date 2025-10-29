@@ -12,7 +12,7 @@ namespace Facturar.Presentacion.Procesos
     public class BotonCancelar : ProcesoBotonBase
     {
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
-        public BotonCancelar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos) : base(empresas, locales, clientes, contratos)
+        public BotonCancelar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas) : base(empresas, locales, clientes, contratos, facturas)
         {
 
         }
@@ -36,18 +36,59 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Local:
+                    /* Pendiente desarrollo
+                     
                     // Habilita el grid de locales
-                    //ucLocales.dgvLocales.Enabled = true; // Pendiente desarrollo
+                    ucLocales.GridBase.Enabled = true;
+
+                    // Quita el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucLocales.GridBase, bloquear: false);
+
+                    // Refresca el grid de locales
+                    ucLocales.CargarLocales();
+
+                    */
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
+                    /* Pendiente de desarrollo
+                     
                     // Habilita el grid de clientes
-                    //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
+                    ucClientes.GridBase.Enabled = true;
+
+                    // Quita el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucClientes.GridBase, bloquear: false);
+
+                    // Refresca el grid de clientes
+                    ucClientes.CargarClientes();
+
+                    */
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
+                    /* Pendiente desarrollo
+                      
                     // Habilita el grid de contratos
-                    //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
+                    //ucContratos.GridBase.Enabled = true; 
+
+                    // Quita el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: false);
+
+                    // Refresca el grid de contratos
+                    ucContratos.CargarContratos();
+
+                    */
+                    break;
+
+                case Enumerador.TipoEntidad.Factura:
+                    // Habilita el grid de facturas
+                    ucFacturas.GridBase.Enabled = true;
+
+                    // Quita el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucFacturas.GridBase, bloquear: false);
+
+                    // Refresca el grid de empresas
+                    ucFacturas.CargarFacturas();
                     break;
             }
         }

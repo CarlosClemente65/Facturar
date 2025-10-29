@@ -73,7 +73,7 @@
             this.txtNumeroFactura.Location = new System.Drawing.Point(134, 369);
             this.txtNumeroFactura.Name = "txtNumeroFactura";
             this.txtNumeroFactura.Size = new System.Drawing.Size(48, 22);
-            this.txtNumeroFactura.TabIndex = 55;
+            this.txtNumeroFactura.TabIndex = 6;
             this.txtNumeroFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label13
@@ -96,7 +96,7 @@
             this.txtSerieFactura.Location = new System.Drawing.Point(94, 369);
             this.txtSerieFactura.Name = "txtSerieFactura";
             this.txtSerieFactura.Size = new System.Drawing.Size(34, 22);
-            this.txtSerieFactura.TabIndex = 53;
+            this.txtSerieFactura.TabIndex = 5;
             this.txtSerieFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label12
@@ -119,7 +119,7 @@
             this.txtCuotaIVA.Location = new System.Drawing.Point(274, 369);
             this.txtCuotaIVA.Name = "txtCuotaIVA";
             this.txtCuotaIVA.Size = new System.Drawing.Size(80, 22);
-            this.txtCuotaIVA.TabIndex = 45;
+            this.txtCuotaIVA.TabIndex = 8;
             this.txtCuotaIVA.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label7
@@ -142,7 +142,7 @@
             this.txtBaseFactura.Location = new System.Drawing.Point(188, 369);
             this.txtBaseFactura.Name = "txtBaseFactura";
             this.txtBaseFactura.Size = new System.Drawing.Size(80, 22);
-            this.txtBaseFactura.TabIndex = 43;
+            this.txtBaseFactura.TabIndex = 7;
             this.txtBaseFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label8
@@ -165,7 +165,7 @@
             this.txtFechaFactura.Location = new System.Drawing.Point(8, 369);
             this.txtFechaFactura.Name = "txtFechaFactura";
             this.txtFechaFactura.Size = new System.Drawing.Size(80, 22);
-            this.txtFechaFactura.TabIndex = 35;
+            this.txtFechaFactura.TabIndex = 4;
             this.txtFechaFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label3
@@ -188,7 +188,7 @@
             this.txtNombreEmpresa.Location = new System.Drawing.Point(175, 293);
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
             this.txtNombreEmpresa.Size = new System.Drawing.Size(352, 22);
-            this.txtNombreEmpresa.TabIndex = 33;
+            this.txtNombreEmpresa.TabIndex = 1;
             // 
             // lblNombre
             // 
@@ -210,7 +210,7 @@
             this.txtNifEmpresa.Location = new System.Drawing.Point(69, 293);
             this.txtNifEmpresa.Name = "txtNifEmpresa";
             this.txtNifEmpresa.Size = new System.Drawing.Size(100, 22);
-            this.txtNifEmpresa.TabIndex = 31;
+            this.txtNifEmpresa.TabIndex = 0;
             this.txtNifEmpresa.Tag = "primerCampo";
             // 
             // label2
@@ -233,7 +233,7 @@
             this.txtNombreCliente.Location = new System.Drawing.Point(175, 321);
             this.txtNombreCliente.Name = "txtNombreCliente";
             this.txtNombreCliente.Size = new System.Drawing.Size(352, 22);
-            this.txtNombreCliente.TabIndex = 59;
+            this.txtNombreCliente.TabIndex = 3;
             // 
             // label1
             // 
@@ -255,8 +255,8 @@
             this.txtNifCliente.Location = new System.Drawing.Point(69, 321);
             this.txtNifCliente.Name = "txtNifCliente";
             this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
-            this.txtNifCliente.TabIndex = 57;
-            this.txtNifCliente.Tag = "primerCampo";
+            this.txtNifCliente.TabIndex = 2;
+            this.txtNifCliente.Tag = "";
             // 
             // label4
             // 
@@ -278,7 +278,7 @@
             this.txtCuotaIRPF.Location = new System.Drawing.Point(361, 369);
             this.txtCuotaIRPF.Name = "txtCuotaIRPF";
             this.txtCuotaIRPF.Size = new System.Drawing.Size(80, 22);
-            this.txtCuotaIRPF.TabIndex = 61;
+            this.txtCuotaIRPF.TabIndex = 9;
             this.txtCuotaIRPF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label5
@@ -301,7 +301,7 @@
             this.txtTotalFactura.Location = new System.Drawing.Point(447, 369);
             this.txtTotalFactura.Name = "txtTotalFactura";
             this.txtTotalFactura.Size = new System.Drawing.Size(80, 22);
-            this.txtTotalFactura.TabIndex = 65;
+            this.txtTotalFactura.TabIndex = 10;
             this.txtTotalFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label9
@@ -338,7 +338,7 @@
             this.txtObservaciones.Multiline = true;
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(218, 49);
-            this.txtObservaciones.TabIndex = 67;
+            this.txtObservaciones.TabIndex = 11;
             // 
             // label10
             // 

@@ -11,7 +11,7 @@ namespace Facturar.Presentacion.Procesos
     public class BotonEliminar : ProcesoBotonBase
     {
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
-        public BotonEliminar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, frmBase _formulario) : base(empresas, locales, clientes, contratos, _formulario)
+        public BotonEliminar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas, frmBase _formulario) : base(empresas, locales, clientes, contratos, facturas, _formulario)
         {
 
         }

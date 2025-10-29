@@ -28,7 +28,7 @@ namespace Facturar.Presentacion.Paneles
             EditarClicked?.Invoke(this, EventArgs.Empty);
         }
 
-        private void btnEliminar_Click(object sender, EventArgs e)
+        private void btnBaja_Click(object sender, EventArgs e)
         {
             BajaClicked?.Invoke(this, EventArgs.Empty);
         }
@@ -39,7 +39,7 @@ namespace Facturar.Presentacion.Paneles
         }
 
 
-        private void btnEliminar_Click_1(object sender, EventArgs e)
+        private void btnEliminar_Click(object sender, EventArgs e)
         {
             EliminarClicked?.Invoke(this, EventArgs.Empty);
         }
@@ -51,7 +51,6 @@ namespace Facturar.Presentacion.Paneles
         public PanelInferior_general()
         {
             InitializeComponent();
-            btnAlta.Click += btnAlta_Click;
             cbEstado.SelectedItem = "Activos";
         }
 

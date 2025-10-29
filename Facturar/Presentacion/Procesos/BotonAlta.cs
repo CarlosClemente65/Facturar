@@ -8,7 +8,7 @@ namespace Facturar.Presentacion.Procesos
     public class BotonAlta : ProcesoBotonBase
     {
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
-        public BotonAlta(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos) : base (empresas, locales, clientes, contratos)
+        public BotonAlta(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas) : base (empresas, locales, clientes, contratos, facturas)
         {
 
         }
@@ -38,6 +38,16 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Contrato:
                     //gestorContratos.Agregar(); // Pendiente de desarrollo
+                    break;
+
+                case Enumerador.TipoEntidad.Factura:
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucFacturas.GridBase, bloquear: true);
+
+                    // Actualiza la empresa seleccionada en UC_Empresa
+                    ucFacturas.ActualizaFacturaSeleccionada();
+
+                    ucFacturas.BloqueoTextBox();
                     break;
             }
         }

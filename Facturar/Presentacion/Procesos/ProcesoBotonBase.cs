@@ -11,24 +11,26 @@ namespace Facturar.Presentacion.Procesos
         protected UC_Locales ucLocales;
         protected UC_Clientes ucClientes;
         protected UC_Contratos ucContratos;
+        protected UC_Facturas ucFacturas;
 
         // Formulario opcional
         protected frmBase formulario;
 
         // Constructor habitual (sin formulario)
-        public ProcesoBotonBase(UC_Empresas _ucEmpresas, UC_Locales _ucLocales, UC_Clientes _ucClientes, UC_Contratos _ucContratos)
+        public ProcesoBotonBase(UC_Empresas _ucEmpresas, UC_Locales _ucLocales, UC_Clientes _ucClientes, UC_Contratos _ucContratos, UC_Facturas _ucFacturas)
         {
             ucEmpresas = _ucEmpresas;
             ucLocales = _ucLocales;
             ucClientes = _ucClientes;
             ucContratos = _ucContratos;
+            ucFacturas = _ucFacturas;
             formulario = null;
 
         }
 
         // Constructor alternativo (con formulario)
-        public ProcesoBotonBase(UC_Empresas _ucEmpresas, UC_Locales _ucLocales, UC_Clientes _ucClientes, UC_Contratos _ucContratos, frmBase _formulario)
-            : this(_ucEmpresas, _ucLocales, _ucClientes, _ucContratos)
+        public ProcesoBotonBase(UC_Empresas _ucEmpresas, UC_Locales _ucLocales, UC_Clientes _ucClientes, UC_Contratos _ucContratos, UC_Facturas _ucFacturas, frmBase _formulario)
+            : this(_ucEmpresas, _ucLocales, _ucClientes, _ucContratos, _ucFacturas)
         {
             formulario = _formulario;
         }
