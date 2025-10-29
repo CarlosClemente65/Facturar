@@ -108,6 +108,7 @@
     <Compile Include="Interfaces\IRepositorioClientes.cs" />
     <Compile Include="Interfaces\IRepositorioContratos.cs" />
     <Compile Include="Interfaces\IRepositorioEmpresas.cs" />
+    <Compile Include="Interfaces\IRepositorioFacturas.cs" />
     <Compile Include="Interfaces\IRepositorioLocales.cs" />
     <Compile Include="Presentacion\Controles\UC_Clientes.cs">
       <SubType>UserControl</SubType>
@@ -132,6 +133,12 @@
     </Compile>
     <Compile Include="Presentacion\Controles\UC_Empresas.Designer.cs">
       <DependentUpon>UC_Empresas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Controles\UC_Facturas.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Controles\UC_Facturas.Designer.cs">
+      <DependentUpon>UC_Facturas.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Controles\UC_HistoricoFacturas.cs">
       <SubType>UserControl</SubType>
@@ -217,6 +224,9 @@
     <EmbeddedResource Include="Presentacion\Controles\UC_Empresas.resx">
       <DependentUpon>UC_Empresas.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Controles\UC_Facturas.resx">
+      <DependentUpon>UC_Facturas.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Controles\UC_GridBase.resx">
       <DependentUpon>UC_GridBase.cs</DependentUpon>
     </EmbeddedResource>
@@ -253,6 +263,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Factura_black.png" />
     <None Include="Resources\Inicio_black.png" />
     <None Include="Resources\Borrar_black1.png" />
     <None Include="Resources\Inicio.png" />

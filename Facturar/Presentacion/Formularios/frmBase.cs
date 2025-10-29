@@ -30,6 +30,7 @@ namespace Facturar.Presentacion
         private GestorClientes gestorClientes;
         private GestorContratos gestorContratos;
         private GestorConfiguracion gestorConfiguracion;
+        private GestorFacturas gestorFacturas;
 
         // Propiedades publicas de los gestores para acceso desde fuera de la clase
         public GestorEmpresas GestorEmpresas => gestorEmpresas;
@@ -44,6 +45,7 @@ namespace Facturar.Presentacion
         private UC_Clientes ucClientes = new UC_Clientes();
         private UC_Contratos ucContratos = new UC_Contratos();
         private UC_Configuracion ucConfiguracion = new UC_Configuracion();
+        private UC_Facturas ucFacturas = new UC_Facturas();
 
 
         // Control de entidad cargada en el panel central
@@ -113,6 +115,10 @@ namespace Facturar.Presentacion
 
                 case Enumerador.TipoEntidad.Configurar:
                     gestorActual = gestorConfiguracion;
+                    break;
+
+                case Enumerador.TipoEntidad.Factura:
+                    gestorActual = gestorFacturas;
                     break;
             }
         }
@@ -318,6 +324,7 @@ namespace Facturar.Presentacion
                 btnLocales.Visible = true;
                 btnContratos.Visible = true;
                 btnConfigurar.Visible = true;
+                btnFacturas.Visible = true;
             }
         }
 
@@ -351,6 +358,7 @@ namespace Facturar.Presentacion
                     btnLocales.Visible = false;
                     btnContratos.Visible = false;
                     btnConfigurar.Visible = false;
+                    btnFacturas.Visible = false;
                 }
             }
             else
@@ -382,6 +390,7 @@ namespace Facturar.Presentacion
             btnLocales.Location = new Point(posicionX - (btnLocales.Width / 2), btnLocales.Location.Y);
             btnContratos.Location = new Point(posicionX - (btnContratos.Width / 2), btnContratos.Location.Y);
             btnConfigurar.Location = new Point(posicionX - (btnConfigurar.Width / 2), btnConfigurar.Location.Y);
+            btnFacturas.Location = new Point(posicionX - (btnFacturas.Width / 2), btnFacturas.Location.Y);
         }
 
         private void AjustarPanelCentral()
@@ -428,6 +437,16 @@ namespace Facturar.Presentacion
             CargarPanelCentral(ucLocales, Enumerador.TipoEntidad.Local);
         }
 
+        private void btnFacturas_Click(object sender, EventArgs e)
+        {
+            ucFacturas.Dock = DockStyle.Fill;
+            btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
+            panelGeneral.Visible = true;
+            CargarPanelCentral(ucFacturas, Enumerador.TipoEntidad.Factura);
+
+            ucFacturas.CargarFacturas();
+        }
+
         private void btnConfigurar_Click(object sender, EventArgs e)
         {
             var ucConfiguracion = new UC_Configuracion();
@@ -436,11 +455,14 @@ namespace Facturar.Presentacion
             CargarPanelCentral(ucConfiguracion, Enumerador.TipoEntidad.Configurar);
         }
 
+
+
         private void btnInicio_Click(object sender, EventArgs e)
         {
             panelCentral.Controls.Clear();
             panelGeneral.Visible = false;
         }
+
 
     }
 

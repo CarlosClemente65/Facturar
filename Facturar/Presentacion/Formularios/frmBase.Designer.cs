@@ -28,12 +28,14 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmBase));
             this.panelSuperior = new System.Windows.Forms.Panel();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.lbMensaje = new System.Windows.Forms.Label();
             this.imgCerrar = new System.Windows.Forms.PictureBox();
             this.imgMinimizar = new System.Windows.Forms.PictureBox();
             this.panelLateral = new System.Windows.Forms.Panel();
+            this.btnFacturas = new System.Windows.Forms.Button();
             this.btnConfigurar = new System.Windows.Forms.Button();
             this.btnContratos = new System.Windows.Forms.Button();
             this.btnLocales = new System.Windows.Forms.Button();
@@ -113,6 +115,7 @@
             // 
             this.panelLateral.BackColor = System.Drawing.Color.Gainsboro;
             this.panelLateral.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.panelLateral.Controls.Add(this.btnFacturas);
             this.panelLateral.Controls.Add(this.btnConfigurar);
             this.panelLateral.Controls.Add(this.btnContratos);
             this.panelLateral.Controls.Add(this.btnLocales);
@@ -124,6 +127,26 @@
             this.panelLateral.Name = "panelLateral";
             this.panelLateral.Size = new System.Drawing.Size(45, 472);
             this.panelLateral.TabIndex = 1;
+            // 
+            // btnFacturas
+            // 
+            this.btnFacturas.Anchor = System.Windows.Forms.AnchorStyles.None;
+            this.btnFacturas.FlatAppearance.BorderSize = 0;
+            this.btnFacturas.FlatAppearance.MouseDownBackColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnFacturas.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(200)))), ((int)(((byte)(200)))));
+            this.btnFacturas.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnFacturas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnFacturas.Image = global::Facturar.Properties.Resources.Factura_black;
+            this.btnFacturas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnFacturas.Location = new System.Drawing.Point(0, 310);
+            this.btnFacturas.Name = "btnFacturas";
+            this.btnFacturas.Size = new System.Drawing.Size(105, 60);
+            this.btnFacturas.TabIndex = 6;
+            this.btnFacturas.Text = "Facturas";
+            this.btnFacturas.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnFacturas.UseVisualStyleBackColor = true;
+            this.btnFacturas.Visible = false;
+            this.btnFacturas.Click += new System.EventHandler(this.btnFacturas_Click);
             // 
             // btnConfigurar
             // 
@@ -155,7 +178,7 @@
             this.btnContratos.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnContratos.Image = global::Facturar.Properties.Resources.Contratos2_black;
             this.btnContratos.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnContratos.Location = new System.Drawing.Point(2, 245);
+            this.btnContratos.Location = new System.Drawing.Point(0, 245);
             this.btnContratos.Name = "btnContratos";
             this.btnContratos.Size = new System.Drawing.Size(105, 60);
             this.btnContratos.TabIndex = 4;
@@ -175,7 +198,7 @@
             this.btnLocales.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLocales.Image = global::Facturar.Properties.Resources.Locales_black;
             this.btnLocales.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnLocales.Location = new System.Drawing.Point(2, 180);
+            this.btnLocales.Location = new System.Drawing.Point(0, 180);
             this.btnLocales.Name = "btnLocales";
             this.btnLocales.Size = new System.Drawing.Size(105, 60);
             this.btnLocales.TabIndex = 3;
@@ -195,7 +218,7 @@
             this.btnClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClientes.Image = global::Facturar.Properties.Resources.Clientes_black;
             this.btnClientes.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClientes.Location = new System.Drawing.Point(2, 115);
+            this.btnClientes.Location = new System.Drawing.Point(0, 115);
             this.btnClientes.Name = "btnClientes";
             this.btnClientes.Size = new System.Drawing.Size(105, 60);
             this.btnClientes.TabIndex = 2;
@@ -312,6 +335,7 @@
             this.Controls.Add(this.panelSuperior);
             this.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             this.Name = "frmBase";
             this.Padding = new System.Windows.Forms.Padding(4);
@@ -348,5 +372,6 @@
         private System.Windows.Forms.Button btnConfigurar;
         private System.Windows.Forms.Panel panelInferior;
         private System.Windows.Forms.Button btnInicio;
+        private System.Windows.Forms.Button btnFacturas;
     }
 }

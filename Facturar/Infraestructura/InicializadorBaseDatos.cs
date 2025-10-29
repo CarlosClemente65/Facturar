@@ -102,6 +102,41 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
+        static string sqlFacturas = @"
+                    CREATE TABLE IF NOT EXISTS Facturas (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        IdEmpresa INTEGER NOT NULL,
+                        IdCliente INTEGER NOT NULL,
+                        FechaFactura DATETIME NOT NULL,
+                        SerieFactura TEXT,
+                        NumeroFactura TEXT NOT NULL,
+                        TotalBase DECIMAL,
+                        TotalIVA DECIMAL,
+                        TotalIRPF DECIMAL,
+                        TotalFactura DECIMAL,       
+                        Observaciones TEXT,
+                        FOREIGN KEY(IdEmpresa) REFERENCES Empresas(Id),
+                        FOREIGN KEY(IdCliente) REFERENCES Clientes(Id)
+                    );
+                ";
+
+        static string sqlLineasFactura = @"
+                    CREATE TABLE IF NOT EXISTS LineasFactura (
+                        Id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        IdFactura INTEGER NOT NULL,
+                        Descripcion TEXT,
+                        Cantidad DECIMAL,
+                        PrecioUnitario DECIMAL,
+                        Subtotal DECIMAL,
+                        TipoIVA DECIMAL,
+                        CuotaIVA DECIMAL,
+                        TipoIRPF DECIMAL,
+                        CuotaIRPF DECIMAL,
+                        TotalLinea DECIMAL,
+                        FOREIGN KEY(IdFactura) REFERENCES Facturas(Id)
+                    );
+                ";
+
 
         // Inicializar la base de datos y crea las tablas
         public static void Inicializar(string rutaBD)

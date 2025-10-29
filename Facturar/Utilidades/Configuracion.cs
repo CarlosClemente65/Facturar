@@ -14,8 +14,6 @@ namespace Facturar.Utilidades
             }
         }
 
-        
-
         public static string CarpetaBackup
         {
             get

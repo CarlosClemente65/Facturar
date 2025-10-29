@@ -24,6 +24,7 @@ namespace Facturar.Utilidades
             Cliente,
             Local,
             Contrato,
+            Factura,
             Configurar
         }
     }
