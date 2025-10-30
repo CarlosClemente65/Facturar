@@ -86,6 +86,8 @@
             this.txtImporte.Size = new System.Drawing.Size(101, 22);
             this.txtImporte.TabIndex = 2;
             this.txtImporte.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtImporte.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtImporte.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label9
             // 

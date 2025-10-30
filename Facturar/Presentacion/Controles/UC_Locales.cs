@@ -322,5 +322,15 @@ namespace Facturar.Presentacion.Controles
                 txt.Text = txt.Text.ToUpper();
             }
         }
+
+        private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Utiles.ValidarImporte(sender as TextBox, e);
+        }
+
+        private void txtImporte_Leave(object sender, EventArgs e)
+        {
+            Utiles.FormatearImporte(sender as TextBox);
+        }
     }
 }

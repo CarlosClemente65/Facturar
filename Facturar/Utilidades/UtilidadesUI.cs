@@ -187,5 +187,38 @@ namespace Facturar.Utilidades
         {
             return obj.GetType().GetProperty(nombreColumna).GetValue(obj, null);
         }
+
+        // Permite validar textoBox con importes
+        public static void ValidarImporte(TextBox txt, KeyPressEventArgs e)
+        {
+            if(char.IsControl(e.KeyChar))
+            {
+                return;
+            }
+
+            if(e.KeyChar == '.')
+            {
+                e.KeyChar = ',';
+            }
+
+            if(!char.IsDigit(e.KeyChar) && e.KeyChar != ',')
+            {
+                e.Handled = true;
+            }
+            else if(e.KeyChar == ',' && txt.Text.Contains(","))
+            {
+                e.Handled = true;
+            }
+        }
+
+        // Permite formatear textBox de importes para que muestren siempre 2 decimales
+        public static void FormatearImporte(TextBox txt)
+        {
+            if(decimal.TryParse(txt.Text, out decimal valor))
+            {
+                // Formatea con dos decimales y coma como separador decimal
+                txt.Text = valor.ToString("N2");
+            }
+        }
     }
 }
