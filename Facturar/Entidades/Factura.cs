@@ -60,6 +60,26 @@ namespace Facturar.Entidades
         // Constructor por defecto
         public Factura()
         {
+
+        }
+
+        // Constructor para crear una copia de una factura existente
+        public Factura(Factura copiaFactura) 
+        {
+            Id = copiaFactura.Id;
+            IdEmpresa = copiaFactura.IdEmpresa;
+            Empresa = copiaFactura.Empresa;
+            IdCliente = copiaFactura.IdCliente;
+            Cliente = copiaFactura.Cliente;
+            FechaFactura = copiaFactura.FechaFactura;
+            SerieFactura = copiaFactura.SerieFactura;
+            NumeroFactura = copiaFactura.NumeroFactura;
+            Lineas = copiaFactura.Lineas;
+            TotalBase = copiaFactura.TotalBase;
+            TotalIVA = copiaFactura.TotalIVA;
+            TotalIRPF = copiaFactura.TotalIRPF;
+            TotalFactura = copiaFactura.TotalFactura;
+            Observaciones = copiaFactura.Observaciones;
         }
     }
 }

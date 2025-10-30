@@ -48,8 +48,6 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
-                    /* Pendiente de desarrollo
-                     
                     // Habilita el grid de clientes
                     ucClientes.GridBase.Enabled = true;
 
@@ -59,7 +57,6 @@ namespace Facturar.Presentacion.Procesos
                     // Refresca el grid de clientes
                     ucClientes.CargarClientes();
 
-                    */
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:

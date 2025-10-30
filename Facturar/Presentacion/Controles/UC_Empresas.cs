@@ -198,7 +198,7 @@ namespace Facturar.Presentacion.Controles
         {
             if(empresa == null)
             {
-                throw new ArgumentNullException("No se han pasado datos de empresa para actualizar");
+                throw new ArgumentNullException("No se han pasado datos de la empresa para actualizar");
             }
 
             if(tipoProceso == Enumerador.TipoProceso.Alta)

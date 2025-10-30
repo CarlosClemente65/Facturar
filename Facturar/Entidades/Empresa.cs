@@ -13,6 +13,7 @@ namespace Facturar.Entidades
         // Constructor por defecto
         public Empresa()
         {
+
         }
 
         // Constructor para crear una copia de una empresa existente
@@ -20,10 +21,6 @@ namespace Facturar.Entidades
         {
             SerieFactura = copiaEntidad.SerieFactura;
             NumeroFacturaActual = copiaEntidad.NumeroFacturaActual;
-
         }
-
-
-
     }
 }

@@ -30,6 +30,9 @@ namespace Facturar.Presentacion.Procesos
 
             // Mensaje de confirmacion de la baja
             DialogResult resultado = MessageBox.Show("Esta seguro de eliminar el registro de la base de datos \n(no se podrá recuperar)", "Eliminar registro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            
+            string mensajeOk = string.Empty;
+            string mensajeKo = string.Empty;
 
             if(resultado == DialogResult.Yes)
             {
@@ -42,12 +45,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorEmpresas.Eliminar(nif: ucEmpresas.EmpresaActual.NIF);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Empresa eliminada de la base de datos.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Empresa eliminada de la base de datos.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         // Restablece el bloqueo del grid y carga las empresas
@@ -65,12 +68,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorLocales.EliminarLocal(id: ucLocales.LocalActual.Id);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Local eliminado de la base de datos.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Local eliminado de la base de datos.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         // Restablece el bloqueo y habilita el grid
@@ -87,12 +90,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorClientes.Eliminar(nif: ucClientes.ClienteActual.NIF);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Eliminado el cliente en la base de datos.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Eliminado el cliente en la base de datos.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         // Restablece el bloqueo y habilita el grid
@@ -110,12 +113,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorContratos.Eliminar(contratoId: ucContratos.ContratoActual.Id);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Eliminado el contrato de la base de datos.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                           mensajeOk = "Eliminado el contrato de la base de datos.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         // Restablece el bloqueo y habilita el grid
@@ -129,8 +132,19 @@ namespace Facturar.Presentacion.Procesos
             }
             else
             {
-                MessageBox.Show("Proceso de borrado cancelado", "Eliminar registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                mensajeOk = "Proceso de borrado cancelado";
             }
-        }
+
+            if(!string.IsNullOrEmpty(mensajeOk))
+            {
+                // Muestra mensaje de proceso correcto
+                MessageBox.Show(mensajeOk, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if(!string.IsNullOrEmpty(mensajeKo))
+            {
+                // Muestra mensaje de error
+                MessageBox.Show(mensajeKo, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
     }
 }

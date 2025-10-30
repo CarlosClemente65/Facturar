@@ -11,6 +11,8 @@ namespace Facturar.Entidades
 {
     public class Contrato
     {
+        
+
         public int Id { get; set; }
         public int EmpresaId { get; set; }
         public int ClienteId { get; set; }
@@ -20,6 +22,28 @@ namespace Facturar.Entidades
         public DateTime? FechaFin { get; set; }
         public bool Activo => !FechaFin.HasValue || FechaFin.Value.Date > DateTime.Today; // Contrato activo si la FechaFin esta no esta rellena o tiene una fecha posterior a hoy
         public string Observaciones { get; set; } // Notas del contrato
+
+
+        // Constructor por defecto
+        public Contrato()
+        {
+
+        }
+
+        // Constructor para crear una copia de un contrato existente
+        public Contrato(Contrato copiaContrato)
+        {
+            Id = copiaContrato.Id;
+            EmpresaId = copiaContrato.EmpresaId;
+            ClienteId = copiaContrato.ClienteId;
+            LocalId = copiaContrato.LocalId;
+            PrecioMensual = copiaContrato.PrecioMensual;
+            FechaInicio = copiaContrato.FechaInicio;
+            FechaFin = copiaContrato.FechaFin;
+            Observaciones = copiaContrato.Observaciones;
+
+        }
+
 
         // Método seguro para establecer la fecha de fin (aplica validación)
         public void EstablecerFechaFin(DateTime? fechaFin)

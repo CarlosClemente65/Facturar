@@ -11,43 +11,79 @@ namespace Facturar.Presentacion.Procesos
 {
     public class BotonValidar : ProcesoBotonBase
     {
+        // Acceso a los gestores del formulario frmBase
+        GestorEmpresas gestorEmpresas;
+        GestorLocales gestorLocales;
+        GestorClientes gestorClientes;
+        GestorContratos gestorContratos;
+        GestorFacturas gestorFacturas;
+        TipoProceso tipoProceso;
+
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
         public BotonValidar
         (UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas, frmBase formulario)
             : base(empresas, locales, clientes, contratos, facturas, formulario)
         {
+            // Acceso a los gestores del formulario frmBase
+            gestorEmpresas = formulario.GestorEmpresas;
+            gestorLocales = formulario.GestorLocales;
+            gestorClientes = formulario.GestorClientes;
+            gestorContratos = formulario.GestorContratos;
+            gestorFacturas = formulario.GestorFacturas;
 
+            // Carga el tipo de proceso que se ha iniciado (alta, baja, edicion, eliminar)
+            tipoProceso = formulario.TipoProceso;
         }
 
         // Procesos a ejecutar segun el tipo de entidad (el parametro estado no se usa aqui).
         public override void Ejecutar(TipoEntidad entidadActiva, bool? estado = true)
         {
-            // Acceso a los gestores del formulario frmBase
-            var gestorEmpresas = formulario.GestorEmpresas;
-            var gestorLocales = formulario.GestorLocales;
-            var gestorClientes = formulario.GestorClientes;
-            var gestorContratos = formulario.GestorContratos;
-            var gestorFacturas = formulario.GestorFacturas;
-
-            // Carga el tipo de proceso que se ha iniciado (alta, baja, edicion, eliminar)
-            var tipoProceso = formulario.TipoProceso;
-
             // Mensaje para mostrar en el aviso de correcto o incorrecto.
-            string mensajeCorrecto = string.Empty;
+            string mensajeOk = string.Empty;
+            string mensajeKo = string.Empty;
 
+            ProcesarEntidad(entidadActiva, tipoProceso, ref mensajeOk, ref mensajeKo);
 
-            // Procesos segun tipo de entidad
-            switch(entidadActiva)
+            // Mostrar mensajes segun corresponda
+            if(!string.IsNullOrEmpty(mensajeOk) && !formulario.errorProceso)
             {
-                case TipoEntidad.Empresa:
-                    Empresa copiaEmpresa = null; // Copia de la empresa por si hay error en la edicion
-                    Empresa empresa = null; // Empresa que se va a crear
-                    try
-                    {
-                        ValidacionEmpresa(gestorEmpresas, tipoProceso, ref mensajeCorrecto, ref copiaEmpresa, ref empresa);
+                // Muestra mensaje de proceso correcto
+                MessageBox.Show(mensajeOk, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            else if(!string.IsNullOrEmpty(mensajeKo))
+            {
+                // Muestra mensaje de error
+                MessageBox.Show(mensajeKo, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
 
-                        // Muestra mensaje de proceso correcto
-                        MessageBox.Show(mensajeCorrecto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        // Procesado de las entidades segun la accion
+        private void ProcesarEntidad(TipoEntidad entidadActiva, TipoProceso tipoProceso, ref string mensajeOk, ref string mensajeKo)
+        {
+            // Copia de los objetos por si hay error en la edicion
+            Empresa copiaEmpresa = null; // Copia de la empresa por si hay error en la edicion
+            Empresa empresa = null; // Empresa que se va a crear
+
+            Local copiaLocal = null; // Copia del local por si hay error en la edicion
+            Local local = null; // Local que se va a crear
+
+            Cliente copiaCliente = null; // Copia del cliente por si hay error en la edicion
+            Cliente cliente = null; // Cliente que se va a crear
+
+            Contrato copiaContrato = null; //Copia del contrato por si hay error en la edicion
+            Contrato contrato = null; // Contrato que se va a crear
+
+            Factura copiaFactura = null; // Copia de la factura por si hay error en la edicion
+            Factura factura = null; // Factura que se va a crear
+
+            try
+            {
+                // Procesos segun tipo de entidad
+                switch(entidadActiva)
+                {
+                    case TipoEntidad.Empresa:
+                        // Ejecucion del proceso al validar la empresa
+                        EjecutarProcesoEmpresa(gestorEmpresas, tipoProceso, ref mensajeOk, ref copiaEmpresa, ref empresa);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -60,31 +96,12 @@ namespace Facturar.Presentacion.Procesos
 
                         // Refresca el grid de empresas
                         ucEmpresas.CargarEmpresas(); // Refresca el grid
-                    }
-                    catch(Exception ex)
-                    {
-                        // Muestra mensaje de error
-                        MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        if(tipoProceso == TipoProceso.Edicion)
-                        {
-                            // Solo en la edicion se restaura la empresa original 
-                            ucEmpresas.EmpresaActual = copiaEmpresa;
-                        }
+                        break;
 
-                        formulario.errorProceso = true;
-                    }
-                    break;
-
-                case Enumerador.TipoEntidad.Local:
-                    Local copiaLocal = null; // Copia del local por si hay error en la edicion
-                    Local local = null; // Local que se va a crear
-                    try
-                    {
-                        ValidacionLocal(gestorLocales, tipoProceso, ref mensajeCorrecto, ref copiaLocal, ref local);
-
-                        // Muestra mensaje de proceso correcto
-                        MessageBox.Show(mensajeCorrecto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    case Enumerador.TipoEntidad.Local:
+                        // Ejecucion del proceso al validar el local
+                        EjecutarProcesoLocal(gestorLocales, tipoProceso, ref mensajeOk, ref copiaLocal, ref local);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -97,90 +114,52 @@ namespace Facturar.Presentacion.Procesos
 
                         // Refresca el grid de locales
                         ucLocales.CargarLocales(); // Refresca el grid
-                    }
-                    catch(Exception ex)
-                    {
-                        // Muestra mensaje de error
-                        MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-                        if(tipoProceso == TipoProceso.Edicion)
-                        {
-                            // Solo en la edicion se restaura el local original 
-                            ucLocales.LocalActual= copiaLocal;
-                        }
+                        break;
 
-                        formulario.errorProceso = true;
-                    }
-                    break;
-
-                case Enumerador.TipoEntidad.Cliente:
-                    // Habilita el grid de clientes
-                    //ucClientes.dgvClientes.Enabled = true; // Pendiente desarrollo
-
-                    //Actualiza la base de datos
-                    //gestorClientes.Agregar(); // Pendiente de desarrollo
-                    break;
-
-                case Enumerador.TipoEntidad.Contrato:
-                    // Habilita el grid de contratos
-                    //ucContratos.dgvContratos.Enabled = true; // Pendiente desarrollo
-
-                    //Actualiza la base de datos
-                    //gestorContratos.Agregar(); // Pendiente de desarrollo
-                    break;
-
-                case Enumerador.TipoEntidad.Factura:
-                    Factura copiaFactura = null; // Copia de la factura por si hay error en la edicion
-                    Factura factura = null; // Factura que se va a crear
-                    try
-                    {
-                        // Mensaje para mostrar en el aviso de correcto o incorrecto.
-                        mensajeCorrecto = string.Empty;
-                        if(tipoProceso == TipoProceso.Edicion)
-                        {
-                            // Se obtiene la factura seleccionada
-                            factura = ucFacturas.FacturaActual;
-
-                            // Hacemos una copia de la factura actual por si la edicion falla
-                            copiaFactura = new Factura();
-
-                            // Se actualizan las propiedades segun los campos de la pantalla
-                            ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Edicion);
-
-                            // Graba los cambios en la base de datos
-                            gestorFacturas.Actualizar(factura: factura);
-
-                            // Mensaje de proceso correcto
-                            mensajeCorrecto = "Factura actualizada correctamente.";
-                        }
-                        else if(tipoProceso == TipoProceso.Alta)
-                        {
-                            // Muestra mensaje de proceso inactivo
-                            mensajeCorrecto = "Opcion en desarrollo.";
-
-                            /* Pendiente de decidir si se permite el alta de una factura o no 
-                            // Crea una nueva factura
-                            factura = new Factura();
-
-                            // Se graban las propiedades segun los campos de la pantalla
-                            ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Alta);
-
-                            // Agrega la nueva factura a la base de datos
-                            gestorFacturas.Agregar(factura);
-
-                            // Mensaje de proceso correcto
-                            mensajeCorrecto = "Factura creada correctamente.";
-
-                            */
-                        }
-
-                        // Muestra mensaje de proceso correcto
-                        MessageBox.Show(mensajeCorrecto, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    case Enumerador.TipoEntidad.Cliente:
+                        // Ejecucion del proceso al validar el cliente
+                        EjecutarProcesoCliente(gestorClientes, tipoProceso, ref mensajeOk, ref copiaCliente, ref cliente);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
 
-                        // Habilita el grid de empresas
+                        // Habilita el grid de clientes
+                        ucClientes.GridBase.Enabled = true;
+
+                        // Quita el efecto de bloqueo de edicion
+                        Utiles.BloqueoEdicionDgv(_grid: ucClientes.GridBase, bloquear: false);
+
+                        // Refresca el grid de clientes
+                        ucClientes.CargarClientes(); // Refresca el grid
+                        break;
+
+                    case Enumerador.TipoEntidad.Contrato:
+                        // Ejecucion del proceso al validar el contrato
+                        EjecutarProcesoContrato(gestorContratos, tipoProceso, ref mensajeOk, ref copiaContrato, ref contrato);
+
+                        // Marca que no ha habido error en el proceso
+                        formulario.errorProceso = false;
+
+                        // Habilita el grid de contratos
+                        ucContratos.GridBase.Enabled = true;
+
+                        // Quita el efecto de bloqueo de edicion
+                        Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: false);
+
+                        // Refresca el grid de contratos
+                        ucContratos.CargarContratos(); // Refresca el grid
+
+                        break;
+
+                    case Enumerador.TipoEntidad.Factura:
+                        // Ejecucion del proceso al validar la factura
+                        EjecutarProcesoFactura(gestorFacturas, tipoProceso, ref mensajeOk, ref copiaFactura, ref factura);
+
+                        // Marca que no ha habido error en el proceso
+                        formulario.errorProceso = false;
+
+                        // Habilita el grid de facturas
                         ucFacturas.GridBase.Enabled = true;
 
                         // Quita el efecto de bloqueo de edicion
@@ -189,97 +168,206 @@ namespace Facturar.Presentacion.Procesos
                         // Refresca el grid de facturas
                         ucFacturas.CargarFacturas(); // Refresca el grid
 
-                    }
-                    catch(Exception ex)
-                    {
-                        // Muestra mensaje de error
-                        MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        break;
+                }
+            }
+            catch(Exception ex)
+            {
+                // Muestra mensaje de error
+                mensajeKo = $"{ex.Message}";
+                formulario.errorProceso = true;
 
-                        if(tipoProceso == TipoProceso.Edicion)
-                        {
+                // Restaura la copia del objeto si hay algun error en el proceso de edicion
+                if(tipoProceso == TipoProceso.Edicion)
+                {
+                    switch(entidadActiva)
+                    {
+                        case TipoEntidad.Empresa:
+                            // Solo en la edicion se restaura la empresa original 
+                            ucEmpresas.EmpresaActual = copiaEmpresa;
+
+                            break;
+
+                        case TipoEntidad.Local:
+                            // Solo en la edicion se restaura el local original 
+                            ucLocales.LocalActual = copiaLocal;
+
+                            break;
+
+                        case TipoEntidad.Cliente:
+                            // Solo en la edicion se restaura el cliente original 
+                            ucClientes.ClienteActual = copiaCliente;
+
+                            break;
+
+                        case TipoEntidad.Contrato:
+                            // Solo en la edicion se restaura el contrato original 
+                            ucContratos.ContratoActual = copiaContrato;
+
+                            break;
+
+                        case TipoEntidad.Factura:
                             // Solo en la edicion se restaura la empresa original
                             ucFacturas.FacturaActual = copiaFactura;
-                        }
 
-                        formulario.errorProceso = true;
+                            break;
                     }
+                }
+            }
+        }
+
+        // Metodo para ejecutar los procesos de editar o alta de una empresa
+        private void EjecutarProcesoEmpresa(GestorEmpresas gestorEmpresas, TipoProceso tipoProceso, ref string mensajeSalida, ref Empresa copiaEmpresa, ref Empresa empresa)
+        {
+            switch(tipoProceso)
+            {
+                case TipoProceso.Edicion:
+                    // Se obtiene la empresa seleccioanda
+                    empresa = ucEmpresas.EmpresaActual;
+
+                    // Hacemos una copia de la empresa actual por si la edicion falla
+                    copiaEmpresa = new Empresa(empresa);
+
+                    // Se actualizan las propiedades segun los campos de la pantalla
+                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Edicion);
+
+                    // Graba los cambios en la base de datos
+                    gestorEmpresas.Actualizar(empresa);
+
+                    // Mensaje de proceso correcto
+                    mensajeSalida = "Empresa actualizada correctamente.";
+
+                    break;
+
+                case TipoProceso.Alta:
+                    // Crea una nueva empresa
+                    empresa = new Empresa();
+
+                    // Se graban las propiedades segun los campos de la pantalla
+                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Alta);
+
+                    // Agrega la nueva empresa a la base de datos
+                    gestorEmpresas.Agregar(empresa);
+
+                    // Mensaje de proceso correcto
+                    mensajeSalida = "Empresa creada correctamente.";
+
                     break;
             }
         }
 
-
-        // Metodo para chequear los datos de un local al pulsar el boton Validar
-        private void ValidacionLocal(GestorLocales gestorLocales, TipoProceso tipoProceso, ref string mensajeCorrecto, ref Local copiaLocal, ref Local local)
+        // Metodo para ejecutar los procesos de editar o alta de un local
+        private void EjecutarProcesoLocal(GestorLocales gestorLocales, TipoProceso tipoProceso, ref string mensajeSalida, ref Local copiaLocal, ref Local local)
         {
-            if(tipoProceso == TipoProceso.Edicion)
+            switch(tipoProceso)
             {
-                // Se obtiene el local seleccioando
-                local = ucLocales.LocalActual;
+                case TipoProceso.Edicion:
+                    // Se obtiene el local seleccioando
+                    local = ucLocales.LocalActual;
 
-                // Hacemos una copia del local actual por si la edicion falla
-                copiaLocal= new Local();
+                    // Hacemos una copia del local actual por si la edicion falla
+                    copiaLocal = new Local(local);
 
-                // Se actualizan las propiedades segun los campos de la pantalla
-                
-                ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Edicion);
+                    // Se actualizan las propiedades segun los campos de la pantalla
 
-                // Graba los cambios en la base de datos
-                gestorLocales.Actualizar(local);
+                    ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Edicion);
 
-                // Mensaje de proceso correcto
-                mensajeCorrecto = "Local actualizado correctamente.";
-            }
-            else if(tipoProceso == TipoProceso.Alta)
-            {
-                // Crea un nuevo local
-                local = new Local();
+                    // Graba los cambios en la base de datos
+                    gestorLocales.Actualizar(local);
 
-                // Se graban las propiedades segun los campos de la pantalla
-                ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Alta);
+                    // Mensaje de proceso correcto
+                    mensajeSalida = "Local actualizado correctamente.";
 
-                // Agrega el nuev local a la base de datos
-                gestorLocales.Agregar(local);
+                    break;
 
-                // Mensaje de proceso correcto
-                mensajeCorrecto = "Empresa creada correctamente.";
+                case TipoProceso.Alta:
+                    // Crea un nuevo local
+                    local = new Local();
+
+                    // Se graban las propiedades segun los campos de la pantalla
+                    ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Alta);
+
+                    // Agrega el nuev local a la base de datos
+                    gestorLocales.Agregar(local);
+
+                    // Mensaje de proceso correcto
+                    mensajeSalida = "Local creado correctamente.";
+
+                    break;
             }
         }
 
-
-
-        // Metodo para chequear los datos de una empresa al pulsar el boton Validar
-        private void ValidacionEmpresa(GestorEmpresas gestorEmpresas, TipoProceso tipoProceso, ref string mensajeCorrecto, ref Empresa copiaEmpresa, ref Empresa empresa)
+        // Metodo para ejecutar los procesos de editar o alta de un cliente
+        private void EjecutarProcesoCliente(GestorClientes gestorClientes, TipoProceso tipoProceso, ref string mensajeOk, ref Cliente copiaCliente, ref Cliente cliente)
         {
-            if(tipoProceso == TipoProceso.Edicion)
+            switch (tipoProceso)
             {
-                // Se obtiene la empresa seleccioanda
-                empresa = ucEmpresas.EmpresaActual;
+                case TipoProceso.Edicion:
+                    // TODO: Implementar el proceso de validar la edicion de clientes
+                    break;
 
-                // Hacemos una copia de la empresa actual por si la edicion falla
-                copiaEmpresa = new Empresa(empresa);
-
-                // Se actualizan las propiedades segun los campos de la pantalla
-                ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Edicion);
-
-                // Graba los cambios en la base de datos
-                gestorEmpresas.Actualizar(empresa);
-
-                // Mensaje de proceso correcto
-                mensajeCorrecto = "Empresa actualizada correctamente.";
+                    case TipoProceso.Alta: 
+                    // TODO: Implementar el proceso de validar el alta de clientes
+                    break;
             }
-            else if(tipoProceso == TipoProceso.Alta)
+        }
+
+        // Metodo para ejecutar los procesos de editar o alta de un contrato
+        private void EjecutarProcesoContrato(GestorContratos gestorContratos, TipoProceso tipoProceso, ref string mensajeOk, ref Contrato copiaContrato, ref Contrato contrato)
+        {
+            switch(tipoProceso)
             {
-                // Crea una nueva empresa
-                empresa = new Empresa();
+                case TipoProceso.Edicion:
 
-                // Se graban las propiedades segun los campos de la pantalla
-                ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Alta);
+                    break;
 
-                // Agrega la nueva empresa a la base de datos
-                gestorEmpresas.Agregar(empresa);
+                case TipoProceso.Alta:
 
-                // Mensaje de proceso correcto
-                mensajeCorrecto = "Empresa creada correctamente.";
+                    break;
+            }
+        }
+
+        private void EjecutarProcesoFactura(GestorFacturas gestorFacturas, TipoProceso tipoProceso, ref string mensajeOk, ref Factura copiaFactura, ref Factura factura)
+        {
+            switch(tipoProceso)
+            {
+                case TipoProceso.Edicion:
+                    // Se obtiene la factura seleccionada
+                    factura = ucFacturas.FacturaActual;
+
+                    // Hacemos una copia de la factura actual por si la edicion falla
+                    copiaFactura= new Factura(factura);
+
+                    // Se actualizan las propiedades segun los campos de la pantalla
+                    ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Edicion);
+
+                    // Graba los cambios en la base de datos
+                    gestorFacturas.Actualizar(factura: factura);
+
+                    // Mensaje de proceso correcto
+                    mensajeOk = "Factura actualizada correctamente.";
+
+                    break;
+
+                case TipoProceso.Alta:
+                    // Muestra mensaje de proceso inactivo
+                    mensajeOk = "Opcion en desarrollo.";
+
+                    /* Pendiente de decidir si se permite el alta de una factura o no 
+                    // Crea una nueva factura
+                    factura = new Factura();
+
+                    // Se graban las propiedades segun los campos de la pantalla
+                    ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Alta);
+
+                    // Agrega la nueva factura a la base de datos
+                    gestorFacturas.Agregar(factura);
+
+                    // Mensaje de proceso correcto
+                    mensajeCorrecto = "Factura creada correctamente.";
+
+                    */
+                    break;
             }
         }
     }

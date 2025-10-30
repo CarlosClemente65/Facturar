@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Facturar.Servicios;
-using System.ComponentModel;
+using static Facturar.Entidades.Cliente;
 
 
 namespace Facturar.Entidades
@@ -43,6 +44,31 @@ namespace Facturar.Entidades
 
         [Browsable(false)] // Evita mostrarlo en el grid
         public bool Activo => !FechaBaja.HasValue || FechaBaja.Value.Date > DateTime.Today; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)
+
+
+        // Constructor por defecto
+        public Local()
+        {
+
+        }
+
+        // Constructor para crear una copia de un cliente existente
+        public Local(Local copiaLocal)
+        {
+            Id = copiaLocal.Id;
+            IdEmpresa = copiaLocal.IdEmpresa;
+            Empresa = copiaLocal.Empresa;
+            Descripcion = copiaLocal.Descripcion;
+            Direccion = copiaLocal.Direccion;
+            CodigoPostal = copiaLocal.CodigoPostal;
+            Poblacion = copiaLocal.Poblacion;
+            Provincia = copiaLocal.Provincia;
+            ImporteAlquiler = copiaLocal.ImporteAlquiler;
+            Observaciones = copiaLocal.Observaciones;
+            FechaAlta = copiaLocal.FechaAlta;
+            FechaBaja = copiaLocal.FechaBaja;
+        }
+
 
         public void EstablecerFechaBaja(DateTime? fechaBaja)
         {

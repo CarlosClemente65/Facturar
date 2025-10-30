@@ -170,7 +170,7 @@ namespace Facturar.Presentacion.Controles
             txtNombreEmpresa.Enabled = false;
         }
 
-        public void BloqueoTextBoxEditar()
+        public void BloqueoTextBoxEdicion()
         {
             // Deshabilita los TextBox que no se pueden editar
             txtFechaAlta.Enabled = false;

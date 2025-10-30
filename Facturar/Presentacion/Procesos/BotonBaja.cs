@@ -33,6 +33,9 @@ namespace Facturar.Presentacion.Procesos
             // Mensaje de confirmacion de la baja
             DialogResult resultado = MessageBox.Show("Esta seguro de dar de baja el registro \n(quedara inactivo sin eliminarlo)", "Baja registro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
+            string mensajeOk = string.Empty;
+            string mensajeKo = string.Empty;
+
             if(resultado == DialogResult.Yes)
             {
                 switch(entidadActiva)
@@ -44,12 +47,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorEmpresas.Baja(nif: ucEmpresas.EmpresaActual.NIF);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Grabada fecha de baja en la empresa.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Grabada fecha de baja en la empresa.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         break;
@@ -61,12 +64,12 @@ namespace Facturar.Presentacion.Procesos
                             gestorLocales.BajaLocal(id: ucLocales.LocalActual.Id);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Grabada fecha de baja en el local.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Grabada fecha de baja en el local.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
                         break;
@@ -78,15 +81,15 @@ namespace Facturar.Presentacion.Procesos
                             gestorClientes.Baja(nif: ucClientes.ClienteActual.NIF);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Grabada fecha de baja en el cliente.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Grabada fecha de baja en el cliente.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
-                        
+
                         break;
 
                     case Enumerador.TipoEntidad.Contrato:
@@ -96,21 +99,32 @@ namespace Facturar.Presentacion.Procesos
                             gestorContratos.Baja(contratoId: ucContratos.ContratoActual.Id);
 
                             // Muestra mensaje de proceso correcto
-                            MessageBox.Show("Grabada fecha de baja en el contrato.", "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            mensajeOk = "Grabada fecha de baja en el contrato.";
                         }
                         catch(Exception ex)
                         {
                             // Muestra mensaje de error
-                            MessageBox.Show($"{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            mensajeKo = $"{ex.Message}";
                         }
 
-                        
                         break;
                 }
             }
             else
             {
-                MessageBox.Show("Proceso de baja cancelado", "Baja registro", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                mensajeOk = "Proceso de baja cancelado";
+            }
+
+            if(!string.IsNullOrEmpty(mensajeOk))
+            {
+                // Muestra mensaje si es correcto
+                MessageBox.Show(mensajeOk, "Información", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+
+            if(!string.IsNullOrEmpty(mensajeKo))
+            {
+                // Muestra mensaje si hay error
+                MessageBox.Show(mensajeKo, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             switch(entidadActiva)

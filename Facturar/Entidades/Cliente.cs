@@ -9,9 +9,23 @@ namespace Facturar.Entidades
     public class Cliente :EntidadBase
     {
         // Datos de facturación
-        public string FormaPago { get; set; } = FormasPago.Transferencia.ToString(); // ej. "Transferencia", "Domiciliación"
+        public FormasPago FormaPago { get; set; } = FormasPago.Transferencia; // ej. "Transferencia", "Domiciliación"
         public string IBAN { get; set; } // para domiciliación o transferencia
         public string Observaciones { get; set; } // notas internas sobre el cliente
+
+        // Constructor por defecto
+        public Cliente()
+        {
+
+        }
+
+        // Constructor para crear una copia de un cliente existente
+        public Cliente(Cliente copiaEntidad) : base(copiaEntidad)
+        {
+            FormaPago = copiaEntidad.FormaPago;
+            IBAN = copiaEntidad.IBAN;
+            Observaciones = copiaEntidad.Observaciones;
+        }
 
         public enum FormasPago
         {

@@ -20,6 +20,7 @@ namespace Facturar.Presentacion.Controles
         public Contrato ContratoActual
         {
             get => ContratoSeleccionado;
+            set => ContratoSeleccionado = value;
         }
 
         public void CargarContratos(bool? activos = true)

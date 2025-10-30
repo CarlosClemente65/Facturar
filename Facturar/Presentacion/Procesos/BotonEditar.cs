@@ -33,7 +33,7 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Local:
                     // Deshabilita los TextBox que no se pueden editar
-                    ucLocales.BloqueoTextBoxEditar();
+                    ucLocales.BloqueoTextBoxEdicion();
 
                     // Actualiza el local seleccionado en UC_Local
                     ucLocales.ActualizarLocalSeleccionado();
@@ -44,8 +44,15 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucClientes.BloqueoTextBoxEdicion();
+
                     // Actualiza el cliente seleccionada en UC_Clientes
-                    ucClientes.ActualizarClienteSeleccionado();// Pendiente de desarrollo
+                    ucClientes.ActualizarClienteSeleccionado();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucClientes.GridBase, bloquear: true);
+
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
