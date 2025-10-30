@@ -5,9 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
-using Enumerador = Facturar.Utilidades.Enumeradores;
 using Facturar.Servicios;
+using static System.Net.Mime.MediaTypeNames;
+using Enumerador = Facturar.Utilidades.Enumeradores;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 
 namespace Facturar.Presentacion.Controles
@@ -93,8 +94,7 @@ namespace Facturar.Presentacion.Controles
                 ("ImporteAlquiler", 8),
                 ("Observaciones", 9),
                 ("FechaAlta", 10),
-                ("FechaBaja", 11),
-                ("SerieFactura", 12)
+                ("FechaBaja", 11)
             };
 
             // Pasa las columnas al grid base para que las configure
@@ -140,45 +140,51 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosLocal(Local local)
         {
-            /* Pendiente de desarrollo y poner los campos que corresponda
-            txtNif.Text = empresa.NIF;
-            txtNombreEmpresa.Text = empresa.Nombre;
-            txtFechaAlta.Text = empresa.FechaAlta.ToString("dd.MM.yyyy");
-
+            // Pendiente de desarrollo y poner los campos que corresponda
+            txtDescripcion.Text = local.Descripcion;
+            txtImporte.Text = local.ImporteAlquiler.ToString("F2");
+            txtDireccion.Text = local.Direccion;
+            txtCodigoPostal.Text = local.CodigoPostal;
+            txtPoblacion.Text = local.Poblacion;
+            txtProvincia.Text = local.Provincia;
+            txtNifEmpresa.Text = local.NIFEmpresa;
+            txtNombreEmpresa.Text = local.NombreEmpresa;
+            txtObservaciones.Text = local.Observaciones;
+            txtFechaAlta.Text = local.FechaAlta.ToString("dd.MM.yyyy");
+            
             // La fecha de baja puede ser nula
-            if(empresa.FechaBaja.HasValue)
+            if(local.FechaBaja.HasValue)
             {
-                txtFechaBaja.Text = empresa.FechaBaja.Value.ToString("dd.MM.yyyy");
+                txtFechaBaja.Text = local.FechaBaja.Value.ToString("dd.MM.yyyy");
             }
             else
             {
                 txtFechaBaja.Text = "";
             }
+        }
 
-            txtDireccion.Text = empresa.Direccion;
-            txtCodigoPostal.Text = empresa.CodigoPostal;
-            txtPoblacion.Text = empresa.Poblacion;
-            txtProvincia.Text = empresa.Provincia;
-            txtTelefono.Text = empresa.Telefono;
-            txtEmail.Text = empresa.Email;
-            txtPersonaContacto.Text = empresa.PersonaContacto;
-            txtSerieFactura.Text = empresa.SerieFactura;
-            txtFactura.Text = empresa.NumeroFacturaActual.ToString();
+        public void BloqueoTextBoxAlta()
+        {
+            // Deshabilita los TextBox que no se pueden editar
+            txtFechaBaja.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
+        }
 
-            */
+        public void BloqueoTextBoxEditar()
+        {
+            // Deshabilita los TextBox que no se pueden editar
+            txtFechaAlta.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
         }
 
         public void ActualizarLocalSeleccionado()
         {
-            /* Pendiente de desarrollo
             
-            if(dgvLocales.CurrentRow != null)
+            if(dgvBase.CurrentRow != null)
             {
                 // Carga el objeto local segun la fila seleccionada
-                LocalSeleccionado = dgvLocales.CurrentRow.DataBoundItem as Local;
+                LocalSeleccionado = dgvBase.CurrentRow.DataBoundItem as Local;
             }
-
-            */
         }
 
         // Actualiza las propiedades del local segun el contenido de los textBox
@@ -191,10 +197,10 @@ namespace Facturar.Presentacion.Controles
 
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
-                // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
-                var gestorEmpresas = new GestorEmpresas();
-                var empresaAlta = gestorEmpresas.ObtenerPorNIF(local.NIFEmpresa);
-                local.IdEmpresa = empresaAlta.Id;
+                // En el caso del alta, se localiza el IdEmpresa a grabar en el local segun el NifEmpresa
+                
+                //var empresaAlta = gestorEmpresas.ObtenerPorNIF(txtNifEmpresa.Text);
+                local.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
             }
 
             // Campos comunes en el alta y edicion
@@ -202,26 +208,26 @@ namespace Facturar.Presentacion.Controles
             local.Direccion = txtDireccion.Text;
             local.CodigoPostal = txtCodigoPostal.Text;
             local.Poblacion = txtPoblacion.Text;
-            local.ImporteAlquiler = decimal.Parse(txtImporte.Text);
+
+            // Solo asigna el importe si es un valor decimal valido
+            if(decimal.TryParse(txtImporte.Text, out decimal importe))
+            {
+                local.ImporteAlquiler = importe;
+            }
             local.Observaciones = txtObservaciones.Text;
-
-            /* Los siguientes campos no se permiten modificar
-            
-
-            */
+            local.FechaAlta = DateTime.Parse(txtFechaAlta.Text);
         }
 
         private void AplicarFormatoColumnas()
         {
-            if(GridBase.Columns.Count == 0) return; // Protege contra columnas vacías
-
-            /* Revisar este metodo para ver el formato de las columas segun corresponda
+            if(dgvBase.Columns.Count == 0) return; // Protege contra columnas vacías
              
             // Lista con los nombres de las propiedades a ajustar
-            string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja", "SerieFactura", "NumeroFacturaActual" };
+            string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja" };
             string[] columnasFecha = { "FechaAlta", "FechaBaja" };
+            string[] columnasImportes = { "ImporteAlquiler" };
 
-            // Aplica formato de fecha
+            // Aplica formatos
             foreach(DataGridViewColumn columna in GridBase.Columns)
             {
                 // Ajuste al centro
@@ -235,12 +241,86 @@ namespace Facturar.Presentacion.Controles
                 {
                     columna.DefaultCellStyle.Format = "dd.MM.yyyy";
                 }
-            }
 
-            */
+                // Aplica formato de importe y alineado a la derecha
+                if(columnasImportes.Contains(columna.DataPropertyName))
+                {
+                    columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                    columna.DefaultCellStyle.Format = "N2";
+                }
+            }
 
             // Ajuste al contenido
             GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        }
+
+        private void txtFechaAlta_Leave(object sender, EventArgs e)
+        {
+            // Validacion de la fecha de alta
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            DateTime fechaValida;
+
+            bool esValida = DateTime.TryParseExact(
+                txtFechaAlta.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out fechaValida                                     // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy","Error de formato de fecha",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                txtFechaAlta.Focus();
+            }
+        }
+
+        private void txtFechaBaja_Leave(object sender, EventArgs e)
+        {
+            // Validacion de la fecha de baja
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            DateTime fechaValida;
+
+            if (txtFechaBaja.Text.Trim() == "")
+            {
+                // Si el campo está vacío, no se realiza la validación
+                return;
+            }
+
+            bool esValida = DateTime.TryParseExact(
+                txtFechaBaja.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out fechaValida                                     // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaBaja.Focus();
+            }
+        }
+
+        private void txtNifEmpresa_Leave(object sender, EventArgs e)
+        {
+            txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
+            txtNombreEmpresa.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+        }
+
+        private Empresa ObtenerEmpresaPorNif(string nif)
+        {
+            var gestorEmpresas = new GestorEmpresas();
+            return gestorEmpresas.ObtenerPorNIF(nif);
+        }
+
+        private void TextBox_ToUpper(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            if(txt != null)
+            {
+                txt.Text = txt.Text.ToUpper();
+            }
         }
     }
 }

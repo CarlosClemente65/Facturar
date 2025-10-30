@@ -61,7 +61,7 @@ namespace Facturar.Presentacion.Controles
             //BloqueoTextBox();
         }
 
-        public void BloqueoTextBox()
+        public void BloqueoTextBoxAlta()
         {
             // Deshabilita los textBox de importes de la factura
             txtBaseFactura.Enabled = false;
@@ -69,6 +69,15 @@ namespace Facturar.Presentacion.Controles
             txtCuotaIRPF.Enabled = false;
             txtTotalFactura.Enabled = false;
         }
+
+        public void BloqueoTextBoxEditar()
+        {
+            // Deshabilita los TextBox que no se pueden editar
+            BloqueoTextBoxAlta();
+            txtNombreCliente.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
+        }
+
 
         public void CargarFacturas()
         {
@@ -250,6 +259,6 @@ namespace Facturar.Presentacion.Controles
             */
         }
 
-
+        
     }
 }

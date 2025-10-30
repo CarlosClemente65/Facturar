@@ -37,7 +37,7 @@ namespace Facturar.Servicios
                 // Inserta el nuevo local en la base de datos
                 var parametros = new[]
                 {
-                    new SQLiteParameter("@EmpresaId", local.IdEmpresa),
+                    new SQLiteParameter("@IdEmpresa", local.IdEmpresa),
                     new SQLiteParameter("@Descripcion", local.Descripcion),
                     new SQLiteParameter("@Direccion", local.Direccion),
                     new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
@@ -51,8 +51,8 @@ namespace Facturar.Servicios
 
                 // Ejecuta el comando y obtiene el numero de filas insertadas
                 string sqlInsertarLocal = "INSERT INTO Locales " +
-                    "(EmpresaId, Descripcion, Direccion, CodigoPostal, Poblacion, Provincia, ImporteAlquiler, Observaciones, FechaAlta, FechaBaja) " +
-                    "VALUES (@EmpresaId, @Descripcion, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @ImporteAlquiler, @Observaciones, @FechaAlta, @FechaBaja)";
+                    "(IdEmpresa, Descripcion, Direccion, CodigoPostal, Poblacion, Provincia, ImporteAlquiler, Observaciones, FechaAlta, FechaBaja) " +
+                    "VALUES (@IdEmpresa, @Descripcion, @Direccion, @CodigoPostal, @Poblacion, @Provincia, @ImporteAlquiler, @Observaciones, @FechaAlta, @FechaBaja)";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarLocal, parametros));
 
@@ -94,7 +94,7 @@ namespace Facturar.Servicios
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", local.Id),
-                    new SQLiteParameter("@EmpresaId", local.IdEmpresa),
+                    new SQLiteParameter("@IdEmpresa", local.IdEmpresa),
                     new SQLiteParameter("@Descripcion", local.Descripcion),
                     new SQLiteParameter("@Direccion", local.Direccion),
                     new SQLiteParameter("@CodigoPostal", local.CodigoPostal),
@@ -107,7 +107,7 @@ namespace Facturar.Servicios
 
                 // Ejecuta la actualizacion y devuelve las filas actualizadas
                 string sqlActualizarLocal = "UPDATE Locales SET " +
-                    "EmpresaId = @EmpresaId, " +
+                    "IdEmpresa = @IdEmpresa, " +
                     "Descripcion = @Descripcion, " +
                     "Direccion = @Direccion, " +
                     "CodigoPostal = @CodigoPostal, " +

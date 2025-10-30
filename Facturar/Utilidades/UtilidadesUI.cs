@@ -92,6 +92,11 @@ namespace Facturar.Utilidades
                     }
                 }
 
+                else if(ctrl is DateTimePicker dt)
+                {
+                    dt.Enabled = habilitar;
+                }
+
                 // Recursión para controles hijos
                 if(ctrl.HasChildren)
                 {

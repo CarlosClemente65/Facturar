@@ -36,8 +36,6 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Local:
-                    /* Pendiente desarrollo
-                     
                     // Habilita el grid de locales
                     ucLocales.GridBase.Enabled = true;
 
@@ -47,7 +45,6 @@ namespace Facturar.Presentacion.Procesos
                     // Refresca el grid de locales
                     ucLocales.CargarLocales();
 
-                    */
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:

@@ -126,6 +126,7 @@
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
             this.txtFechaAlta.TabIndex = 7;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
             // 
             // label3
             // 
@@ -149,6 +150,7 @@
             this.txtFechaBaja.Size = new System.Drawing.Size(90, 22);
             this.txtFechaBaja.TabIndex = 9;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaBaja.Leave += new System.EventHandler(this.txtFechaBaja_Leave);
             // 
             // label4
             // 
@@ -471,8 +473,8 @@
         public System.Windows.Forms.TextBox txtNif;
         public System.Windows.Forms.TextBox txtNombreEmpresa;
         public System.Windows.Forms.TextBox txtFechaAlta;
-        public System.Windows.Forms.TextBox txtFechaBaja;
         public System.Windows.Forms.TextBox txtFactura;
         private System.Windows.Forms.Panel panelDgv;
+        private System.Windows.Forms.TextBox txtFechaBaja;
     }
 }

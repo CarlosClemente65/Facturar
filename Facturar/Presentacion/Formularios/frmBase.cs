@@ -75,7 +75,13 @@ namespace Facturar.Presentacion
             panelGeneral = new PanelInferior_general();
             panelEdicion = new PanelInferior_Edicion();
             panelFacturas = new PanelInferiorFacturas();
-            gestorEmpresas = new GestorEmpresas(); // Instancia para acceder a los metodos de empresas
+
+            // Instancias para acceder a los metodos de las entidades
+            gestorEmpresas = new GestorEmpresas();
+            gestorLocales = new GestorLocales();
+            gestorClientes = new GestorClientes();
+            gestorContratos = new GestorContratos();
+            gestorFacturas = new GestorFacturas();
 
             // Suscribir a los eventos de los userControl
             SuscribirEventosPanelInferior(panelGeneral);

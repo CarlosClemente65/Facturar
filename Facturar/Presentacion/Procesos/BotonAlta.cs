@@ -20,16 +20,21 @@ namespace Facturar.Presentacion.Procesos
             switch(entidadActiva)
             {
                 case Enumerador.TipoEntidad.Empresa:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucEmpresas.BloqueoTextBoxAlta();
+
                     // Aplica el efecto de bloqueo de edicion
                     Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
-
-                    // Actualiza la empresa seleccionada en UC_Empresa
-                    ucEmpresas.ActualizaEmpresaSeleccionada();
 
                     break;
 
                 case Enumerador.TipoEntidad.Local:
-                    //gestorLocales.Agregar(); // Pendiente de desarrollo
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucLocales.BloqueoTextBoxAlta();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucLocales.GridBase, bloquear: true);
+
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
@@ -41,13 +46,11 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Factura:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucFacturas.BloqueoTextBoxAlta();
+
                     // Aplica el efecto de bloqueo de edicion
                     Utiles.BloqueoEdicionDgv(_grid: ucFacturas.GridBase, bloquear: true);
-
-                    // Actualiza la empresa seleccionada en UC_Empresa
-                    ucFacturas.ActualizaFacturaSeleccionada();
-
-                    ucFacturas.BloqueoTextBox();
                     break;
             }
         }

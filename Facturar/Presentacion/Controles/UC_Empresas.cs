@@ -166,6 +166,22 @@ namespace Facturar.Presentacion.Controles
             txtFactura.Text = empresa.NumeroFacturaActual.ToString();
         }
 
+        public void BloqueoTextBoxAlta()
+        {
+            // Deshabilita los textBox de importes de la factura
+            txtFechaBaja.Enabled = false;
+        }
+
+        public void BloqueoTextBoxEdicion()
+        {
+            // Deshabilita los TextBox que no se pueden editar
+            txtNif.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
+            txtFechaAlta.Enabled = false;
+            txtFechaBaja.Enabled = false;
+            txtFactura.Enabled = false;
+        }
+
 
         // Actualiza la empresa seleccionada segun la fila activa del grid
         public void ActualizaEmpresaSeleccionada()
@@ -209,6 +225,7 @@ namespace Facturar.Presentacion.Controles
             empresa.Email = txtEmail.Text;
             empresa.PersonaContacto = txtPersonaContacto.Text;
             empresa.SerieFactura = txtSerieFactura.Text;
+            empresa.FechaAlta = DateTime.ParseExact(txtFechaAlta.Text, "dd.MM.yyyy", null);
 
             /* Los siguientes campos no se permiten modificar
             
@@ -243,6 +260,54 @@ namespace Facturar.Presentacion.Controles
 
             // Ajuste al contenido
             GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        }
+
+        private void txtFechaAlta_Leave(object sender, EventArgs e)
+        {
+            // Validacion de la fecha de alta
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            DateTime fechaValida;
+
+            bool esValida = DateTime.TryParseExact(
+                txtFechaAlta.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out fechaValida                                     // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaAlta.Focus();
+            }
+        }
+
+        private void txtFechaBaja_Leave(object sender, EventArgs e)
+        {
+            // Validacion de la fecha de baja
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            DateTime fechaValida;
+
+            if(txtFechaBaja.Text.Trim() == "")
+            {
+                // Si el campo está vacío, no se realiza la validación
+                return;
+            }
+
+            bool esValida = DateTime.TryParseExact(
+                txtFechaBaja.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out fechaValida                                     // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaBaja.Focus();
+            }
         }
     }
 }

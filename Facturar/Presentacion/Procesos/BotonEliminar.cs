@@ -23,6 +23,7 @@ namespace Facturar.Presentacion.Procesos
             var gestorLocales = formulario.GestorLocales;
             var gestorClientes = formulario.GestorClientes;
             var gestorContratos = formulario.GestorContratos;
+            var gestorFacturas = formulario.GestorFacturas;
 
             // Aplica el efecto de bloqueo de edicion
             Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);

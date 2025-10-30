@@ -21,11 +21,7 @@ namespace Facturar.Presentacion.Procesos
             {
                 case Enumerador.TipoEntidad.Empresa:
                     // Deshabilita los TextBox que no se pueden editar
-                    ucEmpresas.txtNif.Enabled = false;
-                    ucEmpresas.txtNombreEmpresa.Enabled = false;
-                    ucEmpresas.txtFechaAlta.Enabled = false;
-                    ucEmpresas.txtFechaBaja.Enabled = false;
-                    ucEmpresas.txtFactura.Enabled = false;
+                    ucEmpresas.BloqueoTextBoxEdicion();
 
                     // Actualiza la empresa seleccionada en UC_Empresa
                     ucEmpresas.ActualizaEmpresaSeleccionada();
@@ -36,8 +32,15 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Local:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucLocales.BloqueoTextBoxEditar();
+
                     // Actualiza el local seleccionado en UC_Local
-                    ucLocales.ActualizarLocalSeleccionado();// Pendiente de desarrollo
+                    ucLocales.ActualizarLocalSeleccionado();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucLocales.GridBase, bloquear: true);
+
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
@@ -48,6 +51,17 @@ namespace Facturar.Presentacion.Procesos
                 case Enumerador.TipoEntidad.Contrato:
                     // Actualiza el contrato seleccionado en UC_Contratos
                     ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
+                    break;
+
+                case Enumerador.TipoEntidad.Factura:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucFacturas.BloqueoTextBoxEditar();
+
+                    // Actualiza el local seleccionado en UC_Local
+                    ucFacturas.ActualizaFacturaSeleccionada();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucFacturas.GridBase, bloquear: true);
                     break;
             }
         }

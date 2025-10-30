@@ -81,10 +81,11 @@
             this.txtImporte.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtImporte.Enabled = false;
             this.txtImporte.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtImporte.Location = new System.Drawing.Point(430, 286);
+            this.txtImporte.Location = new System.Drawing.Point(459, 286);
             this.txtImporte.Name = "txtImporte";
-            this.txtImporte.Size = new System.Drawing.Size(130, 22);
-            this.txtImporte.TabIndex = 48;
+            this.txtImporte.Size = new System.Drawing.Size(101, 22);
+            this.txtImporte.TabIndex = 2;
+            this.txtImporte.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label9
             // 
@@ -92,7 +93,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.label9.AutoSize = true;
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(450, 270);
+            this.label9.Location = new System.Drawing.Point(461, 270);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(88, 13);
             this.label9.TabIndex = 47;
@@ -106,7 +107,8 @@
             this.txtProvincia.Location = new System.Drawing.Point(622, 326);
             this.txtProvincia.Name = "txtProvincia";
             this.txtProvincia.Size = new System.Drawing.Size(130, 22);
-            this.txtProvincia.TabIndex = 46;
+            this.txtProvincia.TabIndex = 8;
+            this.txtProvincia.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label7
             // 
@@ -128,7 +130,8 @@
             this.txtPoblacion.Location = new System.Drawing.Point(486, 326);
             this.txtPoblacion.Name = "txtPoblacion";
             this.txtPoblacion.Size = new System.Drawing.Size(130, 22);
-            this.txtPoblacion.TabIndex = 44;
+            this.txtPoblacion.TabIndex = 7;
+            this.txtPoblacion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label8
             // 
@@ -150,7 +153,7 @@
             this.txtCodigoPostal.Location = new System.Drawing.Point(412, 326);
             this.txtCodigoPostal.Name = "txtCodigoPostal";
             this.txtCodigoPostal.Size = new System.Drawing.Size(68, 22);
-            this.txtCodigoPostal.TabIndex = 42;
+            this.txtCodigoPostal.TabIndex = 6;
             this.txtCodigoPostal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
@@ -173,7 +176,8 @@
             this.txtDireccion.Location = new System.Drawing.Point(8, 326);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(398, 22);
-            this.txtDireccion.TabIndex = 40;
+            this.txtDireccion.TabIndex = 5;
+            this.txtDireccion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label5
             // 
@@ -195,8 +199,9 @@
             this.txtFechaBaja.Location = new System.Drawing.Point(662, 286);
             this.txtFechaBaja.Name = "txtFechaBaja";
             this.txtFechaBaja.Size = new System.Drawing.Size(90, 22);
-            this.txtFechaBaja.TabIndex = 38;
+            this.txtFechaBaja.TabIndex = 4;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaBaja.Leave += new System.EventHandler(this.txtFechaBaja_Leave);
             // 
             // label4
             // 
@@ -218,8 +223,9 @@
             this.txtFechaAlta.Location = new System.Drawing.Point(566, 286);
             this.txtFechaAlta.Name = "txtFechaAlta";
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
-            this.txtFechaAlta.TabIndex = 36;
+            this.txtFechaAlta.TabIndex = 3;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
             // 
             // label3
             // 
@@ -240,9 +246,10 @@
             this.txtDescripcion.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDescripcion.Location = new System.Drawing.Point(11, 286);
             this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(413, 22);
-            this.txtDescripcion.TabIndex = 34;
+            this.txtDescripcion.Size = new System.Drawing.Size(442, 22);
+            this.txtDescripcion.TabIndex = 1;
             this.txtDescripcion.Tag = "primerCampo";
+            this.txtDescripcion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // lblNombre
             // 
@@ -261,10 +268,11 @@
             this.txtObservaciones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtObservaciones.Enabled = false;
             this.txtObservaciones.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtObservaciones.Location = new System.Drawing.Point(412, 365);
+            this.txtObservaciones.Location = new System.Drawing.Point(412, 367);
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(340, 22);
-            this.txtObservaciones.TabIndex = 49;
+            this.txtObservaciones.TabIndex = 11;
+            this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label1
             // 
@@ -298,7 +306,8 @@
             this.txtNifEmpresa.Location = new System.Drawing.Point(8, 367);
             this.txtNifEmpresa.Name = "txtNifEmpresa";
             this.txtNifEmpresa.Size = new System.Drawing.Size(91, 22);
-            this.txtNifEmpresa.TabIndex = 52;
+            this.txtNifEmpresa.TabIndex = 9;
+            this.txtNifEmpresa.Leave += new System.EventHandler(this.txtNifEmpresa_Leave);
             // 
             // txtNombreEmpresa
             // 
@@ -308,7 +317,7 @@
             this.txtNombreEmpresa.Location = new System.Drawing.Point(105, 367);
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
             this.txtNombreEmpresa.Size = new System.Drawing.Size(301, 22);
-            this.txtNombreEmpresa.TabIndex = 54;
+            this.txtNombreEmpresa.TabIndex = 10;
             // 
             // label11
             // 
