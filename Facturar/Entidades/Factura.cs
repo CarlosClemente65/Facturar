@@ -10,6 +10,7 @@ namespace Facturar.Entidades
 {
     public class Factura
     {
+        [DisplayName("Nº reg.")]
         public int Id { get; set; }
 
         public int IdEmpresa { get; set; }   // Id empresa emisora

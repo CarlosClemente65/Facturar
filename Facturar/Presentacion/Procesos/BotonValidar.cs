@@ -269,7 +269,6 @@ namespace Facturar.Presentacion.Procesos
                     copiaLocal = new Local(local);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-
                     ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Edicion);
 
                     // Graba los cambios en la base de datos

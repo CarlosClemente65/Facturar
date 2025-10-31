@@ -274,18 +274,18 @@ namespace Facturar.Utilidades
                 switch(proceso)
                 {
                     case Procesos.Alta:
-                        contrato.EmpresaId = 1;
-                        contrato.ClienteId = 4;
-                        contrato.LocalId = 3;
+                        contrato.IdEmpresa = 1;
+                        contrato.IdCliente = 4;
+                        contrato.IdLocal = 3;
                         contrato.PrecioMensual = 755.22m;
                         contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025").Value;
                         contrato.Observaciones = "Observaciones contrato 1";
 
                         resultado = gestor.Agregar(contrato);
 
-                        contrato.EmpresaId = 2;
-                        contrato.ClienteId = 3;
-                        contrato.LocalId = 4;
+                        contrato.IdEmpresa = 2;
+                        contrato.IdCliente = 3;
+                        contrato.IdLocal = 4;
                         contrato.PrecioMensual = 800m;
                         contrato.FechaInicio = Utiles.ConvertirFecha("15/05/2025").Value;
                         contrato.Observaciones = "Observaciones contrato 2";
@@ -349,7 +349,7 @@ namespace Facturar.Utilidades
                 switch(proceso)
                 {
                     case Procesos.Alta:
-                        revision.ContratoId = 8;
+                        revision.IdContrato = 8;
                         revision.FechaRevision = Utiles.ConvertirFecha("14/05/2026").Value;
                         revision.PrecioAnterior = 700;
                         revision.PrecioRevisado = 750m;
@@ -357,7 +357,7 @@ namespace Facturar.Utilidades
 
                         resultado = gestor.AgregarRevisionContrato(revision);
 
-                        revision.ContratoId = 9;
+                        revision.IdContrato = 9;
                         revision.FechaRevision = Utiles.ConvertirFecha("16/05/2025").Value;
                         revision.PrecioAnterior = 100;
                         revision.PrecioRevisado = 780m;

@@ -315,7 +315,7 @@ namespace Facturar.Presentacion.Controles
         private void txtNifCliente_Leave(object sender, EventArgs e)
         {
             txtNifCliente.Text = txtNifCliente.Text.ToUpper();
-            txtNombreCliente.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+            txtNombreCliente.Text = ObtenerClientePorNif(txtNifEmpresa.Text)?.Nombre ?? "";
         }
 
         private Cliente ObtenerClientePorNif(string nif)

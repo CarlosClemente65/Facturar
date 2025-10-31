@@ -25,9 +25,9 @@ namespace Facturar.Servicios
             // Inserta el nuevo contrato en la base de datos
             var parametros = new[]
             {
-                    new SQLiteParameter("@EmpresaId", contrato.EmpresaId),
-                    new SQLiteParameter("@ClienteId", contrato.ClienteId),
-                    new SQLiteParameter("@LocalId", contrato.LocalId),
+                    new SQLiteParameter("@EmpresaId", contrato.IdEmpresa),
+                    new SQLiteParameter("@ClienteId", contrato.IdCliente),
+                    new SQLiteParameter("@LocalId", contrato.IdLocal),
                     new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
                     new SQLiteParameter("@FechaInicio", contrato.FechaInicio.Date),
                     new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
@@ -202,7 +202,7 @@ namespace Facturar.Servicios
 
         public bool AgregarRevisionContrato(RevisionContrato nuevaRevision)
         {
-            var contrato = ObtenerPorId(nuevaRevision.ContratoId);
+            var contrato = ObtenerPorId(nuevaRevision.IdContrato);
             if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos");
@@ -223,7 +223,7 @@ namespace Facturar.Servicios
             }
 
             // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
-            DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.ContratoId);
+            DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.IdContrato);
 
             if(ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
             {
@@ -234,7 +234,7 @@ namespace Facturar.Servicios
             {
                 // Asignacion de valores a parametros
                 var parametros = new[] {
-                    new SQLiteParameter("@ContratoId", nuevaRevision.ContratoId),
+                    new SQLiteParameter("@ContratoId", nuevaRevision.IdContrato),
                     new SQLiteParameter("@FechaRevision", nuevaRevision.FechaRevision),
                     new SQLiteParameter("@PrecioAnterior", nuevaRevision.PrecioAnterior),
                     new SQLiteParameter("@PorcentajeRevision", nuevaRevision.PorcentajeRevision),
@@ -259,7 +259,7 @@ namespace Facturar.Servicios
                 var parametrosContrato = new[]
                 {
                     new SQLiteParameter("@NuevoPrecio", nuevaRevision.PrecioRevisado),
-                    new SQLiteParameter("@ContratoId", nuevaRevision.ContratoId)
+                    new SQLiteParameter("@ContratoId", nuevaRevision.IdContrato)
                 };
 
                 var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
@@ -294,7 +294,7 @@ namespace Facturar.Servicios
 
             // Validar que la empresa exista en la base de datos y este activa
             var gestorEmpresas = new GestorEmpresas();
-            var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.EmpresaId);
+            var empresaExistente = gestorEmpresas.ObtenerPorId(contrato.IdEmpresa);
             if(empresaExistente == null || !empresaExistente.Activo)
             {
                 throw new InvalidOperationException("La empresa no existe en la base de datos o esta inactiva.");
@@ -303,7 +303,7 @@ namespace Facturar.Servicios
 
             // Validar que el cliente exista en la base de datos y este activo
             var gestorClientes = new GestorClientes();
-            var clienteExistente = gestorClientes.ObtenerPorId(contrato.ClienteId);
+            var clienteExistente = gestorClientes.ObtenerPorId(contrato.IdCliente);
             if(clienteExistente == null || !clienteExistente.Activo)
             {
                 throw new ArgumentException("El cliente del contrato no existe en la base de datos o esta inactivo.");
@@ -311,14 +311,14 @@ namespace Facturar.Servicios
 
             // Validar que el local exista en la base de datos y este activo
             var gestorLocales = new GestorLocales();
-            var localExistente = gestorLocales.ObtenerPorId(contrato.LocalId);
+            var localExistente = gestorLocales.ObtenerPorId(contrato.IdLocal);
             if(localExistente == null || !localExistente.Activo)
             {
                 throw new InvalidOperationException("El local del contrato no existe en la base de datos o esta inactivo.");
             }
 
             // Valida que el local pertenezca a la empresa
-            if(localExistente.IdEmpresa != contrato.EmpresaId)
+            if(localExistente.IdEmpresa != contrato.IdEmpresa)
             {
                 throw new InvalidOperationException("La empresa asignada no tiene ese local");
             }
@@ -327,7 +327,7 @@ namespace Facturar.Servicios
             contrato.ValidarPropiedadesContrato();
 
             // Si hay algun contrato, se comprueba que no haya uno activo (solo puede haber un contrato activo)
-            var contratosLocal = ListarContratosPorLocal(localId: contrato.LocalId, activos: true);
+            var contratosLocal = ListarContratosPorLocal(localId: contrato.IdLocal, activos: true);
             if(contratosLocal.Any()) // Si hay algun contrato
             {
                 var contratoActivo = ObtenerContratoActivoPorLocal(localId: contrato.Id);
@@ -384,7 +384,7 @@ namespace Facturar.Servicios
             if(clienteId == null && !string.IsNullOrWhiteSpace(clienteNif))
             {
                 var gestorClientes = new GestorClientes();
-                var cliente = gestorClientes.ObtenerPorNIF(clienteNif);
+                var cliente = gestorClientes.ObtenerEmpresaPorNIF(clienteNif);
                 if(cliente == null)
                 {
                     return Enumerable.Empty<Contrato>();

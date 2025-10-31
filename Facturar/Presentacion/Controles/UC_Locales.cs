@@ -99,7 +99,6 @@ namespace Facturar.Presentacion.Controles
 
             // Pasa las columnas al grid base para que las configure
             ConfigurarColumnas<Empresa>(columnas);
-
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
@@ -179,7 +178,6 @@ namespace Facturar.Presentacion.Controles
 
         public void ActualizarLocalSeleccionado()
         {
-            
             if(dgvBase.CurrentRow != null)
             {
                 // Carga el objeto local segun la fila seleccionada

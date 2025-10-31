@@ -65,40 +65,40 @@ namespace Facturar.Infraestructura
 
         static string sqlClientesEmpresas = @"
                     CREATE TABLE IF NOT EXISTS ClientesEmpresas (
-                        ClienteId INTEGER NOT NULL,
-                        EmpresaId INTEGER NOT NULL,
-                        PRIMARY KEY (ClienteId, EmpresaId),
-                        FOREIGN KEY (ClienteId) REFERENCES Clientes(Id),
-                        FOREIGN KEY (EmpresaId) REFERENCES Empresas(Id)
+                        IdCliente INTEGER NOT NULL,
+                        IdEmpresa INTEGER NOT NULL,
+                        PRIMARY KEY (IdCliente, IdEmpresa),
+                        FOREIGN KEY (IdCliente) REFERENCES Clientes(Id),
+                        FOREIGN KEY (IdEmpresa) REFERENCES Empresas(Id)
                     );
                 ";
 
         static string sqlContratos = @"
                     CREATE TABLE IF NOT EXISTS Contratos (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        EmpresaId INTEGER NOT NULL,
-                        ClienteId INTEGER NOT NULL,
-                        LocalId INTEGER NOT NULL,
+                        IdEmpresa INTEGER NOT NULL,
+                        IdCliente INTEGER NOT NULL,
+                        IdLocal INTEGER NOT NULL,
                         PrecioMensual DECIMAL NOT NULL,
                         FechaInicio DATETIME NOT NULL,
                         FechaFin DATETIME,
                         Observaciones TEXT,
-                        FOREIGN KEY(EmpresaId) REFERENCES Empresas(Id),
-                        FOREIGN KEY(ClienteId) REFERENCES Clientes(Id),
-                        FOREIGN KEY(LocalId) REFERENCES Locales(Id)
+                        FOREIGN KEY(IdEmpresa) REFERENCES Empresas(Id),
+                        FOREIGN KEY(IdCliente) REFERENCES Clientes(Id),
+                        FOREIGN KEY(IdLocal) REFERENCES Locales(Id)
                     );
                 ";
 
         static string sqlRevisionesContrato = @"
                     CREATE TABLE IF NOT EXISTS RevisionesContrato (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
-                        ContratoId INTEGER NOT NULL,
+                        IdContrato INTEGER NOT NULL,
                         FechaRevision DATETIME NOT NULL,
                         PrecioAnterior DECIMAL NOT NULL,
                         PorcentajeRevision DECIMAL,
                         PrecioRevisado DECIMAL NOT NULL,
                         Observaciones TEXT,
-                        FOREIGN KEY(ContratoId) REFERENCES Contratos(Id)
+                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id)
                     );
                 ";
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text;
@@ -11,17 +12,47 @@ namespace Facturar.Entidades
 {
     public class Contrato
     {
-        
-
+        [DisplayName("Nº reg.")]
         public int Id { get; set; }
-        public int EmpresaId { get; set; }
-        public int ClienteId { get; set; }
-        public int LocalId { get; set; }
+        public int IdEmpresa { get; set; }
+
+        public Empresa Empresa { get; set; }   // Objeto empresa emisora
+
+        [DisplayName("NIF empresa")]
+        public string NIFEmpresa => Empresa?.NIF ?? string.Empty; // NIF de la empresa emisora
+
+        [DisplayName("Nombre empresa")]
+        public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
+
+        public int IdCliente { get; set; }
+        public Cliente Cliente { get; set; }   // Objeto cliente receptor
+
+        [DisplayName("NIF cliente")]
+        public string NIFCliente => Cliente?.NIF ?? string.Empty; // NIF del cliente receptor
+
+        [DisplayName("Nombre cliente")]
+        public string NombreCliente => Cliente?.Nombre ?? string.Empty; // Nombre del cliente receptor
+
+        public int IdLocal { get; set; }
+        public Local Local { get; set; } // Objeto local contrato
+
+        [DisplayName("Descripcion local")]
+        public string DescripcionLocal => Local.Descripcion ?? string.Empty;
+
+
+        [DisplayName("Precio mensual")]
         public decimal PrecioMensual { get; set; }
+
+        [DisplayName("Fecha inicio")]
         public DateTime FechaInicio { get; set; }
+
+        [DisplayName("Fecha fin")]
         public DateTime? FechaFin { get; set; }
-        public bool Activo => !FechaFin.HasValue || FechaFin.Value.Date > DateTime.Today; // Contrato activo si la FechaFin esta no esta rellena o tiene una fecha posterior a hoy
+        
         public string Observaciones { get; set; } // Notas del contrato
+
+        [Browsable(false)] // Evita mostrarlo en el grid
+        public bool Activo => !FechaFin.HasValue || FechaFin.Value.Date > DateTime.Today; // Contrato activo si la FechaFin esta no esta rellena o tiene una fecha posterior a hoy
 
 
         // Constructor por defecto
@@ -34,9 +65,9 @@ namespace Facturar.Entidades
         public Contrato(Contrato copiaContrato)
         {
             Id = copiaContrato.Id;
-            EmpresaId = copiaContrato.EmpresaId;
-            ClienteId = copiaContrato.ClienteId;
-            LocalId = copiaContrato.LocalId;
+            IdEmpresa = copiaContrato.IdEmpresa;
+            IdCliente = copiaContrato.IdCliente;
+            IdLocal = copiaContrato.IdLocal;
             PrecioMensual = copiaContrato.PrecioMensual;
             FechaInicio = copiaContrato.FechaInicio;
             FechaFin = copiaContrato.FechaFin;
@@ -77,7 +108,7 @@ namespace Facturar.Entidades
     }
     public class RevisionContrato
     {
-        public int ContratoId { get; set; }
+        public int IdContrato { get; set; }
         public DateTime FechaRevision { get; set; } // Fecha en que se revisa el contrato
         public decimal? PrecioAnterior { get; set; } // Precio antes de la revisión
         public decimal? PorcentajeRevision { get; set; } // Porcentaje de revisión aplicado
