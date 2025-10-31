@@ -62,6 +62,7 @@ namespace Facturar.Presentacion.Paneles
                 panelActivos.BringToFront();
             }
             cbEstado.SelectedIndex = 0;
+            cbEstado.Enabled = true; // Habilita el comboBox de activos porque se deshabilita en el proceso de deshabilitar los textbox
         }
     }
 }
