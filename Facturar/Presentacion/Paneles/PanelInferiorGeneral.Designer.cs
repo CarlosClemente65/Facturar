@@ -167,7 +167,7 @@
             // 
             // cbEstado
             // 
-            this.cbEstado.BackColor = System.Drawing.SystemColors.Control;
+            this.cbEstado.BackColor = System.Drawing.Color.White;
             this.cbEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEstado.DropDownWidth = 75;
             this.cbEstado.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

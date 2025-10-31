@@ -309,5 +309,14 @@ namespace Facturar.Presentacion.Controles
                 txtFechaBaja.Focus();
             }
         }
+
+        private void TextBox_ToUpper(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            if(txt != null)
+            {
+                txt.Text = txt.Text.ToUpper();
+            }
+        }
     }
 }

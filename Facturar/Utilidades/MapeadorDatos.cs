@@ -32,7 +32,17 @@ namespace Facturar.Utilidades
                     // Conversion automatica si el tipo es compatible
                     if(valor != null && propiedad.PropertyType != valor.GetType()) // Comprueba si el tipo de la propiedad es distinto del valor de la BBDD
                     {
-                        valor = Convert.ChangeType(valor, Nullable.GetUnderlyingType(propiedad.PropertyType) ?? propiedad.PropertyType);
+                        var tipoProp = Nullable.GetUnderlyingType(propiedad.PropertyType) ?? propiedad.PropertyType;
+
+                        // Conversión específica para enums
+                        if(tipoProp.IsEnum)
+                        {
+                            valor = Enum.Parse(tipoProp, valor.ToString(), ignoreCase: true);
+                        }
+                        else
+                        {
+                            valor = Convert.ChangeType(valor, tipoProp);
+                        }
                     }
 
                     propiedad.SetValue(objeto, valor);

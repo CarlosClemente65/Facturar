@@ -172,6 +172,9 @@ namespace Facturar.Presentacion
                 // Boton Alta
                 general.AltaClicked += (s, e) =>
                 {
+                    // Selecciona el tipo de proceso
+                    tipoProceso = Enumerador.TipoProceso.Alta;
+
                     // Habilita el panel de edicion
                     AlternarPanelInferior(panelEdicion);
 
@@ -181,14 +184,10 @@ namespace Facturar.Presentacion
                     // Limpiar los TextBoxes para poder introducir datos del alta
                     Utiles.LimpiarTextBoxes(contenedor: this);
 
-                    tipoProceso = Enumerador.TipoProceso.Alta;
-
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonAlta.Ejecutar(entidadActiva);
 
-                    // Deja el estado de los registros como activo
-                    panelGeneral.MostrarActivos(visible: true);
                 };
 
                 // Boton Baja
@@ -201,28 +200,24 @@ namespace Facturar.Presentacion
                     var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
                     botonBaja.Ejecutar(entidadActiva: entidadActiva);
 
-                    // Deja el proceso libre para siguientes procesos
-                    tipoProceso = Enumerador.TipoProceso.Ninguno;
-
-                    // Deja el estado de los registros como activo
-                    panelGeneral.MostrarActivos(visible: true);
                 };
 
                 // Boton edicion
                 general.EditarClicked += (s, e) =>
                 {
+                    // Selecciona el tipo de proceso
+                    tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Habilita el panel de edicion
                     AlternarPanelInferior(panelEdicion);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
 
-                    // Selecciona el tipo de proceso
-                    tipoProceso = Enumerador.TipoProceso.Edicion;
-
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
                     botonEditar.Ejecutar(entidadActiva);
+
                 };
 
                 // Proceso al seleccionar estado
@@ -248,17 +243,13 @@ namespace Facturar.Presentacion
                 // Procesos para eliminar
                 general.EliminarClicked += (s, e) =>
                 {
+                    // Selecciona el tipo de proceso
                     tipoProceso = Enumerador.TipoProceso.Eliminacion;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
                     botonEliminar.Ejecutar(entidadActiva: entidadActiva);
 
-                    // Deja el proceso libre para siguientes procesos
-                    tipoProceso = Enumerador.TipoProceso.Ninguno;
-
-                    // Deja el estado de los registros como activo
-                    panelGeneral.MostrarActivos(visible: true);
                 };
             }
             else if(panel is PanelInferior_Edicion edicion)
@@ -275,6 +266,12 @@ namespace Facturar.Presentacion
 
                     // Deshabilitar los TextBox
                     Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+
+                    // Deja el proceso libre para siguientes procesos
+                    tipoProceso = Enumerador.TipoProceso.Ninguno;
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
                 };
 
                 // Procesos al validar la edicion
@@ -295,9 +292,13 @@ namespace Facturar.Presentacion
                         // Deshabilitar los TextBox
                         Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
-                        // Inicializa el tipo de proceso para siguientes acciones.
+                        // Deja el proceso libre para siguientes procesos
                         tipoProceso = Enumerador.TipoProceso.Ninguno;
+
+                        // Deja el estado de los registros como activo
+                        panelGeneral.MostrarActivos(visible: true);
                     }
+
                 };
 
             }
@@ -307,6 +308,9 @@ namespace Facturar.Presentacion
                 // Boton Alta
                 facturas.AltaClicked += (s, e) =>
                 {
+                    // Selecciona el tipo de proceso
+                    tipoProceso = Enumerador.TipoProceso.Alta;
+
                     // Habilita el panel de edicion
                     AlternarPanelInferior(panelEdicion);
 
@@ -315,8 +319,6 @@ namespace Facturar.Presentacion
 
                     // Limpiar los TextBoxes para poder introducir datos del alta
                     Utiles.LimpiarTextBoxes(contenedor: this);
-
-                    tipoProceso = Enumerador.TipoProceso.Alta;
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
@@ -354,7 +356,6 @@ namespace Facturar.Presentacion
         private void btnAbrirPanel_Click(object sender, EventArgs e)
         {
             // Animacion para expandir / ocultar panel lateral
-            //CambiarEstadoPanelLateral();
             timerLateral.Start();
             panelLateral.BringToFront();
             if(!panelLateralVisible)
@@ -462,7 +463,7 @@ namespace Facturar.Presentacion
         {
             ucClientes.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            
+
             // Evita abrir varias veces el panelGeneral
             if(panelGeneral.Visible == false)
             {
@@ -522,7 +523,6 @@ namespace Facturar.Presentacion
             panelGeneral.Visible = true;
             CargarPanelCentral(ucConfiguracion, Enumerador.TipoEntidad.Configurar);
         }
-
 
         private void btnInicio_Click(object sender, EventArgs e)
         {

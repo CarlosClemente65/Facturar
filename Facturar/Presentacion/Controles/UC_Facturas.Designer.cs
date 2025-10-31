@@ -121,6 +121,8 @@
             this.txtCuotaIVA.Size = new System.Drawing.Size(80, 22);
             this.txtCuotaIVA.TabIndex = 8;
             this.txtCuotaIVA.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCuotaIVA.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtCuotaIVA.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label7
             // 
@@ -144,6 +146,8 @@
             this.txtBaseFactura.Size = new System.Drawing.Size(80, 22);
             this.txtBaseFactura.TabIndex = 7;
             this.txtBaseFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtBaseFactura.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtBaseFactura.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label8
             // 
@@ -167,6 +171,7 @@
             this.txtFechaFactura.Size = new System.Drawing.Size(80, 22);
             this.txtFechaFactura.TabIndex = 4;
             this.txtFechaFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaFactura.Leave += new System.EventHandler(this.txtFechaFactura_Leave);
             // 
             // label3
             // 
@@ -189,6 +194,7 @@
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
             this.txtNombreEmpresa.Size = new System.Drawing.Size(352, 22);
             this.txtNombreEmpresa.TabIndex = 1;
+            this.txtNombreEmpresa.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // lblNombre
             // 
@@ -212,6 +218,7 @@
             this.txtNifEmpresa.Size = new System.Drawing.Size(100, 22);
             this.txtNifEmpresa.TabIndex = 0;
             this.txtNifEmpresa.Tag = "primerCampo";
+            this.txtNifEmpresa.Leave += new System.EventHandler(this.txtNifEmpresa_Leave);
             // 
             // label2
             // 
@@ -234,6 +241,7 @@
             this.txtNombreCliente.Name = "txtNombreCliente";
             this.txtNombreCliente.Size = new System.Drawing.Size(352, 22);
             this.txtNombreCliente.TabIndex = 3;
+            this.txtNombreCliente.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label1
             // 
@@ -257,6 +265,7 @@
             this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
             this.txtNifCliente.TabIndex = 2;
             this.txtNifCliente.Tag = "";
+            this.txtNifCliente.Leave += new System.EventHandler(this.txtNifCliente_Leave);
             // 
             // label4
             // 
@@ -280,6 +289,8 @@
             this.txtCuotaIRPF.Size = new System.Drawing.Size(80, 22);
             this.txtCuotaIRPF.TabIndex = 9;
             this.txtCuotaIRPF.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtCuotaIRPF.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtCuotaIRPF.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label5
             // 
@@ -303,6 +314,8 @@
             this.txtTotalFactura.Size = new System.Drawing.Size(80, 22);
             this.txtTotalFactura.TabIndex = 10;
             this.txtTotalFactura.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtTotalFactura.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtTotalFactura.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label9
             // 
@@ -339,6 +352,7 @@
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(218, 49);
             this.txtObservaciones.TabIndex = 11;
+            this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label10
             // 

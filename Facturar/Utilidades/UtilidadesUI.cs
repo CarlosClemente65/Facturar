@@ -97,6 +97,11 @@ namespace Facturar.Utilidades
                     dt.Enabled = habilitar;
                 }
 
+                else if(ctrl is ComboBox cb)
+                {
+                    cb.Enabled = habilitar;
+                }
+
                 // Recursión para controles hijos
                 if(ctrl.HasChildren)
                 {

@@ -93,6 +93,7 @@
             this.txtNif.Size = new System.Drawing.Size(100, 22);
             this.txtNif.TabIndex = 3;
             this.txtNif.Tag = "primerCampo";
+            this.txtNif.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // txtNombreEmpresa
             // 
@@ -103,6 +104,7 @@
             this.txtNombreEmpresa.Name = "txtNombreEmpresa";
             this.txtNombreEmpresa.Size = new System.Drawing.Size(439, 22);
             this.txtNombreEmpresa.TabIndex = 5;
+            this.txtNombreEmpresa.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // lblNombre
             // 
@@ -173,6 +175,7 @@
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(398, 22);
             this.txtDireccion.TabIndex = 11;
+            this.txtDireccion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label5
             // 
@@ -218,6 +221,7 @@
             this.txtProvincia.Name = "txtProvincia";
             this.txtProvincia.Size = new System.Drawing.Size(130, 22);
             this.txtProvincia.TabIndex = 17;
+            this.txtProvincia.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label7
             // 
@@ -240,6 +244,7 @@
             this.txtPoblacion.Name = "txtPoblacion";
             this.txtPoblacion.Size = new System.Drawing.Size(130, 22);
             this.txtPoblacion.TabIndex = 15;
+            this.txtPoblacion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label8
             // 
@@ -306,6 +311,7 @@
             this.txtPersonaContacto.Name = "txtPersonaContacto";
             this.txtPersonaContacto.Size = new System.Drawing.Size(244, 22);
             this.txtPersonaContacto.TabIndex = 23;
+            this.txtPersonaContacto.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label11
             // 

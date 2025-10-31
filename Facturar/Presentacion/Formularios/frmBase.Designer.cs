@@ -138,7 +138,7 @@
             this.btnFacturas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnFacturas.Image = global::Facturar.Properties.Resources.Factura_black;
             this.btnFacturas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnFacturas.Location = new System.Drawing.Point(0, 310);
+            this.btnFacturas.Location = new System.Drawing.Point(0, 300);
             this.btnFacturas.Name = "btnFacturas";
             this.btnFacturas.Size = new System.Drawing.Size(105, 60);
             this.btnFacturas.TabIndex = 6;
@@ -178,7 +178,7 @@
             this.btnContratos.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnContratos.Image = global::Facturar.Properties.Resources.Contratos2_black;
             this.btnContratos.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnContratos.Location = new System.Drawing.Point(0, 245);
+            this.btnContratos.Location = new System.Drawing.Point(0, 235);
             this.btnContratos.Name = "btnContratos";
             this.btnContratos.Size = new System.Drawing.Size(105, 60);
             this.btnContratos.TabIndex = 4;
@@ -198,7 +198,7 @@
             this.btnLocales.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnLocales.Image = global::Facturar.Properties.Resources.Locales_black;
             this.btnLocales.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnLocales.Location = new System.Drawing.Point(0, 180);
+            this.btnLocales.Location = new System.Drawing.Point(0, 105);
             this.btnLocales.Name = "btnLocales";
             this.btnLocales.Size = new System.Drawing.Size(105, 60);
             this.btnLocales.TabIndex = 3;
@@ -218,7 +218,7 @@
             this.btnClientes.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnClientes.Image = global::Facturar.Properties.Resources.Clientes_black;
             this.btnClientes.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnClientes.Location = new System.Drawing.Point(0, 115);
+            this.btnClientes.Location = new System.Drawing.Point(0, 170);
             this.btnClientes.Name = "btnClientes";
             this.btnClientes.Size = new System.Drawing.Size(105, 60);
             this.btnClientes.TabIndex = 2;
@@ -238,7 +238,7 @@
             this.btnEmpresas.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEmpresas.Image = global::Facturar.Properties.Resources.Empresa_black;
             this.btnEmpresas.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnEmpresas.Location = new System.Drawing.Point(0, 50);
+            this.btnEmpresas.Location = new System.Drawing.Point(0, 40);
             this.btnEmpresas.Margin = new System.Windows.Forms.Padding(0);
             this.btnEmpresas.Name = "btnEmpresas";
             this.btnEmpresas.Size = new System.Drawing.Size(105, 60);

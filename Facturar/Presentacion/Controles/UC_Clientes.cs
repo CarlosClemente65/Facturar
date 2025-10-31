@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using static Facturar.Utilidades.Enumeradores;
 using Enumerador = Facturar.Utilidades.Enumeradores;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -302,6 +303,43 @@ namespace Facturar.Presentacion.Controles
             {
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaBaja.Focus();
+            }
+        }
+
+        internal void ActualizaPropiedadesClientes(Cliente cliente, Enumerador.TipoProceso tipoProceso)
+        {
+            if(cliente == null)
+            {
+                throw new ArgumentNullException("No se han pasado datos del cliente para actualizar");
+            }
+
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
+                cliente.NIF = txtNifCliente.Text;  // No se permite modificar el NIF
+                cliente.Nombre = txtNombreCliente.Text; // No se permite modificar el nombre
+            }
+
+            // Campos comunes en el alta y edicion
+            cliente.Direccion = txtDireccion.Text;
+            cliente.CodigoPostal = txtCodigoPostal.Text;
+            cliente.Poblacion = txtPoblacion.Text;
+            cliente.Provincia = txtProvincia.Text;
+            cliente.Telefono = txtTelefono.Text;
+            cliente.Email = txtEmail.Text;
+            cliente.PersonaContacto = txtPersonaContacto.Text;
+            cliente.FechaAlta = DateTime.ParseExact(txtFechaAlta.Text, "dd.MM.yyyy", null);
+            cliente.FormaPago = (Cliente.FormasPago)cbFormaPago.SelectedItem;
+            cliente.IBAN = txtIban.Text;
+            cliente.Observaciones = txtObservaciones.Text;
+        }
+
+        private void TextBox_ToUpper(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            if(txt != null)
+            {
+                txt.Text = txt.Text.ToUpper();
             }
         }
 

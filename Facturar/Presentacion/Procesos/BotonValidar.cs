@@ -19,6 +19,10 @@ namespace Facturar.Presentacion.Procesos
         GestorFacturas gestorFacturas;
         TipoProceso tipoProceso;
 
+        // Mensaje para mostrar en el aviso de correcto o incorrecto.
+        string mensajeOk = string.Empty;
+        string mensajeKo = string.Empty;
+
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
         public BotonValidar
         (UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas, frmBase formulario)
@@ -38,11 +42,7 @@ namespace Facturar.Presentacion.Procesos
         // Procesos a ejecutar segun el tipo de entidad (el parametro estado no se usa aqui).
         public override void Ejecutar(TipoEntidad entidadActiva, bool? estado = true)
         {
-            // Mensaje para mostrar en el aviso de correcto o incorrecto.
-            string mensajeOk = string.Empty;
-            string mensajeKo = string.Empty;
-
-            ProcesarEntidad(entidadActiva, tipoProceso, ref mensajeOk, ref mensajeKo);
+            ProcesarEntidad(entidadActiva, tipoProceso);
 
             // Mostrar mensajes segun corresponda
             if(!string.IsNullOrEmpty(mensajeOk) && !formulario.errorProceso)
@@ -58,7 +58,7 @@ namespace Facturar.Presentacion.Procesos
         }
 
         // Procesado de las entidades segun la accion
-        private void ProcesarEntidad(TipoEntidad entidadActiva, TipoProceso tipoProceso, ref string mensajeOk, ref string mensajeKo)
+        private void ProcesarEntidad(TipoEntidad entidadActiva, TipoProceso tipoProceso)
         {
             // Copia de los objetos por si hay error en la edicion
             Empresa copiaEmpresa = null; // Copia de la empresa por si hay error en la edicion
@@ -83,7 +83,7 @@ namespace Facturar.Presentacion.Procesos
                 {
                     case TipoEntidad.Empresa:
                         // Ejecucion del proceso al validar la empresa
-                        EjecutarProcesoEmpresa(gestorEmpresas, tipoProceso, ref mensajeOk, ref copiaEmpresa, ref empresa);
+                        EjecutarProcesoEmpresa(gestorEmpresas, tipoProceso, ref copiaEmpresa, ref empresa);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -101,7 +101,7 @@ namespace Facturar.Presentacion.Procesos
 
                     case Enumerador.TipoEntidad.Local:
                         // Ejecucion del proceso al validar el local
-                        EjecutarProcesoLocal(gestorLocales, tipoProceso, ref mensajeOk, ref copiaLocal, ref local);
+                        EjecutarProcesoLocal(gestorLocales, tipoProceso, ref copiaLocal, ref local);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -119,7 +119,7 @@ namespace Facturar.Presentacion.Procesos
 
                     case Enumerador.TipoEntidad.Cliente:
                         // Ejecucion del proceso al validar el cliente
-                        EjecutarProcesoCliente(gestorClientes, tipoProceso, ref mensajeOk, ref copiaCliente, ref cliente);
+                        EjecutarProcesoCliente(gestorClientes, tipoProceso, ref copiaCliente, ref cliente);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -136,7 +136,7 @@ namespace Facturar.Presentacion.Procesos
 
                     case Enumerador.TipoEntidad.Contrato:
                         // Ejecucion del proceso al validar el contrato
-                        EjecutarProcesoContrato(gestorContratos, tipoProceso, ref mensajeOk, ref copiaContrato, ref contrato);
+                        EjecutarProcesoContrato(gestorContratos, tipoProceso, ref copiaContrato, ref contrato);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -154,7 +154,7 @@ namespace Facturar.Presentacion.Procesos
 
                     case Enumerador.TipoEntidad.Factura:
                         // Ejecucion del proceso al validar la factura
-                        EjecutarProcesoFactura(gestorFacturas, tipoProceso, ref mensajeOk, ref copiaFactura, ref factura);
+                        EjecutarProcesoFactura(gestorFacturas, tipoProceso, ref copiaFactura, ref factura);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -217,7 +217,7 @@ namespace Facturar.Presentacion.Procesos
         }
 
         // Metodo para ejecutar los procesos de editar o alta de una empresa
-        private void EjecutarProcesoEmpresa(GestorEmpresas gestorEmpresas, TipoProceso tipoProceso, ref string mensajeSalida, ref Empresa copiaEmpresa, ref Empresa empresa)
+        private void EjecutarProcesoEmpresa(GestorEmpresas gestorEmpresas, TipoProceso tipoProceso, ref Empresa copiaEmpresa, ref Empresa empresa)
         {
             switch(tipoProceso)
             {
@@ -235,7 +235,7 @@ namespace Facturar.Presentacion.Procesos
                     gestorEmpresas.Actualizar(empresa);
 
                     // Mensaje de proceso correcto
-                    mensajeSalida = "Empresa actualizada correctamente.";
+                    mensajeOk = "Empresa actualizada correctamente.";
 
                     break;
 
@@ -250,14 +250,14 @@ namespace Facturar.Presentacion.Procesos
                     gestorEmpresas.Agregar(empresa);
 
                     // Mensaje de proceso correcto
-                    mensajeSalida = "Empresa creada correctamente.";
+                    mensajeOk = "Empresa creada correctamente.";
 
                     break;
             }
         }
 
         // Metodo para ejecutar los procesos de editar o alta de un local
-        private void EjecutarProcesoLocal(GestorLocales gestorLocales, TipoProceso tipoProceso, ref string mensajeSalida, ref Local copiaLocal, ref Local local)
+        private void EjecutarProcesoLocal(GestorLocales gestorLocales, TipoProceso tipoProceso, ref Local copiaLocal, ref Local local)
         {
             switch(tipoProceso)
             {
@@ -276,7 +276,7 @@ namespace Facturar.Presentacion.Procesos
                     gestorLocales.Actualizar(local);
 
                     // Mensaje de proceso correcto
-                    mensajeSalida = "Local actualizado correctamente.";
+                    mensajeOk = "Local actualizado correctamente.";
 
                     break;
 
@@ -291,43 +291,67 @@ namespace Facturar.Presentacion.Procesos
                     gestorLocales.Agregar(local);
 
                     // Mensaje de proceso correcto
-                    mensajeSalida = "Local creado correctamente.";
+                    mensajeOk = "Local creado correctamente.";
 
                     break;
             }
         }
 
         // Metodo para ejecutar los procesos de editar o alta de un cliente
-        private void EjecutarProcesoCliente(GestorClientes gestorClientes, TipoProceso tipoProceso, ref string mensajeOk, ref Cliente copiaCliente, ref Cliente cliente)
+        private void EjecutarProcesoCliente(GestorClientes gestorClientes, TipoProceso tipoProceso, ref Cliente copiaCliente, ref Cliente cliente)
         {
             switch (tipoProceso)
             {
                 case TipoProceso.Edicion:
-                    // TODO: Implementar el proceso de validar la edicion de clientes
+                    // Se obtiene el cliente seleccioando
+                    cliente = ucClientes.ClienteActual;
+
+                    // Hacemos una copia del cliente actual por si la edicion falla
+                    copiaCliente = new Cliente(cliente);
+
+                    // Se actualizan las propiedades segun los campos de la pantalla
+                    ucClientes.ActualizaPropiedadesClientes(cliente, TipoProceso.Edicion);
+
+                    // Graba los cambios en la base de datos
+                    gestorClientes.Actualizar(cliente);
+
+                    // Mensaje de proceso correcto
+                    mensajeOk = "Cliente actualizado correctamente.";
+
                     break;
 
-                    case TipoProceso.Alta: 
-                    // TODO: Implementar el proceso de validar el alta de clientes
+                    case TipoProceso.Alta:
+                    // Crea un nuevo cliente
+                    cliente= new Cliente();
+
+                    // Se graban las propiedades segun los campos de la pantalla
+                    ucClientes.ActualizaPropiedadesCliente(cliente, TipoProceso.Alta);
+
+                    // Agrega el nuevo cliente a la base de datos
+                    gestorClientes.Agregar(cliente);
+
+                    // Mensaje de proceso correcto
+                    mensajeOk = "Cliente creado correctamente.";
                     break;
             }
         }
 
         // Metodo para ejecutar los procesos de editar o alta de un contrato
-        private void EjecutarProcesoContrato(GestorContratos gestorContratos, TipoProceso tipoProceso, ref string mensajeOk, ref Contrato copiaContrato, ref Contrato contrato)
+        private void EjecutarProcesoContrato(GestorContratos gestorContratos, TipoProceso tipoProceso, ref Contrato copiaContrato, ref Contrato contrato)
         {
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
-
+                    //TODO : Implementar el proceso de validar la edicion de contratos
                     break;
 
                 case TipoProceso.Alta:
-
+                    //TODO : Implementar el proceso de validar el alta de contratos
                     break;
             }
         }
 
-        private void EjecutarProcesoFactura(GestorFacturas gestorFacturas, TipoProceso tipoProceso, ref string mensajeOk, ref Factura copiaFactura, ref Factura factura)
+        private void EjecutarProcesoFactura(GestorFacturas gestorFacturas, TipoProceso tipoProceso, ref Factura copiaFactura, ref Factura factura)
         {
             switch(tipoProceso)
             {

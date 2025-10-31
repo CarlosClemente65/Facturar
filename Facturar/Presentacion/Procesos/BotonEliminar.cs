@@ -30,7 +30,7 @@ namespace Facturar.Presentacion.Procesos
 
             // Mensaje de confirmacion de la baja
             DialogResult resultado = MessageBox.Show("Esta seguro de eliminar el registro de la base de datos \n(no se podrá recuperar)", "Eliminar registro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            
+
             string mensajeOk = string.Empty;
             string mensajeKo = string.Empty;
 
@@ -113,7 +113,7 @@ namespace Facturar.Presentacion.Procesos
                             gestorContratos.Eliminar(contratoId: ucContratos.ContratoActual.Id);
 
                             // Muestra mensaje de proceso correcto
-                           mensajeOk = "Eliminado el contrato de la base de datos.";
+                            mensajeOk = "Eliminado el contrato de la base de datos.";
                         }
                         catch(Exception ex)
                         {
@@ -146,5 +146,6 @@ namespace Facturar.Presentacion.Procesos
                 // Muestra mensaje de error
                 MessageBox.Show(mensajeKo, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        }
     }
 }

@@ -138,7 +138,7 @@ namespace Facturar.Utilidades
                         cliente.Telefono = "666111111";
                         cliente.Email = "correo@correo.com";
                         cliente.PersonaContacto = "Persona contacto primero";
-                        cliente.FormaPago = Cliente.FormasPago.Domiciliacion.ToString();
+                        cliente.FormaPago = Cliente.FormasPago.Domiciliacion;
                         cliente.Observaciones = "Observaciones del cliente 1";
 
                         resultado = gestor.Agregar(cliente);
@@ -153,7 +153,7 @@ namespace Facturar.Utilidades
                         cliente.Email = "correo@correo.com";
                         cliente.FechaAlta = Utiles.ValidarFecha("15/05/2025");
                         cliente.PersonaContacto = "Persona contacto segundo";
-                        cliente.FormaPago = Cliente.FormasPago.Transferencia.ToString();
+                        cliente.FormaPago = Cliente.FormasPago.Transferencia;
                         cliente.Observaciones = "Observaciones del cliente 2";
 
                         resultado = gestor.Agregar(cliente);
@@ -174,7 +174,7 @@ namespace Facturar.Utilidades
                         cliente.Telefono = "666333222";
                         cliente.Email = "correo@correo.com";
                         cliente.PersonaContacto = "Persona contacto";
-                        cliente.FormaPago = Cliente.FormasPago.Transferencia.ToString();
+                        cliente.FormaPago = Cliente.FormasPago.Transferencia;
                         cliente.IBAN = "ES6601822032002200231234";
                         cliente.Observaciones = "Cliente de pruebas modificado";
 

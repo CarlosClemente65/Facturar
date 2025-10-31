@@ -5,8 +5,9 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -259,6 +260,68 @@ namespace Facturar.Presentacion.Controles
             */
         }
 
-        
+        private void TextBox_ToUpper(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+            if(txt != null)
+            {
+                txt.Text = txt.Text.ToUpper();
+            }
+        }
+
+        private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            Utiles.ValidarImporte(sender as TextBox, e);
+        }
+
+        private void txtImporte_Leave(object sender, EventArgs e)
+        {
+            Utiles.FormatearImporte(sender as TextBox);
+        }
+
+        private void txtFechaFactura_Leave(object sender, EventArgs e)
+        {
+            // Validacion de la fecha de factura
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            DateTime fechaValida;
+
+            bool esValida = DateTime.TryParseExact(
+                txtFechaFactura.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out fechaValida                                     // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaFactura.Focus();
+            }
+        }
+
+        private void txtNifEmpresa_Leave(object sender, EventArgs e)
+        {
+            txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
+            txtNombreEmpresa.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+        }
+
+        private Empresa ObtenerEmpresaPorNif(string nif)
+        {
+            var gestorEmpresas = new GestorEmpresas();
+            return gestorEmpresas.ObtenerPorNIF(nif);
+        }
+
+        private void txtNifCliente_Leave(object sender, EventArgs e)
+        {
+            txtNifCliente.Text = txtNifCliente.Text.ToUpper();
+            txtNombreCliente.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+        }
+
+        private Cliente ObtenerClientePorNif(string nif)
+        {
+            var gestorClientes = new GestorClientes();
+            return gestorClientes.ObtenerPorNIF(nif);
+        }
     }
 }
