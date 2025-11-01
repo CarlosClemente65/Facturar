@@ -28,6 +28,13 @@ namespace Facturar.Presentacion.Controles
         public UC_Locales()
         {
             InitializeComponent();
+
+            // Activa doble buffering para evitar parpadeo al dibujar los controles
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.UpdateStyles();
         }
 
         // Propiedad publica para ver el local seleccionado en el grid

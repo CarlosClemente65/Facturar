@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Facturar.Presentacion.Paneles
@@ -15,6 +16,16 @@ namespace Facturar.Presentacion.Paneles
         {
             get => panelActivos.Visible;
             set => panelActivos.Visible = value;
+        }
+
+
+        public PanelInferior_general()
+        {
+            InitializeComponent();
+            cbEstado.FlatStyle = FlatStyle.Flat;
+            cbEstado.BackColor = Color.Wheat;
+            cbEstado.ForeColor = Color.Black;
+            cbEstado.SelectedItem = "Activos";
         }
 
 
@@ -48,11 +59,7 @@ namespace Facturar.Presentacion.Paneles
         {
             get { return cbEstado.SelectedItem?.ToString(); }
         }
-        public PanelInferior_general()
-        {
-            InitializeComponent();
-            cbEstado.SelectedItem = "Activos";
-        }
+        
 
         public void MostrarActivos(bool visible)
         {

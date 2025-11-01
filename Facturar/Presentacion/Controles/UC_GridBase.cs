@@ -25,7 +25,7 @@ namespace Facturar.Presentacion.Controles
         // Aplica el color de fondo de las filas seleccionadas (necesario para aplicar el efecto de bloqueo)
         private void ConfigurarGrid()
         {
-            GridBase.DefaultCellStyle.SelectionBackColor = Color.OldLace;
+            GridBase.DefaultCellStyle.SelectionBackColor = Color.Wheat;
             GridBase.DefaultCellStyle.SelectionForeColor = Color.Black;
         }
 

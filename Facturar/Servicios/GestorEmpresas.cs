@@ -190,6 +190,12 @@ namespace Facturar.Servicios
                 throw new InvalidOperationException("La empresa no existe en la base de datos.");
             }
 
+            // Verifica que la empresa esté activa
+            if(!empresa.Activo)
+            {
+                throw new InvalidOperationException("La empresa ya está dada de baja.");
+            }
+
             try
             {
                 // Graba la fecha de baja en la propiedad de la empresa

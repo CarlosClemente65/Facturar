@@ -62,6 +62,14 @@ namespace Facturar.Presentacion
         public frmBase()
         {
             InitializeComponent();
+
+            // Activa doble buffering para evitar parpadeo al dibujar los controles
+            this.DoubleBuffered = true;
+            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
+            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
+            this.SetStyle(ControlStyles.UserPaint, true);
+            this.UpdateStyles();
+
         }
 
         private void frmBase_Load(object sender, EventArgs e)

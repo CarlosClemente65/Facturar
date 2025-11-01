@@ -201,6 +201,12 @@ namespace Facturar.Servicios
                 throw new InvalidOperationException("El cliente no existe en la base de datos.");
             }
 
+            // Verifica que el cliente esté activo
+            if(!cliente.Activo)
+            {
+                throw new InvalidOperationException("La empresa ya está dada de baja.");
+            }
+
             try
             {
                 // Graba la fecha de baja en la propiedad del cliente

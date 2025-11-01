@@ -264,8 +264,6 @@
             // 
             // panelCentral
             // 
-            this.panelCentral.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
             this.panelCentral.BackColor = System.Drawing.Color.Tan;
             this.panelCentral.Location = new System.Drawing.Point(4, 44);
             this.panelCentral.Name = "panelCentral";
