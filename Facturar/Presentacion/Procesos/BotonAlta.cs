@@ -46,7 +46,12 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
-                    //gestorContratos.Agregar(); // Pendiente de desarrollo
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucContratos.BloqueoTextBoxAlta();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: true);
+
                     break;
 
                 case Enumerador.TipoEntidad.Factura:

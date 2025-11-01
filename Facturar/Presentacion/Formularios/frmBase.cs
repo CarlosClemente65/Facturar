@@ -259,6 +259,8 @@ namespace Facturar.Presentacion
                 {
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonCancelar = new Proceso.BotonCancelar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
+
+                    // Ejecuta las acciones establecidas en el boton
                     botonCancelar.Ejecutar(entidadActiva);
 
                     // Muestra el panel de botones estandard

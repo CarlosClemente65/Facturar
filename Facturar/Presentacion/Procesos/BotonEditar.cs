@@ -56,8 +56,15 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
+                    // Deshabilita los TextBox que no se pueden editar
+                    ucContratos.BloqueoTextBoxEdicion();
+
                     // Actualiza el contrato seleccionado en UC_Contratos
-                    ucContratos.ActualizarContratoSeleccionado();// Pendiente de desarrollo
+                    ucContratos.ActualizarContratoSeleccionado();
+
+                    // Aplica el efecto de bloqueo de edicion
+                    Utiles.BloqueoEdicionDgv(_grid: ucClientes.GridBase, bloquear: true);
+
                     break;
 
                 case Enumerador.TipoEntidad.Factura:

@@ -60,10 +60,8 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
-                    /* Pendiente desarrollo
-                      
                     // Habilita el grid de contratos
-                    //ucContratos.GridBase.Enabled = true; 
+                    ucContratos.GridBase.Enabled = true;
 
                     // Quita el efecto de bloqueo de edicion
                     Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: false);
@@ -71,7 +69,6 @@ namespace Facturar.Presentacion.Procesos
                     // Refresca el grid de contratos
                     ucContratos.CargarContratos();
 
-                    */
                     break;
 
                 case Enumerador.TipoEntidad.Factura:

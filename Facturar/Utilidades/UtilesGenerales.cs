@@ -21,11 +21,18 @@ namespace Facturar.Utilidades
         /// <returns>Fecha formateada a DateTime o null</returns>
         public static DateTime? ConvertirFecha(string fecha)
         {
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
             if(string.IsNullOrWhiteSpace(fecha))
             {
                 return null;
             }
-            if(DateTime.TryParseExact(fecha, "dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture, System.Globalization.DateTimeStyles.None, out DateTime fechaConvertida))
+            if(DateTime.TryParseExact(
+                fecha, 
+                formatosValidos, 
+                System.Globalization.CultureInfo.InvariantCulture, 
+                System.Globalization.DateTimeStyles.None, 
+                out DateTime fechaConvertida)
+                )
             {
                 return fechaConvertida.Date;
             }

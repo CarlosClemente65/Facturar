@@ -25,9 +25,9 @@ namespace Facturar.Servicios
             // Inserta el nuevo contrato en la base de datos
             var parametros = new[]
             {
-                    new SQLiteParameter("@EmpresaId", contrato.IdEmpresa),
-                    new SQLiteParameter("@ClienteId", contrato.IdCliente),
-                    new SQLiteParameter("@LocalId", contrato.IdLocal),
+                    new SQLiteParameter("@IdEmpresa", contrato.IdEmpresa),
+                    new SQLiteParameter("@IdCliente", contrato.IdCliente),
+                    new SQLiteParameter("@IdLocal", contrato.IdLocal),
                     new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
                     new SQLiteParameter("@FechaInicio", contrato.FechaInicio.Date),
                     new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
@@ -37,9 +37,9 @@ namespace Facturar.Servicios
             // Ejecuta el comando y obtiene el numero de filas insertadas
             string sqlInsertarContrato =
                 "INSERT INTO Contratos " +
-                "(EmpresaId, ClienteId, LocalId, PrecioMensual, FechaInicio, FechaFin, Observaciones) " +
+                "(IdEmpresa, IdCliente, IdLocal, PrecioMensual, FechaInicio, FechaFin, Observaciones) " +
                "VALUES " +
-               "(@EmpresaId, @ClienteId, @LocalId, @PrecioMensual, @FechaInicio, @FechaFin, @Observaciones)";
+               "(@IdEmpresa, @IdCliente, @IdLocal, @PrecioMensual, @FechaInicio, @FechaFin, @Observaciones)";
 
             var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlInsertarContrato, parametros));
 
@@ -80,16 +80,17 @@ namespace Facturar.Servicios
                 }
 
                 // Inserta el nuevo contrato en la base de datos
-                // Nota: Solo se permite añadir la fecha de fin o modificar los comentarios
+                // Nota: Solo se permite añadir la fecha de fin, el importe o modificar los comentarios
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", contrato.Id),
+                    new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
                     new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
                     new SQLiteParameter("@Observaciones", contrato.Observaciones)
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas actualizadas
-                string sqlActualizarContrato = "UPDATE Contratos SET FechaFin= @FechaFin, Observaciones = @Observaciones WHERE Id = @Id";
+                string sqlActualizarContrato = "UPDATE Contratos SET FechaFin = @FechaFin, PrecioMensual = @PrecioMensual, Observaciones = @Observaciones WHERE Id = @Id";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlActualizarContrato, parametros));
 
@@ -122,14 +123,14 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite dar de baja un contrato estableciendo su fecha de fin
         /// </summary>
-        /// <param name="contratoId"></param>
+        /// <param name="idCcontrato"></param>
         /// <param name="fechaBaja"></param>
         /// <returns></returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool Baja(int contratoId, DateTime? fechaBaja = null)
+        public bool Baja(int idCcontrato, DateTime? fechaBaja = null)
         {
             // Verifica que exista el contrato
-            var contrato = ObtenerPorId(contratoId);
+            var contrato = ObtenerPorId(idCcontrato);
             if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos.");
@@ -168,13 +169,13 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite eliminar un contrato de la base de datos
         /// </summary>
-        /// <param name="contratoId"></param>
+        /// <param name="idContrato"></param>
         /// <returns>True si se ha podido eliminar el contrato</returns>
         /// <exception cref="InvalidOperationException"></exception>
-        public bool Eliminar(int contratoId)
+        public bool Eliminar(int idContrato)
         {
             // Verifica que exista el contrato
-            var contrato = ObtenerPorId(contratoId);
+            var contrato = ObtenerPorId(idContrato);
             if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos.");
@@ -234,7 +235,7 @@ namespace Facturar.Servicios
             {
                 // Asignacion de valores a parametros
                 var parametros = new[] {
-                    new SQLiteParameter("@ContratoId", nuevaRevision.IdContrato),
+                    new SQLiteParameter("@IdContrato", nuevaRevision.IdContrato),
                     new SQLiteParameter("@FechaRevision", nuevaRevision.FechaRevision),
                     new SQLiteParameter("@PrecioAnterior", nuevaRevision.PrecioAnterior),
                     new SQLiteParameter("@PorcentajeRevision", nuevaRevision.PorcentajeRevision),
@@ -244,8 +245,8 @@ namespace Facturar.Servicios
 
                 // Ejecuta el comando y obtiene el numero de filas insertadas
                 string sql = "INSERT INTO RevisionesContrato " +
-                    "(ContratoId, FechaRevision, PrecioAnterior, PorcentajeRevision, PrecioRevisado, Observaciones) " +
-                   "VALUES (@ContratoId, @FechaRevision, @PrecioAnterior, @PorcentajeRevision, @PrecioRevisado, @Observaciones)";
+                    "(IdContrato, FechaRevision, PrecioAnterior, PorcentajeRevision, PrecioRevisado, Observaciones) " +
+                   "VALUES (@IdContrato, @FechaRevision, @PrecioAnterior, @PorcentajeRevision, @PrecioRevisado, @Observaciones)";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sql, parametros));
 
@@ -255,11 +256,11 @@ namespace Facturar.Servicios
                 }
 
                 // Una vez insertada la revision, se actualiza el precio mensual en el contrato
-                string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @ContratoId";
+                string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @IdContrato";
                 var parametrosContrato = new[]
                 {
                     new SQLiteParameter("@NuevoPrecio", nuevaRevision.PrecioRevisado),
-                    new SQLiteParameter("@ContratoId", nuevaRevision.IdContrato)
+                    new SQLiteParameter("@IdContrato", nuevaRevision.IdContrato)
                 };
 
                 var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
@@ -327,10 +328,10 @@ namespace Facturar.Servicios
             contrato.ValidarPropiedadesContrato();
 
             // Si hay algun contrato, se comprueba que no haya uno activo (solo puede haber un contrato activo)
-            var contratosLocal = ListarContratosPorLocal(localId: contrato.IdLocal, activos: true);
+            var contratosLocal = ListarContratosPorLocal(idLocal: contrato.IdLocal, activos: true);
             if(contratosLocal.Any()) // Si hay algun contrato
             {
-                var contratoActivo = ObtenerContratoActivoPorLocal(localId: contrato.Id);
+                var contratoActivo = ObtenerContratoActivoPorLocal(IdLocal: contrato.Id);
                 if(contratosLocal != null)
                 {
                     throw new InvalidOperationException(
@@ -374,26 +375,26 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a un cliente
         /// </summary>
-        /// <param name="clienteNif"></param>
-        /// <param name="clienteId"></param>
+        /// <param name="nifCliente"></param>
+        /// <param name="idCliente"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
-        public IEnumerable<Contrato> ListarContratosPorCliente(int? clienteId = null, string clienteNif = null, bool? activos = null)
+        public IEnumerable<Contrato> ListarContratosPorCliente(int? idCliente = null, string nifCliente = null, bool? activos = null)
         {
             // Obtiene el Id del cliente a partir del NIF
-            if(clienteId == null && !string.IsNullOrWhiteSpace(clienteNif))
+            if(idCliente == null && !string.IsNullOrWhiteSpace(nifCliente))
             {
                 var gestorClientes = new GestorClientes();
-                var cliente = gestorClientes.ObtenerEmpresaPorNIF(clienteNif);
+                var cliente = gestorClientes.ObtenerPorNIF(nifCliente);
                 if(cliente == null)
                 {
                     return Enumerable.Empty<Contrato>();
                 }
-                clienteId = cliente.Id;
+                idCliente = cliente.Id;
             }
 
             // Sql de consulta a la base de datos
-            string sql = "SELECT * FROM Contratos WHERE ClienteId = @ClienteId";
+            string sql = "SELECT * FROM Contratos WHERE IdCliente = @IdCliente";
 
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
@@ -405,7 +406,7 @@ namespace Facturar.Servicios
 
             var parametros = new[]
             {
-                new SQLiteParameter("@ClienteId", clienteId)
+                new SQLiteParameter("@IdCliente", idCliente)
             };
 
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
@@ -424,26 +425,26 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a una empresa
         /// </summary>
-        /// <param name="empresaId"></param>
-        /// <param name="empresaNif"></param>
+        /// <param name="idEmpresa"></param>
+        /// <param name="nifEmpresa"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
-        public IEnumerable<Contrato> ListarContratosPorEmpresa(int? empresaId = null, string empresaNif = null, bool? activos = null)
+        public IEnumerable<Contrato> ListarContratosPorEmpresa(int? idEmpresa = null, string nifEmpresa = null, bool? activos = null)
         {
             // Obtiene el Id de la empresa a partir del NIF
-            if(empresaId == null && !string.IsNullOrWhiteSpace(empresaNif))
+            if(idEmpresa == null && !string.IsNullOrWhiteSpace(nifEmpresa))
             {
                 var gestorEmpresa = new GestorEmpresas();
-                var empresa = gestorEmpresa.ObtenerPorNIF(empresaNif);
+                var empresa = gestorEmpresa.ObtenerPorNIF(nifEmpresa);
                 if(empresa == null)
                 {
                     return Enumerable.Empty<Contrato>();
                 }
-                empresaId = empresa.Id;
+                idEmpresa = empresa.Id;
             }
 
             // Sql de consulta a la base de datos
-            string sql = "SELECT * FROM Contratos WHERE EmpresaId = @EmpresaId";
+            string sql = "SELECT * FROM Contratos WHERE IdEmpresa = @IdEmpresa";
 
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
@@ -455,7 +456,7 @@ namespace Facturar.Servicios
 
             var parametros = new[]
             {
-                new SQLiteParameter("@EmpresaId", empresaId)
+                new SQLiteParameter("@IdEmpresa", idEmpresa)
             };
 
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
@@ -472,21 +473,21 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a un local
         /// </summary>
-        /// <param name="localId"></param>
+        /// <param name="idLocal"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
-        public IEnumerable<Contrato> ListarContratosPorLocal(int localId, bool? activos = null)
+        public IEnumerable<Contrato> ListarContratosPorLocal(int idLocal, bool? activos = null)
         {
             // Controla que el local existe
             var gestorLocales = new GestorLocales();
-            var local = gestorLocales.ObtenerPorId(localId);
+            var local = gestorLocales.ObtenerPorId(idLocal);
             if(local == null)
             {
                 return Enumerable.Empty<Contrato>();
             }
 
             // Sql de consulta a la base de datos
-            string sql = "SELECT * FROM Contratos WHERE LocalId = @LocalId";
+            string sql = "SELECT * FROM Contratos WHERE IdLocal = @IdLocal";
 
             // Ajusta la consulta segun el estado solicitado (activo, inactivo o todos)
             if(activos.HasValue)
@@ -498,7 +499,7 @@ namespace Facturar.Servicios
 
             var parametros = new[]
             {
-                new SQLiteParameter("@LocalId", local.Id)
+                new SQLiteParameter("@IdLocal", local.Id)
             };
 
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
@@ -553,25 +554,25 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene una relacion de las revisiones de un contrato
         /// </summary>
-        /// <param name="contratoId"></param>
+        /// <param name="IdContrato"></param>
         /// <returns></returns>
-        public IEnumerable<RevisionContrato> ListarRevisionesContrato(int contratoId)
+        public IEnumerable<RevisionContrato> ListarRevisionesContrato(int IdContrato)
         {
             // Valida que el contrato exista
-            var contrato = ObtenerPorId(contratoId);
+            var contrato = ObtenerPorId(IdContrato);
             if(contrato == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos");
             }
             // Sql de consulta a la base de datos
-            string sql = "SELECT * FROM RevisionesContrato WHERE ContratoId = @ContratoId";
+            string sql = "SELECT * FROM RevisionesContrato WHERE IdContrato = @IdContrato";
 
             // Ordenar los contratros por fecha
             sql += " ORDER BY FechaRevision DESC";
 
             var parametros = new[]
             {
-                new SQLiteParameter("@ContratoId", contrato.Id)
+                new SQLiteParameter("@IdContrato", contrato.Id)
             };
 
             DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
@@ -590,22 +591,22 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene el contrato activo asociado a un local identificado por su Id
         /// </summary>
-        /// <param name="localId"></param>
+        /// <param name="IdLocal"></param>
         /// <returns>Objeto con el contrato activo</returns>
-        public Contrato ObtenerContratoActivoPorLocal(int localId)
+        public Contrato ObtenerContratoActivoPorLocal(int IdLocal)
         {
             // Valida que el local exista
-            var contratoActivo = ObtenerPorId(localId);
+            var contratoActivo = ObtenerPorId(IdLocal);
             if(contratoActivo == null)
             {
                 return null;
             }
 
             // Consulta a la base de datos los contratos activos del local
-            string sql = "SELECT * FROM Contratos WHERE LocalId = @LocalId AND FechaFin IS NULL LIMIT 1";
+            string sql = "SELECT * FROM Contratos WHERE IdLocal = @IdLocal AND FechaFin IS NULL LIMIT 1";
             var parametros = new[]
             {
-               new SQLiteParameter("@LocalId", localId)
+               new SQLiteParameter("@IdLocal", IdLocal)
             };
 
             // Almacena el resultado en una tabla
@@ -640,21 +641,21 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene la ultima revision de un contrato
         /// </summary>
-        /// <param name="contratoId"></param>
+        /// <param name="IdContrato"></param>
         /// <returns>Fecha de la ultima revision del contrato</returns>
-        private DateTime? ObtenerUltimaRevision(int contratoId)
+        private DateTime? ObtenerUltimaRevision(int IdContrato)
         {
             // Valida que exista el contrato
-            var gestor = ObtenerPorId(contratoId);
+            var gestor = ObtenerPorId(IdContrato);
             if(gestor == null)
             {
                 throw new InvalidOperationException("El contrato no existe en la base de datos.");
             }
 
             // Prepara consulta a la base de datos
-            string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE ContratoId = @ContratoId";
+            string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE IdContrato = @IdContrato";
             var parametros = new[] {
-                new SQLiteParameter("@ContratoId", contratoId)
+                new SQLiteParameter("@IdContrato", IdContrato)
                 };
             object resultado = GestorDatos.EjecutarComandoValorUnico(sql, parametros);
 
@@ -665,5 +666,6 @@ namespace Facturar.Servicios
 
             return Convert.ToDateTime(resultado);
         }
+
     }
 }

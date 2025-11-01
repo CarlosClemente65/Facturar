@@ -96,7 +96,7 @@ namespace Facturar.Presentacion.Procesos
                         try
                         {
                             // Graba la fecha de baja en el contrato en la base de datos
-                            gestorContratos.Baja(contratoId: ucContratos.ContratoActual.Id);
+                            gestorContratos.Baja(idCcontrato: ucContratos.ContratoActual.Id);
 
                             // Muestra mensaje de proceso correcto
                             mensajeOk = "Grabada fecha de baja en el contrato.";

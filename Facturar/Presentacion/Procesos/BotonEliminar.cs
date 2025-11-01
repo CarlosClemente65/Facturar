@@ -110,7 +110,7 @@ namespace Facturar.Presentacion.Procesos
                         try
                         {
                             // Elimina el contrato en la base de datos
-                            gestorContratos.Eliminar(contratoId: ucContratos.ContratoActual.Id);
+                            gestorContratos.Eliminar(idContrato: ucContratos.ContratoActual.Id);
 
                             // Muestra mensaje de proceso correcto
                             mensajeOk = "Eliminado el contrato de la base de datos.";

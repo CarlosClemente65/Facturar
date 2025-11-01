@@ -54,6 +54,7 @@
             dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
             this.dgvBase.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvBase.ColumnHeadersHeight = 30;
+            this.dgvBase.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvBase.EnableHeadersVisualStyles = false;
             this.dgvBase.Location = new System.Drawing.Point(0, 0);
             this.dgvBase.Margin = new System.Windows.Forms.Padding(0);

@@ -314,10 +314,10 @@ namespace Facturar.Utilidades
                         List<Contrato> ConsultaContratosActivos = gestor.ListarTodos(true).ToList();
 
                         // Consulta contratos de un cliente
-                        List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente(clienteNif: "05100001G").ToList();
+                        List<Contrato> ConsultaContratosCliente = gestor.ListarContratosPorCliente(nifCliente: "05100001G").ToList();
 
                         //Consulta los contratos de una empresa
-                        List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa(empresaNif: "05196375P").ToList();
+                        List<Contrato> ConsultaContratosEmpresa = gestor.ListarContratosPorEmpresa(nifEmpresa: "05196375P").ToList();
 
                         // Consulta los contratos de un local
                         List<Contrato> ConsultaContratosLocal = gestor.ListarContratosPorLocal(4).ToList();

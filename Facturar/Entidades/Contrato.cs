@@ -48,7 +48,7 @@ namespace Facturar.Entidades
 
         [DisplayName("Fecha fin")]
         public DateTime? FechaFin { get; set; }
-        
+
         public string Observaciones { get; set; } // Notas del contrato
 
         [Browsable(false)] // Evita mostrarlo en el grid
@@ -75,6 +75,18 @@ namespace Facturar.Entidades
 
         }
 
+
+        public void CargarRelaciones(GestorEmpresas gestorEmpresas, GestorClientes gestorClientes, GestorLocales gestorLocales)
+        {
+            // Carga la empresa emisora
+            Empresa = gestorEmpresas.ObtenerPorId(IdEmpresa);
+
+            // Carga el cliente
+            Cliente = gestorClientes.ObtenerPorId(IdCliente);
+
+            // Carga el local del contrato
+            Local = gestorLocales.ObtenerPorId(IdLocal);
+        }
 
         // Método seguro para establecer la fecha de fin (aplica validación)
         public void EstablecerFechaFin(DateTime? fechaFin)
@@ -123,7 +135,7 @@ namespace Facturar.Entidades
                 FechaRevision = Utiles.ValidarFecha(FechaRevision);
             }
 
-            if (PrecioAnterior.HasValue && PrecioAnterior == 0)
+            if(PrecioAnterior.HasValue && PrecioAnterior == 0)
             {
                 throw new ArgumentException("El importe del precio anterior es obligatorio.");
             }

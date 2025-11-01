@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -16,6 +17,9 @@ namespace Facturar.Presentacion.Controles
     {
         // Propiedad privada para almacenar el cliente seleccionado en el grid
         private Contrato ContratoSeleccionado;
+        private Empresa EmpresaContrato;
+        private Cliente ClienteContrato;
+        private Local LocalContrato;
 
         // Almacena la lista de contratos para poder ordenar
         private IEnumerable<Contrato> listaContratos;
@@ -23,6 +27,7 @@ namespace Facturar.Presentacion.Controles
         private bool ordenAscendente = true;
 
         private bool datosCargados = false;
+
         public UC_Contratos()
         {
             InitializeComponent();
@@ -65,7 +70,17 @@ namespace Facturar.Presentacion.Controles
         public void CargarContratos(bool? activos = true)
         {
             var gestorContratos = new Servicios.GestorContratos();
+            var gestorEmpresas = new GestorEmpresas();
+            var gestorClientes = new GestorClientes();
+            var gestorLocales = new GestorLocales();
+
             listaContratos = gestorContratos.ListarTodos(activos: activos);
+
+            // Carga las entidades relacionadas para mostrar los datos en el grid
+            foreach(var contrato in listaContratos)
+            {
+                contrato.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorClientes: gestorClientes, gestorLocales: gestorLocales);
+            }
 
             // Carga los datos de los contratos en el gridBase
             GridBase.DataSource = null;
@@ -94,31 +109,15 @@ namespace Facturar.Presentacion.Controles
 
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
-                // En el caso del alta, se localiza el IdEmpresa y el IdCliente a grabar en el local segun el NifEmpresa
-
-                //var empresaAlta = gestorEmpresas.ObtenerPorNIF(txtNifEmpresa.Text);
-                contrato.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
+                // En el caso del alta, hay que seleccionar un cliente y local para asignarlos al contrato (la empresa esta vinculada al local)
+                contrato.IdCliente = ClienteContrato.Id;
+                contrato.IdLocal = LocalContrato.Id;
+                contrato.IdEmpresa = EmpresaContrato.Id;
             }
-
-
-            // TODO: Revision para actualizar propiedades del contrato
-            /* Pendiente de revisar propiedades
-             
-            // Campos comunes en el alta y edicion
-            local.Descripcion = txtDescripcion.Text;
-            local.Direccion = txtDireccion.Text;
-            local.CodigoPostal = txtCodigoPostal.Text;
-            local.Poblacion = txtPoblacion.Text;
-
-            // Solo asigna el importe si es un valor decimal valido
-            if(decimal.TryParse(txtImporte.Text, out decimal importe))
-            {
-                local.ImporteAlquiler = importe;
-            }
-            local.Observaciones = txtObservaciones.Text;
-            local.FechaAlta = DateTime.Parse(txtFechaAlta.Text);
-
-            */
+            contrato.PrecioMensual = Convert.ToDecimal(txtPrecioMensual.Text);
+            contrato.FechaInicio = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaInicio.Text) ?? DateTime.Today;
+            contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
+            contrato.Observaciones = txtObservaciones.Text;
         }
 
 
@@ -140,7 +139,7 @@ namespace Facturar.Presentacion.Controles
             };
 
             // Pasa las columnas al grid base para que las configure
-            ConfigurarColumnas<Empresa>(columnas);
+            ConfigurarColumnas<Contrato>(columnas);
 
         }
 
@@ -183,23 +182,29 @@ namespace Facturar.Presentacion.Controles
         public void BloqueoTextBoxAlta()
         {
             // Deshabilita los TextBox que no se pueden editar
-            txtFechaFin.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
             txtNombreCliente.Enabled = false;
+            txtDescripcion.Enabled = false;
+            txtNifEmpresa.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
+            txtFechaFin.Enabled = false;
         }
 
         public void BloqueoTextBoxEdicion()
         {
             // Deshabilita los TextBox que no se pueden editar
-            txtFechaInicio.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
+            txtNifCliente.Enabled = false;
             txtNombreCliente.Enabled = false;
+            txtIdLocal.Enabled = false;
+            txtDescripcion.Enabled = false;
+            txtNifEmpresa.Enabled = false;
+            txtNombreEmpresa.Enabled = false;
+            txtFechaInicio.Enabled = false;
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
         private void GridBase_FilaSeleccionada(object sender, object entidad)
         {
-            // Como recibe un objeto genérico, se chequea que sea del tipo Local
+            // Como recibe un objeto genérico, se chequea que sea del tipo contrato
             if(entidad is Contrato contrato)
             {
                 // Actualiza el contrato seleccionada
@@ -217,13 +222,16 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos del contrato en los textBox correspondientes
         private void MostrarDatoscontrato(Contrato contrato)
         {
-            txtNifEmpresa.Text = contrato.NIFEmpresa;
-            txtNombreEmpresa.Text = contrato.NombreEmpresa;
             txtNifCliente.Text = contrato.NIFCliente;
             txtNombreCliente.Text = contrato.NombreCliente;
+            txtIdLocal.Text = contrato.IdLocal.ToString();
 
             // TODO: Cambiar la descripcion del local por un comboBox de locales
             txtDescripcion.Text = contrato.DescripcionLocal;
+
+            txtPrecioMensual.Text = contrato.PrecioMensual.ToString("N2");
+            txtNifEmpresa.Text = contrato.NIFEmpresa;
+            txtNombreEmpresa.Text = contrato.NombreEmpresa;
             txtFechaInicio.Text = contrato.FechaInicio.ToString("dd.MM.yyyy");
 
             // La fecha de fin puede ser nula
@@ -236,7 +244,6 @@ namespace Facturar.Presentacion.Controles
                 txtFechaFin.Text = "";
             }
 
-            txtPrecioMensual.Text = contrato.PrecioMensual.ToString("N2");
             txtObservaciones.Text = contrato.Observaciones;
         }
 
@@ -324,22 +331,27 @@ namespace Facturar.Presentacion.Controles
             Utiles.FormatearImporte(sender as TextBox);
         }
 
-        private void txtNifEmpresa_Leave(object sender, EventArgs e)
-        {
-            txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
-            txtNombreEmpresa.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
-        }
-
-        private Empresa ObtenerEmpresaPorNif(string nif)
-        {
-            var gestorEmpresas = new GestorEmpresas();
-            return gestorEmpresas.ObtenerPorNIF(nif);
-        }
-
         private void txtNifCliente_Leave(object sender, EventArgs e)
         {
             txtNifCliente.Text = txtNifCliente.Text.ToUpper();
-            txtNombreCliente.Text = ObtenerClientePorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+            ClienteContrato = ObtenerClientePorNif(txtNifCliente.Text);
+            txtNombreCliente.Text = ClienteContrato.Nombre;
+        }
+
+        private void txtIdLocal_Leave(object sender, EventArgs e)
+        {
+            ObtenerLocal(Convert.ToInt32(txtIdLocal.Text));
+            txtDescripcion.Text = LocalContrato.Descripcion;
+            txtNifEmpresa.Text = EmpresaContrato.NIF;
+            txtNombreEmpresa.Text = EmpresaContrato.Nombre;
+        }
+
+        private void ObtenerLocal(int idLocal)
+        {
+            var gestorLocales = new GestorLocales();
+            LocalContrato = gestorLocales.ObtenerPorId(idLocal);
+            var gestorEmpresas = new GestorEmpresas();
+            EmpresaContrato = gestorEmpresas.ObtenerPorId(LocalContrato.IdEmpresa);
         }
 
         private Cliente ObtenerClientePorNif(string nif)

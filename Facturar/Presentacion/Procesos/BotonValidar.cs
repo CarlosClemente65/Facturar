@@ -299,7 +299,7 @@ namespace Facturar.Presentacion.Procesos
         // Metodo para ejecutar los procesos de editar o alta de un cliente
         private void EjecutarProcesoCliente(GestorClientes gestorClientes, TipoProceso tipoProceso, ref Cliente copiaCliente, ref Cliente cliente)
         {
-            switch (tipoProceso)
+            switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
                     // Se obtiene el cliente seleccioando
@@ -319,9 +319,9 @@ namespace Facturar.Presentacion.Procesos
 
                     break;
 
-                    case TipoProceso.Alta:
+                case TipoProceso.Alta:
                     // Crea un nuevo cliente
-                    cliente= new Cliente();
+                    cliente = new Cliente();
 
                     // Se graban las propiedades segun los campos de la pantalla
                     ucClientes.ActualizaPropiedadesCliente(cliente, TipoProceso.Alta);
@@ -341,11 +341,34 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
-                    //TODO : Implementar el proceso de validar la edicion de contratos
+                    // Se obtiene el contrato seleccionado
+                    contrato = ucContratos.ContratoActual;
+
+                    // Hacemos una copia del contrato actual por si la edicion falla
+                    copiaContrato = new Contrato(contrato);
+
+                    // Se actualizan las propiedades segun los campos de la pantalla
+                    ucContratos.ActualizaPropiedadesContrato(contrato, TipoProceso.Edicion);
+
+                    // Graba los cambios en la base de datos
+                    gestorContratos.Actualizar(contrato);
+
+                    // Mensaje de proceso correcto
+                    mensajeOk = "Contrato actualizado correctamente.";
                     break;
 
                 case TipoProceso.Alta:
-                    //TODO : Implementar el proceso de validar el alta de contratos
+                    // Crea un nuevo contrato
+                    contrato = new Contrato();
+
+                    // Se graban las propiedades segun los campos de la pantalla
+                    ucContratos.ActualizaPropiedadesContrato(contrato, TipoProceso.Alta);
+
+                    // Agrega el nuevo contrato a la base de datos
+                    gestorContratos.Agregar(contrato);
+
+                    // Mensaje de proceso correcto
+                    mensajeOk = "Contrato creado correctamente.";
                     break;
             }
         }
@@ -359,7 +382,7 @@ namespace Facturar.Presentacion.Procesos
                     factura = ucFacturas.FacturaActual;
 
                     // Hacemos una copia de la factura actual por si la edicion falla
-                    copiaFactura= new Factura(factura);
+                    copiaFactura = new Factura(factura);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
                     ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Edicion);

@@ -59,7 +59,7 @@
             this.btnValidar.Margin = new System.Windows.Forms.Padding(0);
             this.btnValidar.Name = "btnValidar";
             this.btnValidar.Size = new System.Drawing.Size(75, 56);
-            this.btnValidar.TabIndex = 3;
+            this.btnValidar.TabIndex = 30;
             this.btnValidar.Text = "Validar";
             this.btnValidar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnValidar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
@@ -81,7 +81,7 @@
             this.btnCancelar.Margin = new System.Windows.Forms.Padding(0);
             this.btnCancelar.Name = "btnCancelar";
             this.btnCancelar.Size = new System.Drawing.Size(75, 56);
-            this.btnCancelar.TabIndex = 4;
+            this.btnCancelar.TabIndex = 31;
             this.btnCancelar.Text = "Cancelar";
             this.btnCancelar.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
             this.btnCancelar.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
