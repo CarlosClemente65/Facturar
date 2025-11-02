@@ -30,7 +30,7 @@
         {
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.txtNif = new System.Windows.Forms.TextBox();
+            this.txtNifEmpresa = new System.Windows.Forms.TextBox();
             this.txtNombreEmpresa = new System.Windows.Forms.TextBox();
             this.lblNombre = new System.Windows.Forms.Label();
             this.txtFechaAlta = new System.Windows.Forms.TextBox();
@@ -82,17 +82,17 @@
             this.label2.TabIndex = 2;
             this.label2.Text = "NIF";
             // 
-            // txtNif
+            // txtNifEmpresa
             // 
-            this.txtNif.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtNif.Enabled = false;
-            this.txtNif.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNif.Location = new System.Drawing.Point(11, 289);
-            this.txtNif.Name = "txtNif";
-            this.txtNif.Size = new System.Drawing.Size(100, 22);
-            this.txtNif.TabIndex = 3;
-            this.txtNif.Tag = "primerCampo";
-            this.txtNif.Leave += new System.EventHandler(this.TextBox_ToUpper);
+            this.txtNifEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.txtNifEmpresa.Enabled = false;
+            this.txtNifEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtNifEmpresa.Location = new System.Drawing.Point(11, 289);
+            this.txtNifEmpresa.Name = "txtNifEmpresa";
+            this.txtNifEmpresa.Size = new System.Drawing.Size(100, 22);
+            this.txtNifEmpresa.TabIndex = 3;
+            this.txtNifEmpresa.Tag = "primerCampo";
+            this.txtNifEmpresa.Leave += new System.EventHandler(this.txtNifEmpresa_Leave);
             // 
             // txtNombreEmpresa
             // 
@@ -126,6 +126,7 @@
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
             this.txtFechaAlta.TabIndex = 7;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaAlta.Enter += new System.EventHandler(this.txtFechaAlta_Enter);
             this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
             // 
             // label3
@@ -399,7 +400,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtNombreEmpresa);
             this.Controls.Add(this.lblNombre);
-            this.Controls.Add(this.txtNif);
+            this.Controls.Add(this.txtNifEmpresa);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panelDgv);
@@ -411,7 +412,7 @@
             this.Controls.SetChildIndex(this.panelDgv, 0);
             this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.label2, 0);
-            this.Controls.SetChildIndex(this.txtNif, 0);
+            this.Controls.SetChildIndex(this.txtNifEmpresa, 0);
             this.Controls.SetChildIndex(this.lblNombre, 0);
             this.Controls.SetChildIndex(this.txtNombreEmpresa, 0);
             this.Controls.SetChildIndex(this.label3, 0);
@@ -465,7 +466,7 @@
         private System.Windows.Forms.TextBox txtSerieFactura;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Label label13;
-        public System.Windows.Forms.TextBox txtNif;
+        public System.Windows.Forms.TextBox txtNifEmpresa;
         public System.Windows.Forms.TextBox txtNombreEmpresa;
         public System.Windows.Forms.TextBox txtFechaAlta;
         public System.Windows.Forms.TextBox txtFactura;

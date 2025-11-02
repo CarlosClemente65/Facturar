@@ -5,8 +5,10 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using Facturar.Servicios;
+using static System.Net.Mime.MediaTypeNames;
 using Enumerador = Facturar.Utilidades.Enumeradores;
+using Utiles = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -15,8 +17,14 @@ namespace Facturar.Presentacion.Controles
         // Propiedad privada para almacenar la empresa seleccionada en el grid
         private Empresa EmpresaSeleccionada;
 
+        // Define el tipo de proceso (alta o edicion)
+        public Enumerador.TipoProceso tipoProceso;
+
         // Almacena la lista de empresas para poder ordenar
         private IEnumerable<Empresa> listaEmpresas;
+
+        // Instancias para los gestores necesarios
+        GestorEmpresas gestorEmpresas = new GestorEmpresas();
 
         private bool ordenAscendente = true;
 
@@ -141,7 +149,7 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosEmpresa(Empresa empresa)
         {
-            txtNif.Text = empresa.NIF;
+            txtNifEmpresa.Text = empresa.NIF;
             txtNombreEmpresa.Text = empresa.Nombre;
             txtFechaAlta.Text = empresa.FechaAlta.ToString("dd.MM.yyyy");
 
@@ -175,13 +183,12 @@ namespace Facturar.Presentacion.Controles
         public void BloqueoTextBoxEdicion()
         {
             // Deshabilita los TextBox que no se pueden editar
-            txtNif.Enabled = false;
+            txtNifEmpresa.Enabled = false;
             txtNombreEmpresa.Enabled = false;
             txtFechaAlta.Enabled = false;
             txtFechaBaja.Enabled = false;
             txtFactura.Enabled = false;
         }
-
 
         // Actualiza la empresa seleccionada segun la fila activa del grid
         public void ActualizaEmpresaSeleccionada()
@@ -194,7 +201,7 @@ namespace Facturar.Presentacion.Controles
 
 
         // Actualiza las propiedades de la empresa segun el contenido de los textBox
-        public void ActualizaPropiedadesEmpresa(Empresa empresa, Enumerador.TipoProceso tipoProceso)
+        public void ActualizaPropiedadesEmpresa(Empresa empresa)
         {
             if(empresa == null)
             {
@@ -204,7 +211,7 @@ namespace Facturar.Presentacion.Controles
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
                 // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
-                empresa.NIF = txtNif.Text;  // No se permite modificar el NIF
+                empresa.NIF = txtNifEmpresa.Text;  // No se permite modificar el NIF
                 empresa.Nombre = txtNombreEmpresa.Text; // No se permite modificar el nombre
 
                 // El campo NumeroFacturaActual es la ultima factura emitida, por lo que en el alta se permite indicar por si empieza por un numero diferente
@@ -226,11 +233,6 @@ namespace Facturar.Presentacion.Controles
             empresa.PersonaContacto = txtPersonaContacto.Text;
             empresa.SerieFactura = txtSerieFactura.Text;
             empresa.FechaAlta = DateTime.ParseExact(txtFechaAlta.Text, "dd.MM.yyyy", null);
-
-            /* Los siguientes campos no se permiten modificar
-            
-
-            */
         }
 
         private void AplicarFormatoColumnas()
@@ -262,6 +264,11 @@ namespace Facturar.Presentacion.Controles
             GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
+        private void txtFechaAlta_Enter(object sender, EventArgs e)
+        {
+            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+        }
+
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
@@ -281,6 +288,11 @@ namespace Facturar.Presentacion.Controles
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaAlta.Focus();
             }
+        }
+
+        private void txtFechaBaja_Enter(object sender, EventArgs e)
+        {
+            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
@@ -310,6 +322,24 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
+        private void txtNifEmpresa_Leave(object sender, EventArgs e)
+        {
+            txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
+
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // Chequea si ya existe la empresa con ese NIF
+                var empresaExistente = gestorEmpresas.ObtenerPorNIF(txtNifEmpresa.Text);
+                if(empresaExistente != null)
+                {
+                    MessageBox.Show("Ya existe una empresa con ese NIF. \nIntroduce otro diferente.",
+                        "NIF duplicado",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Warning);
+                    txtNifEmpresa.Focus();
+                }
+            }
+        }
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
             TextBox txt = sender as TextBox;

@@ -20,6 +20,9 @@ namespace Facturar.Presentacion.Procesos
             switch(entidadActiva)
             {
                 case Enumerador.TipoEntidad.Empresa:
+                    // Establece el tipo de proceso en modo edicion
+                    ucEmpresas.tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Deshabilita los TextBox que no se pueden editar
                     ucEmpresas.BloqueoTextBoxEdicion();
 
@@ -32,6 +35,9 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Local:
+                    // Establece el tipo de proceso en modo edicion
+                    ucLocales.tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Deshabilita los TextBox que no se pueden editar
                     ucLocales.BloqueoTextBoxEdicion();
 
@@ -44,6 +50,9 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
+                    // Establece el tipo de proceso en modo edicion
+                    ucClientes.tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Deshabilita los TextBox que no se pueden editar
                     ucClientes.BloqueoTextBoxEdicion();
 
@@ -56,6 +65,9 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
+                    // Establece el tipo de proceso en modo edicion
+                    ucContratos.tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Deshabilita los TextBox que no se pueden editar
                     ucContratos.BloqueoTextBoxEdicion();
 
@@ -68,6 +80,9 @@ namespace Facturar.Presentacion.Procesos
                     break;
 
                 case Enumerador.TipoEntidad.Factura:
+                    // Establece el tipo de proceso en modo edicion
+                    ucFacturas.tipoProceso = Enumerador.TipoProceso.Edicion;
+
                     // Deshabilita los TextBox que no se pueden editar
                     ucFacturas.BloqueoTextBoxEditar();
 

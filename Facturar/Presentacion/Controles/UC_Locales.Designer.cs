@@ -88,6 +88,7 @@
             this.txtFechaBaja.Size = new System.Drawing.Size(92, 22);
             this.txtFechaBaja.TabIndex = 4;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaBaja.Enter += new System.EventHandler(this.txtFechaBaja_Enter);
             this.txtFechaBaja.Leave += new System.EventHandler(this.txtFechaBaja_Leave);
             // 
             // label4
@@ -111,6 +112,7 @@
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
             this.txtFechaAlta.TabIndex = 3;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaAlta.Enter += new System.EventHandler(this.txtFechaAlta_Enter);
             this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
             // 
             // label3

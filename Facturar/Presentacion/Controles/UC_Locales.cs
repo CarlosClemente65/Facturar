@@ -18,6 +18,16 @@ namespace Facturar.Presentacion.Controles
         // Propiedad privada para almacenar el local seleccionado en el grid
         private Local LocalSeleccionado;
 
+        private Empresa EmpresaLocal;
+
+        // Define el tipo de proceso (alta o edicion)
+        public Enumerador.TipoProceso tipoProceso;
+
+        // Instancias de los gestores necesarios
+        GestorEmpresas gestorEmpresas = new GestorEmpresas();
+        GestorLocales gestorLocales = new GestorLocales();
+        GestorContratos gestorContratos = new GestorContratos();
+
         // Almacena la lista de locales para poder ordenar
         private IEnumerable<Local> listaLocales;
 
@@ -28,13 +38,6 @@ namespace Facturar.Presentacion.Controles
         public UC_Locales()
         {
             InitializeComponent();
-
-            // Activa doble buffering para evitar parpadeo al dibujar los controles
-            this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.UpdateStyles();
         }
 
         // Propiedad publica para ver el local seleccionado en el grid
@@ -74,8 +77,13 @@ namespace Facturar.Presentacion.Controles
 
         public void CargarLocales(bool? activos = true)
         {
-            var gestorLocales = new Servicios.GestorLocales();
             listaLocales = gestorLocales.ListarTodos(activos: activos);
+
+            // Carga las empresas relacionadas para mostrar los datos en el grid
+            foreach(var local in listaLocales)
+            {
+                local.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorContratos: gestorContratos );
+            }
 
             // Carga los datos de los locales
             // Carga los datos de las empresas en el gridBase
@@ -142,7 +150,6 @@ namespace Facturar.Presentacion.Controles
             ordenAscendente = !ordenAscendente;
         }
 
-
         // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosLocal(Local local)
         {
@@ -157,7 +164,7 @@ namespace Facturar.Presentacion.Controles
             txtNombreEmpresa.Text = local.NombreEmpresa;
             txtObservaciones.Text = local.Observaciones;
             txtFechaAlta.Text = local.FechaAlta.ToString("dd.MM.yyyy");
-            
+
             // La fecha de baja puede ser nula
             if(local.FechaBaja.HasValue)
             {
@@ -180,6 +187,7 @@ namespace Facturar.Presentacion.Controles
         {
             // Deshabilita los TextBox que no se pueden editar
             txtFechaAlta.Enabled = false;
+            txtFechaBaja.Enabled = false;
             txtNombreEmpresa.Enabled = false;
         }
 
@@ -193,7 +201,7 @@ namespace Facturar.Presentacion.Controles
         }
 
         // Actualiza las propiedades del local segun el contenido de los textBox
-        public void ActualizaPropiedadesLocal(Local local, Enumerador.TipoProceso tipoProceso)
+        public void ActualizaPropiedadesLocal(Local local)
         {
             if(local == null)
             {
@@ -203,7 +211,7 @@ namespace Facturar.Presentacion.Controles
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
                 // En el caso del alta, se localiza el IdEmpresa a grabar en el local segun el NifEmpresa
-                
+
                 //var empresaAlta = gestorEmpresas.ObtenerPorNIF(txtNifEmpresa.Text);
                 local.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
             }
@@ -226,7 +234,7 @@ namespace Facturar.Presentacion.Controles
         private void AplicarFormatoColumnas()
         {
             if(dgvBase.Columns.Count == 0) return; // Protege contra columnas vacías
-             
+
             // Lista con los nombres de las propiedades a ajustar
             string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja" };
             string[] columnasFecha = { "FechaAlta", "FechaBaja" };
@@ -259,6 +267,11 @@ namespace Facturar.Presentacion.Controles
             GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
+        private void txtFechaAlta_Enter(object sender, EventArgs e)
+        {
+            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+        }
+
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
@@ -275,9 +288,14 @@ namespace Facturar.Presentacion.Controles
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy","Error de formato de fecha",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaAlta.Focus();
             }
+        }
+
+        private void txtFechaBaja_Enter(object sender, EventArgs e)
+        {
+            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
@@ -286,7 +304,7 @@ namespace Facturar.Presentacion.Controles
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
             DateTime fechaValida;
 
-            if (txtFechaBaja.Text.Trim() == "")
+            if(txtFechaBaja.Text.Trim() == "")
             {
                 // Si el campo está vacío, no se realiza la validación
                 return;
@@ -310,12 +328,28 @@ namespace Facturar.Presentacion.Controles
         private void txtNifEmpresa_Leave(object sender, EventArgs e)
         {
             txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
-            txtNombreEmpresa.Text = ObtenerEmpresaPorNif(txtNifEmpresa.Text)?.Nombre ?? "";
+
+            // Busca la empresa por su NIF en la base de datos
+            EmpresaLocal = ObtenerEmpresaPorNif(txtNifEmpresa.Text);
+            if(EmpresaLocal == null)
+            {
+                MessageBox.Show("La empresa indicada no existe",
+                                "Empresa no encontrada",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Warning);
+
+                txtNombreEmpresa.Text = string.Empty;
+                txtNifEmpresa.Focus();
+            }
+            else
+            {
+                LocalSeleccionado.Empresa = EmpresaLocal;
+                txtNombreEmpresa.Text = EmpresaLocal?.Nombre ?? string.Empty;
+            }
         }
 
         private Empresa ObtenerEmpresaPorNif(string nif)
         {
-            var gestorEmpresas = new GestorEmpresas();
             return gestorEmpresas.ObtenerPorNIF(nif);
         }
 

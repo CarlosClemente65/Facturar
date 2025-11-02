@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
+using Facturar.Servicios;
 using static Facturar.Utilidades.Enumeradores;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using Utiles = Facturar.Utilidades.UtilidadesUI;
@@ -15,6 +16,12 @@ namespace Facturar.Presentacion.Controles
     {
         // Propiedad privada para almacenar el cliente seleccionado en el grid
         private Cliente ClienteSeleccionado;
+
+        // Instancias de los gestores necesarios
+        GestorClientes gestorClientes = new GestorClientes();
+
+        // Define el tipo de proceso (alta o edicion)
+        public Enumerador.TipoProceso tipoProceso;
 
         // Almacena la lista de locales para poder ordenar
         private IEnumerable<Cliente> listaClientes;
@@ -68,7 +75,6 @@ namespace Facturar.Presentacion.Controles
 
         public void CargarClientes(bool? activos = true)
         {
-            var gestorClientes = new Servicios.GestorClientes();
             listaClientes = gestorClientes.ListarTodos(activos: activos);
 
             // Carga los datos de las empresas en el gridBase
@@ -86,7 +92,6 @@ namespace Facturar.Presentacion.Controles
                 ClienteSeleccionado = dgvBase.CurrentRow.DataBoundItem as Cliente;
             }
         }
-
 
         // Evento que se lanza al seleccionar una fila en el grid base
         private void GridBase_FilaSeleccionada(object sender, object entidad)
@@ -122,7 +127,6 @@ namespace Facturar.Presentacion.Controles
             ordenAscendente = !ordenAscendente;
         }
 
-
         // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosCliente(Cliente cliente)
         {
@@ -150,7 +154,7 @@ namespace Facturar.Presentacion.Controles
             cbFormaPago.SelectedItem = ClienteSeleccionado.FormaPago;
             txtIban.Text = cliente.IBAN;
             txtObservaciones.Text = cliente.Observaciones;
-            
+
         }
 
         public void BloqueoTextBoxAlta()
@@ -165,7 +169,6 @@ namespace Facturar.Presentacion.Controles
             txtNifCliente.Enabled = false;
             txtNombreCliente.Enabled = false;
             txtFechaAlta.Enabled = false;
-            txtFechaBaja.Enabled = false;
         }
 
         // Define las columnas a mostrar en el grid base y el orden que tendran
@@ -224,7 +227,7 @@ namespace Facturar.Presentacion.Controles
         }
 
         // Actualiza las propiedades de la empresa segun el contenido de los textBox
-        public void ActualizaPropiedadesCliente(Cliente cliente, Enumerador.TipoProceso tipoProceso)
+        public void ActualizaPropiedadesCliente(Cliente cliente)
         {
             if(cliente == null)
             {
@@ -250,13 +253,12 @@ namespace Facturar.Presentacion.Controles
             cliente.FormaPago = (Cliente.FormasPago)cbFormaPago.SelectedItem;
             cliente.IBAN = txtIban.Text;
             cliente.Observaciones = txtObservaciones.Text;
-
-            /* Los siguientes campos no se permiten modificar
-            
-
-            */
         }
 
+        private void txtFechaAlta_Enter(object sender, EventArgs e)
+        {
+            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+        }
 
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
@@ -277,6 +279,11 @@ namespace Facturar.Presentacion.Controles
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaAlta.Focus();
             }
+        }
+
+        private void txtFechaBaja_Enter(object sender, EventArgs e)
+        {
+            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
@@ -306,34 +313,6 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-        internal void ActualizaPropiedadesClientes(Cliente cliente, Enumerador.TipoProceso tipoProceso)
-        {
-            if(cliente == null)
-            {
-                throw new ArgumentNullException("No se han pasado datos del cliente para actualizar");
-            }
-
-            if(tipoProceso == Enumerador.TipoProceso.Alta)
-            {
-                // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
-                cliente.NIF = txtNifCliente.Text;  // No se permite modificar el NIF
-                cliente.Nombre = txtNombreCliente.Text; // No se permite modificar el nombre
-            }
-
-            // Campos comunes en el alta y edicion
-            cliente.Direccion = txtDireccion.Text;
-            cliente.CodigoPostal = txtCodigoPostal.Text;
-            cliente.Poblacion = txtPoblacion.Text;
-            cliente.Provincia = txtProvincia.Text;
-            cliente.Telefono = txtTelefono.Text;
-            cliente.Email = txtEmail.Text;
-            cliente.PersonaContacto = txtPersonaContacto.Text;
-            cliente.FechaAlta = DateTime.ParseExact(txtFechaAlta.Text, "dd.MM.yyyy", null);
-            cliente.FormaPago = (Cliente.FormasPago)cbFormaPago.SelectedItem;
-            cliente.IBAN = txtIban.Text;
-            cliente.Observaciones = txtObservaciones.Text;
-        }
-
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
             TextBox txt = sender as TextBox;
@@ -341,6 +320,37 @@ namespace Facturar.Presentacion.Controles
             {
                 txt.Text = txt.Text.ToUpper();
             }
+        }
+
+        private void txtNifCliente_Leave(object sender, EventArgs e)
+        {
+            // Solo se permite acceder al NIF en el alta
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                txtNifCliente.Text = txtNifCliente.Text.ToUpper();
+
+                // Busca el cliente por su NIF en la base de datos
+                ClienteSeleccionado = ObtenerClientePorNif(txtNifCliente.Text);
+                if(ClienteSeleccionado != null)
+                {
+                    MessageBox.Show("El cliente indicado ya existe en la base de datos.",
+                                    "Empresa duplicada",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+
+                    txtNombreCliente.Text = string.Empty;
+                    txtNifCliente.Focus();
+                }
+                else
+                {
+                    txtNombreCliente.Text = ClienteSeleccionado?.Nombre ?? string.Empty;
+                }
+            }
+        }
+
+        private Cliente ObtenerClientePorNif(string nif)
+        {
+            return gestorClientes.ObtenerPorNIF(nif);
         }
 
     }

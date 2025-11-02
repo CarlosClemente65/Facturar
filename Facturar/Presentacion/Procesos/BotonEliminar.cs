@@ -25,8 +25,8 @@ namespace Facturar.Presentacion.Procesos
             var gestorContratos = formulario.GestorContratos;
             var gestorFacturas = formulario.GestorFacturas;
 
-            // Aplica el efecto de bloqueo de edicion
-            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
+            //// Aplica el efecto de bloqueo de edicion
+            //Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
 
             // Mensaje de confirmacion de la baja
             DialogResult resultado = MessageBox.Show("Esta seguro de eliminar el registro de la base de datos \n(no se podrá recuperar)", "Eliminar registro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -145,6 +145,45 @@ namespace Facturar.Presentacion.Procesos
             {
                 // Muestra mensaje de error
                 MessageBox.Show(mensajeKo, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            switch(entidadActiva)
+            {
+                case Enumerador.TipoEntidad.Empresa:
+                    // Restablece el bloqueo y habilita el grid
+                    Utiles.RestablecerPaneles<GestorEmpresas, Empresa>(ucEmpresas.GridBase, false, gestorEmpresas);
+
+                    // Refresca el grid de empresas
+                    ucEmpresas.CargarEmpresas(); // Refresca el grid
+
+                    break;
+
+                case Enumerador.TipoEntidad.Local:
+                    // Restablece el bloqueo y habilita el grid
+                    Utiles.RestablecerPaneles<GestorLocales, Local>(ucLocales.GridBase, false, gestorLocales);
+
+                    // Refresca el grid de locales
+                    ucLocales.CargarLocales(); // Refresca el grid
+
+                    break;
+
+                case Enumerador.TipoEntidad.Cliente:
+                    // Restablece el bloqueo y habilita el grid
+                    Utiles.RestablecerPaneles<GestorClientes, Cliente>(ucClientes.GridBase, false, gestorClientes);
+
+                    // Refresca el grid de clientes
+                    ucClientes.CargarClientes(); // Refresca el grid
+
+                    break;
+
+                case Enumerador.TipoEntidad.Contrato:
+                    // Restablece el bloqueo y habilita el grid
+                    Utiles.RestablecerPaneles<GestorContratos, Contrato>(ucContratos.GridBase, false, gestorContratos);
+
+                    // Refresca el grid de contratos
+                    ucContratos.CargarContratos(); // Refresca el grid
+
+                    break;
             }
         }
     }

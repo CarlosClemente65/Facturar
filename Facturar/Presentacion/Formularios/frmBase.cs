@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
+using Facturar.Presentacion.Procesos;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using Proceso = Facturar.Presentacion.Procesos;
@@ -62,14 +63,6 @@ namespace Facturar.Presentacion
         public frmBase()
         {
             InitializeComponent();
-
-            // Activa doble buffering para evitar parpadeo al dibujar los controles
-            this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint, true);
-            this.SetStyle(ControlStyles.UserPaint, true);
-            this.UpdateStyles();
-
         }
 
         private void frmBase_Load(object sender, EventArgs e)
@@ -194,8 +187,9 @@ namespace Facturar.Presentacion
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
-                    botonAlta.Ejecutar(entidadActiva);
 
+                    // Ejecuta las acciones establecidas en el boton
+                    botonAlta.Ejecutar(entidadActiva);
                 };
 
                 // Boton Baja
@@ -206,7 +200,15 @@ namespace Facturar.Presentacion
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonBaja = new Proceso.BotonBaja(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
+
+                    // Ejecuta las acciones establecidas en el boton
                     botonBaja.Ejecutar(entidadActiva: entidadActiva);
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
+
+                    // Deja el proceso libre para siguientes procesos
+                    tipoProceso = Enumerador.TipoProceso.Ninguno;
 
                 };
 
@@ -224,6 +226,8 @@ namespace Facturar.Presentacion
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
+
+                    // Ejecuta las acciones establecidas en el boton
                     botonEditar.Ejecutar(entidadActiva);
 
                 };
@@ -256,7 +260,15 @@ namespace Facturar.Presentacion
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonEliminar = new Proceso.BotonEliminar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas, this);
+
+                    // Ejecuta las acciones establecidas en el boton
                     botonEliminar.Ejecutar(entidadActiva: entidadActiva);
+
+                    // Deja el estado de los registros como activo
+                    panelGeneral.MostrarActivos(visible: true);
+
+                    // Deja el proceso libre para siguientes procesos
+                    tipoProceso = Enumerador.TipoProceso.Ninguno;
 
                 };
             }
@@ -308,9 +320,7 @@ namespace Facturar.Presentacion
                         // Deja el estado de los registros como activo
                         panelGeneral.MostrarActivos(visible: true);
                     }
-
                 };
-
             }
 
             else if(panel is PanelInferiorFacturas facturas)

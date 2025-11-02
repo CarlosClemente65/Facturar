@@ -222,6 +222,9 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
+                    // Se establece el tipo de proceso en modo edicion
+                    ucEmpresas.tipoProceso = TipoProceso.Edicion;
+
                     // Se obtiene la empresa seleccioanda
                     empresa = ucEmpresas.EmpresaActual;
 
@@ -229,7 +232,7 @@ namespace Facturar.Presentacion.Procesos
                     copiaEmpresa = new Empresa(empresa);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Edicion);
+                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa);
 
                     // Graba los cambios en la base de datos
                     gestorEmpresas.Actualizar(empresa);
@@ -243,8 +246,11 @@ namespace Facturar.Presentacion.Procesos
                     // Crea una nueva empresa
                     empresa = new Empresa();
 
+                    // Se establece el tipo de proceso en modo alta
+                    ucEmpresas.tipoProceso = TipoProceso.Alta;
+
                     // Se graban las propiedades segun los campos de la pantalla
-                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa, TipoProceso.Alta);
+                    ucEmpresas.ActualizaPropiedadesEmpresa(empresa);
 
                     // Agrega la nueva empresa a la base de datos
                     gestorEmpresas.Agregar(empresa);
@@ -262,6 +268,9 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
+                    // Se establece el tipo de proceso en modo edicion
+                    ucLocales.tipoProceso = TipoProceso.Edicion;
+
                     // Se obtiene el local seleccioando
                     local = ucLocales.LocalActual;
 
@@ -269,7 +278,7 @@ namespace Facturar.Presentacion.Procesos
                     copiaLocal = new Local(local);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-                    ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Edicion);
+                    ucLocales.ActualizaPropiedadesLocal(local);
 
                     // Graba los cambios en la base de datos
                     gestorLocales.Actualizar(local);
@@ -283,8 +292,11 @@ namespace Facturar.Presentacion.Procesos
                     // Crea un nuevo local
                     local = new Local();
 
+                    // Se establece el tipo de proceso en modo alta
+                    ucLocales.tipoProceso = TipoProceso.Alta;
+
                     // Se graban las propiedades segun los campos de la pantalla
-                    ucLocales.ActualizaPropiedadesLocal(local, TipoProceso.Alta);
+                    ucLocales.ActualizaPropiedadesLocal(local);
 
                     // Agrega el nuev local a la base de datos
                     gestorLocales.Agregar(local);
@@ -302,6 +314,9 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
+                    // Se establece el tipo de proceso en modo edicion
+                    ucClientes.tipoProceso = TipoProceso.Edicion;
+
                     // Se obtiene el cliente seleccioando
                     cliente = ucClientes.ClienteActual;
 
@@ -309,7 +324,7 @@ namespace Facturar.Presentacion.Procesos
                     copiaCliente = new Cliente(cliente);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-                    ucClientes.ActualizaPropiedadesClientes(cliente, TipoProceso.Edicion);
+                    ucClientes.ActualizaPropiedadesCliente(cliente);
 
                     // Graba los cambios en la base de datos
                     gestorClientes.Actualizar(cliente);
@@ -323,8 +338,11 @@ namespace Facturar.Presentacion.Procesos
                     // Crea un nuevo cliente
                     cliente = new Cliente();
 
+                    // Se establece el tipo de proceso en modo alta
+                    ucClientes.tipoProceso = TipoProceso.Alta;
+
                     // Se graban las propiedades segun los campos de la pantalla
-                    ucClientes.ActualizaPropiedadesCliente(cliente, TipoProceso.Alta);
+                    ucClientes.ActualizaPropiedadesCliente(cliente);
 
                     // Agrega el nuevo cliente a la base de datos
                     gestorClientes.Agregar(cliente);
@@ -341,6 +359,9 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
+                    // Se establece el tipo de proceso en modo edicion
+                    ucContratos.tipoProceso = TipoProceso.Edicion;
+
                     // Se obtiene el contrato seleccionado
                     contrato = ucContratos.ContratoActual;
 
@@ -348,7 +369,7 @@ namespace Facturar.Presentacion.Procesos
                     copiaContrato = new Contrato(contrato);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-                    ucContratos.ActualizaPropiedadesContrato(contrato, TipoProceso.Edicion);
+                    ucContratos.ActualizaPropiedadesContrato(contrato);
 
                     // Graba los cambios en la base de datos
                     gestorContratos.Actualizar(contrato);
@@ -361,8 +382,11 @@ namespace Facturar.Presentacion.Procesos
                     // Crea un nuevo contrato
                     contrato = new Contrato();
 
+                    // Se establece el tipo de proceso en modo alta
+                    ucContratos.tipoProceso = TipoProceso.Alta;
+
                     // Se graban las propiedades segun los campos de la pantalla
-                    ucContratos.ActualizaPropiedadesContrato(contrato, TipoProceso.Alta);
+                    ucContratos.ActualizaPropiedadesContrato(contrato);
 
                     // Agrega el nuevo contrato a la base de datos
                     gestorContratos.Agregar(contrato);
@@ -378,6 +402,9 @@ namespace Facturar.Presentacion.Procesos
             switch(tipoProceso)
             {
                 case TipoProceso.Edicion:
+                    // Se establece el tipo de proceso en modo edicion
+                    ucFacturas.tipoProceso = TipoProceso.Edicion;
+
                     // Se obtiene la factura seleccionada
                     factura = ucFacturas.FacturaActual;
 
@@ -385,7 +412,7 @@ namespace Facturar.Presentacion.Procesos
                     copiaFactura = new Factura(factura);
 
                     // Se actualizan las propiedades segun los campos de la pantalla
-                    ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Edicion);
+                    ucFacturas.ActualizaPropiedadesFactura(factura);
 
                     // Graba los cambios en la base de datos
                     gestorFacturas.Actualizar(factura: factura);
@@ -403,6 +430,9 @@ namespace Facturar.Presentacion.Procesos
                     // Crea una nueva factura
                     factura = new Factura();
 
+                    // Se establece el tipo de proceso en modo alta
+                    ucFacturas.tipoProceso = TipoProceso.Alta;
+                    
                     // Se graban las propiedades segun los campos de la pantalla
                     ucFacturas.ActualizaPropiedadesFactura(factura, TipoProceso.Alta);
 

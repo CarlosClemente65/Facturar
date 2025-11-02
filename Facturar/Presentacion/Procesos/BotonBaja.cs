@@ -27,8 +27,8 @@ namespace Facturar.Presentacion.Procesos
             var gestorClientes = formulario.GestorClientes;
             var gestorContratos = formulario.GestorContratos;
 
-            // Aplica el efecto de bloqueo de edicion
-            Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
+            //// Aplica el efecto de bloqueo de edicion
+            //Utiles.BloqueoEdicionDgv(_grid: ucEmpresas.GridBase, bloquear: true);
 
             // Mensaje de confirmacion de la baja
             DialogResult resultado = MessageBox.Show("Esta seguro de dar de baja el registro \n(quedara inactivo sin eliminarlo)", "Baja registro", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
@@ -164,7 +164,6 @@ namespace Facturar.Presentacion.Procesos
                     ucContratos.CargarContratos(); // Refresca el grid
 
                     break;
-
             }
         }
     }

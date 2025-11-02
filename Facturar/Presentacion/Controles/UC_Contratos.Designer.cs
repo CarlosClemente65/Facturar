@@ -160,18 +160,19 @@
             this.txtFechaFin.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFechaFin.Enabled = false;
             this.txtFechaFin.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFechaFin.Location = new System.Drawing.Point(664, 285);
+            this.txtFechaFin.Location = new System.Drawing.Point(664, 326);
             this.txtFechaFin.Name = "txtFechaFin";
             this.txtFechaFin.Size = new System.Drawing.Size(90, 22);
             this.txtFechaFin.TabIndex = 9;
             this.txtFechaFin.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaFin.Enter += new System.EventHandler(this.txtFechaFin_Enter);
             this.txtFechaFin.Leave += new System.EventHandler(this.txtFechaFin_Leave);
             // 
             // label5
             // 
             this.label5.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label5.Location = new System.Drawing.Point(664, 269);
+            this.label5.Location = new System.Drawing.Point(664, 310);
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(90, 13);
             this.label5.TabIndex = 70;
@@ -183,18 +184,19 @@
             this.txtFechaInicio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtFechaInicio.Enabled = false;
             this.txtFechaInicio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFechaInicio.Location = new System.Drawing.Point(568, 285);
+            this.txtFechaInicio.Location = new System.Drawing.Point(568, 326);
             this.txtFechaInicio.Name = "txtFechaInicio";
             this.txtFechaInicio.Size = new System.Drawing.Size(90, 22);
             this.txtFechaInicio.TabIndex = 8;
             this.txtFechaInicio.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaInicio.Enter += new System.EventHandler(this.txtFechaInicio_Enter);
             this.txtFechaInicio.Leave += new System.EventHandler(this.txtFechaInicio_Leave);
             // 
             // label6
             // 
             this.label6.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(568, 269);
+            this.label6.Location = new System.Drawing.Point(568, 310);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(90, 13);
             this.label6.TabIndex = 69;
@@ -219,7 +221,7 @@
             this.txtDescripcion.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.txtDescripcion.Location = new System.Drawing.Point(70, 326);
             this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(360, 22);
+            this.txtDescripcion.Size = new System.Drawing.Size(382, 22);
             this.txtDescripcion.TabIndex = 4;
             this.txtDescripcion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
@@ -228,7 +230,7 @@
             this.txtPrecioMensual.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtPrecioMensual.Enabled = false;
             this.txtPrecioMensual.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPrecioMensual.Location = new System.Drawing.Point(462, 285);
+            this.txtPrecioMensual.Location = new System.Drawing.Point(462, 326);
             this.txtPrecioMensual.Name = "txtPrecioMensual";
             this.txtPrecioMensual.Size = new System.Drawing.Size(100, 22);
             this.txtPrecioMensual.TabIndex = 5;
@@ -240,7 +242,7 @@
             // 
             this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label9.Location = new System.Drawing.Point(459, 269);
+            this.label9.Location = new System.Drawing.Point(459, 310);
             this.label9.Name = "label9";
             this.label9.Size = new System.Drawing.Size(102, 13);
             this.label9.TabIndex = 74;
@@ -252,7 +254,7 @@
             this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(442, 310);
+            this.label8.Location = new System.Drawing.Point(462, 351);
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(91, 13);
             this.label8.TabIndex = 76;
@@ -263,9 +265,9 @@
             this.txtObservaciones.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.txtObservaciones.Enabled = false;
             this.txtObservaciones.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtObservaciones.Location = new System.Drawing.Point(436, 326);
+            this.txtObservaciones.Location = new System.Drawing.Point(462, 367);
             this.txtObservaciones.Name = "txtObservaciones";
-            this.txtObservaciones.Size = new System.Drawing.Size(318, 22);
+            this.txtObservaciones.Size = new System.Drawing.Size(292, 22);
             this.txtObservaciones.TabIndex = 10;
             this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 

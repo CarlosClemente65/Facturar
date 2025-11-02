@@ -1,12 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Facturar.Servicios;
-using static Facturar.Entidades.Cliente;
 
 
 namespace Facturar.Entidades
@@ -24,6 +18,12 @@ namespace Facturar.Entidades
 
         [DisplayName("Nombre empresa")]
         public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
+
+        public int IdContrato { get; set; }
+
+        public Contrato Contrato { get; set; }
+        public bool ContratoActivo => IdContrato > 0; // Indica si el local tiene algun contrato grabado
+
         public string Descripcion { get; set; } // Descripcion a incluir en la factura del local
         public string Direccion { get; set; }
 
@@ -93,6 +93,13 @@ namespace Facturar.Entidades
                 throw new ArgumentException("La fecha de baja no puede ser anterior a la fecha de alta.");
             }
 
+        }
+
+        public void CargarRelaciones(GestorEmpresas gestorEmpresas, GestorContratos gestorContratos)
+        {
+            // Carga la empresa emisora
+            Empresa = gestorEmpresas.ObtenerPorId(IdEmpresa);
+            Contrato = gestorContratos.ObtenerContratoActivoPorLocal(IdContrato);
         }
     }
 

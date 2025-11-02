@@ -4,6 +4,7 @@ using System.Data;
 using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using Facturar.Entidades;
 using Facturar.Servicios;
@@ -21,7 +22,15 @@ namespace Facturar.Presentacion.Controles
         private Cliente ClienteContrato;
         private Local LocalContrato;
 
-        // Almacena la lista de contratos para poder ordenar
+        public Enumerador.TipoProceso tipoProceso;
+
+        // Instancias de los gestores necesarios
+        GestorContratos gestorContratos = new Servicios.GestorContratos();
+        GestorEmpresas gestorEmpresas = new GestorEmpresas();
+        GestorClientes gestorClientes = new GestorClientes();
+        GestorLocales gestorLocales = new GestorLocales();
+
+        // Almacena la lista de contratos con todas sus propiedades
         private IEnumerable<Contrato> listaContratos;
 
         private bool ordenAscendente = true;
@@ -67,13 +76,9 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
+        // Carga los contratos en el grid base y sus relaciones
         public void CargarContratos(bool? activos = true)
         {
-            var gestorContratos = new Servicios.GestorContratos();
-            var gestorEmpresas = new GestorEmpresas();
-            var gestorClientes = new GestorClientes();
-            var gestorLocales = new GestorLocales();
-
             listaContratos = gestorContratos.ListarTodos(activos: activos);
 
             // Carga las entidades relacionadas para mostrar los datos en el grid
@@ -92,15 +97,18 @@ namespace Facturar.Presentacion.Controles
 
         internal void ActualizarContratoSeleccionado()
         {
-            if(dgvBase.CurrentRow != null)
+            // Carga el objeto contrato segun la fila seleccionada
+            if(dgvBase.CurrentRow?.DataBoundItem is Contrato contrato)
             {
-                // Carga el objeto contrato segun la fila seleccionada
-                ContratoSeleccionado = dgvBase.CurrentRow.DataBoundItem as Contrato;
+                ContratoSeleccionado = contrato;
+                LocalContrato = contrato.Local ?? gestorLocales.ObtenerPorId(contrato.IdLocal); // Carga el local del contrato y si no existe lo obtiene del gestor
+                ClienteContrato = contrato.Cliente ?? gestorClientes.ObtenerPorId(contrato.IdCliente); // Carga el cliente del contrato y si no existe lo obtiene del gestor
+                EmpresaContrato = contrato.Empresa ?? gestorEmpresas.ObtenerPorId(contrato.IdEmpresa); // Carga la empresa del contrato y si no existe lo obtiene del gestor
             }
         }
 
         // Actualiza las propiedades del contrato segun el contenido de los textBox
-        public void ActualizaPropiedadesContrato(Contrato contrato, Enumerador.TipoProceso tipoProceso)
+        public void ActualizaPropiedadesContrato(Contrato contrato)
         {
             if(contrato == null)
             {
@@ -119,7 +127,6 @@ namespace Facturar.Presentacion.Controles
             contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
             contrato.Observaciones = txtObservaciones.Text;
         }
-
 
         // Define las columnas a mostrar en el grid base y el orden que tendran
         private void InicializaColumnas()
@@ -218,7 +225,6 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-
         // Muestra los datos del contrato en los textBox correspondientes
         private void MostrarDatoscontrato(Contrato contrato)
         {
@@ -264,6 +270,11 @@ namespace Facturar.Presentacion.Controles
             ordenAscendente = !ordenAscendente;
         }
 
+        private void txtFechaInicio_Enter(object sender, EventArgs e)
+        {
+            txtFechaInicio.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+        }
+
         private void txtFechaInicio_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de inicio
@@ -283,6 +294,11 @@ namespace Facturar.Presentacion.Controles
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaInicio.Focus();
             }
+        }
+
+        private void txtFechaFin_Enter(object sender, EventArgs e)
+        {
+            txtFechaFin.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
         }
 
         private void txtFechaFin_Leave(object sender, EventArgs e)
@@ -328,36 +344,98 @@ namespace Facturar.Presentacion.Controles
 
         private void txtImporte_Leave(object sender, EventArgs e)
         {
+            if (txtPrecioMensual.Text == "")
+            {
+                txtPrecioMensual.Text = "0";
+            }
             Utiles.FormatearImporte(sender as TextBox);
         }
 
         private void txtNifCliente_Leave(object sender, EventArgs e)
         {
-            txtNifCliente.Text = txtNifCliente.Text.ToUpper();
-            ClienteContrato = ObtenerClientePorNif(txtNifCliente.Text);
-            txtNombreCliente.Text = ClienteContrato.Nombre;
+            // Solo en el alta se permite acceder al cliente
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                txtNifCliente.Text = txtNifCliente.Text.ToUpper();
+
+                // En el alta se chequea que el cliente exista
+                // Busca el cliente por su NIF en la base de datos
+                ClienteContrato = ObtenerClientePorNif(txtNifCliente.Text);
+                if(ClienteContrato == null)
+                {
+                    MessageBox.Show("El cliente indicado no existe",
+                                    "Cliente no encontrado",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                    txtNombreCliente.Text = string.Empty;
+                    txtNifCliente.Focus();
+                }
+                else
+                {
+                    txtNombreCliente.Text = ClienteContrato?.Nombre ?? string.Empty;
+                    ContratoSeleccionado.Cliente = ClienteContrato;
+                }
+            }
+
         }
 
         private void txtIdLocal_Leave(object sender, EventArgs e)
         {
-            ObtenerLocal(Convert.ToInt32(txtIdLocal.Text));
-            txtDescripcion.Text = LocalContrato.Descripcion;
-            txtNifEmpresa.Text = EmpresaContrato.NIF;
-            txtNombreEmpresa.Text = EmpresaContrato.Nombre;
-        }
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // Solo en el alta se permite acceder al local
+                LocalContrato = ObtenerLocalPorId(Convert.ToInt32(txtIdLocal.Text));
+                if(LocalContrato == null)
+                {
+                    MessageBox.Show("El local indicado no existe",
+                                    "Local no encontrado",
+                                    MessageBoxButtons.OK,
+                                    MessageBoxIcon.Warning);
+                    txtIdLocal.Text = string.Empty;
+                    txtIdLocal.Focus();
+                }
 
-        private void ObtenerLocal(int idLocal)
-        {
-            var gestorLocales = new GestorLocales();
-            LocalContrato = gestorLocales.ObtenerPorId(idLocal);
-            var gestorEmpresas = new GestorEmpresas();
-            EmpresaContrato = gestorEmpresas.ObtenerPorId(LocalContrato.IdEmpresa);
+
+                // Chequeo de que el local no tiene un contrato activo
+                else if(LocalContrato.ContratoActivo)
+                {
+                    MessageBox.Show("El local ya tiene un contrato activo.",
+                                     "Local con contrato activo",
+                                     MessageBoxButtons.OK,
+                                     MessageBoxIcon.Warning);
+                    txtIdLocal.Text = string.Empty;
+                    txtIdLocal.Focus();
+                }
+                else
+                {
+                    ContratoSeleccionado.Local = LocalContrato;
+                    // Se obtiene la empresa vinculada al local
+                    EmpresaContrato = ObtenerEmpresaPorIdLocal(LocalContrato.IdEmpresa);
+
+                    //Carga los datos del local y la empresa en los textBox correspondientes
+                    txtDescripcion.Text = LocalContrato?.Descripcion ?? string.Empty;
+                    txtNifEmpresa.Text = EmpresaContrato?.NIF ?? string.Empty;
+                    txtNombreEmpresa.Text = EmpresaContrato?.Nombre ?? string.Empty;
+                }
+            }
         }
 
         private Cliente ObtenerClientePorNif(string nif)
         {
             var gestorClientes = new GestorClientes();
             return gestorClientes.ObtenerPorNIF(nif);
+        }
+
+        private Local ObtenerLocalPorId(int id)
+        {
+            var gestorLocales = new GestorLocales();
+            return gestorLocales.ObtenerPorId(id);
+        }
+
+        private Empresa ObtenerEmpresaPorIdLocal(int id)
+        {
+            var gestorEmpresas = new GestorEmpresas();
+            return gestorEmpresas.ObtenerPorId(id);
         }
     }
 }

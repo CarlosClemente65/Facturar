@@ -46,7 +46,7 @@ namespace Facturar.Utilidades
         /// <returns>Cadena con formato 'dd/MM/yyyy'</returns>
         public static string FormatearFecha(DateTime? fecha)
         {
-            return fecha?.ToString("dd/MM/yyyy") ?? string.Empty;
+            return fecha?.ToString("dd.MM.yyyy") ?? string.Empty;
         }
 
 

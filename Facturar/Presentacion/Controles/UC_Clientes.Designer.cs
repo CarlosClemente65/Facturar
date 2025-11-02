@@ -249,6 +249,7 @@
             this.txtFechaBaja.Size = new System.Drawing.Size(90, 22);
             this.txtFechaBaja.TabIndex = 40;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaBaja.Enter += new System.EventHandler(this.txtFechaBaja_Enter);
             this.txtFechaBaja.Leave += new System.EventHandler(this.txtFechaBaja_Leave);
             // 
             // label4
@@ -272,6 +273,7 @@
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
             this.txtFechaAlta.TabIndex = 38;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaAlta.Enter += new System.EventHandler(this.txtFechaAlta_Enter);
             this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
             // 
             // label3
@@ -317,7 +319,7 @@
             this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
             this.txtNifCliente.TabIndex = 34;
             this.txtNifCliente.Tag = "primerCampo";
-            this.txtNifCliente.Leave += new System.EventHandler(this.TextBox_ToUpper);
+            this.txtNifCliente.Leave += new System.EventHandler(this.txtNifCliente_Leave);
             // 
             // label1
             // 

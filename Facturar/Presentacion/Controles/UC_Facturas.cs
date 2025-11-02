@@ -13,8 +13,13 @@ namespace Facturar.Presentacion.Controles
 {
     public partial class UC_Facturas : UC_GridBase
     {
+        // Define el tipo de proceso (alta o edicion)
+        public Enumerador.TipoProceso tipoProceso;
+
         // Propiedad privada para almacenar la factura seleccionada en el grid
         private Factura FacturaSeleccionada;
+        private Empresa EmpresaFactura;
+        private Cliente ClienteFatura;
 
         // Almacena la lista de facturas para poder ordenar
         private IEnumerable<Factura> listaFacturas;
@@ -22,6 +27,7 @@ namespace Facturar.Presentacion.Controles
         private bool ordenAscendente = true;
 
         private bool datosCargados = false; // Evita que se recargue el control innecesariamente
+
         public UC_Facturas()
         {
             InitializeComponent();
@@ -222,7 +228,7 @@ namespace Facturar.Presentacion.Controles
 
 
         // Actualiza las propiedades de la factura segun el contenido de los textBox
-        public void ActualizaPropiedadesFactura(Factura factura, Enumerador.TipoProceso tipoProceso)
+        public void ActualizaPropiedadesFactura(Factura factura)
         {
             if(factura == null)
             {
