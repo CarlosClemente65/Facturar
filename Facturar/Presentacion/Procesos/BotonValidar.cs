@@ -374,11 +374,6 @@ namespace Facturar.Presentacion.Procesos
                     // Graba los cambios en la base de datos
                     gestorContratos.Actualizar(contrato);
 
-                    //// Graba el importe del alquiler en el local
-                    //if(contrato.Local.ImporteAlquiler != contrato.PrecioMensual)
-                    //{
-                    //    contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
-                    //}
                     gestorLocales.Actualizar(contrato.Local);
 
                     // Mensaje de proceso correcto
@@ -395,7 +390,9 @@ namespace Facturar.Presentacion.Procesos
                     // Se graban las propiedades segun los campos de la pantalla
                     ucContratos.ActualizaPropiedadesContrato(contrato);
 
+                    // TODO: Pendiente de revisar que se agrega bien el IdContrato en el Local
                     // Agrega el nuevo contrato a la base de datos
+                    contrato.Local.IdContrato = contrato.Id;
                     gestorContratos.Agregar(contrato);
 
                     // Graba el importe del alquiler en el local

@@ -14,6 +14,7 @@ namespace Facturar.Entidades
     {
         [DisplayName("Nº reg.")]
         public int Id { get; set; }
+
         public int IdEmpresa { get; set; }
 
         public Empresa Empresa { get; set; }   // Objeto empresa emisora

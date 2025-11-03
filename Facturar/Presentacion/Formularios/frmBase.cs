@@ -113,18 +113,22 @@ namespace Facturar.Presentacion
             {
                 case Enumerador.TipoEntidad.Empresa:
                     gestorActual = gestorEmpresas;
+                    ucEmpresas.CargarEmpresas();
                     break;
 
                 case Enumerador.TipoEntidad.Local:
                     gestorActual = gestorLocales;
+                    ucLocales.CargarLocales();
                     break;
 
                 case Enumerador.TipoEntidad.Cliente:
                     gestorActual = gestorClientes;
+                    ucClientes.CargarClientes();
                     break;
 
                 case Enumerador.TipoEntidad.Contrato:
                     gestorActual = gestorContratos;
+                    ucContratos.CargarContratos();
                     break;
 
                 case Enumerador.TipoEntidad.Configurar:

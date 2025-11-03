@@ -3,6 +3,8 @@ using System.Data.SQLite;
 using System.IO;
 using Facturar.Utilidades;
 using Facturar.Infraestructura;
+using System;
+using System.Runtime.InteropServices.WindowsRuntime;
 
 namespace Facturar.Servicios
 {
@@ -15,7 +17,7 @@ namespace Facturar.Servicios
 
         public static void ChequeoBaseDatos()
         {
-            if(!File.Exists(rutaBD)) 
+            if(!File.Exists(rutaBD))
             {
                 InicializadorBaseDatos.Inicializar(rutaBD);
             }
@@ -130,7 +132,7 @@ namespace Facturar.Servicios
 
             // Se almacena el resultado en la tabla que luego se mapea al objeto pasado 'T'
             DataTable tabla = EjecutarConsulta(sqlConsulta, parametros);
-            
+
             if(tabla.Rows.Count == 0)
             {
                 return default(T); // Devuelve null si T es una clase
@@ -138,6 +140,18 @@ namespace Facturar.Servicios
 
             // Mapea la fila obtenida en la tabla anterior al tipo de objeto pasado 'T'
             return MapeadorDatos.MapearFila<T>(tabla.Rows[0]);
+        }
+
+        public static long ObtenerUltimoId()
+        {
+            using(var conexion = AbrirConexion())
+            {
+                conexion.Open();
+                using(var comando = new SQLiteCommand("SELECT last_insert_rowid()", conexion))
+                {
+                    return (long)comando.ExecuteScalar();
+                }
+            }
         }
     }
 }
