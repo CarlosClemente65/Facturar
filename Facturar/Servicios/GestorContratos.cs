@@ -48,8 +48,6 @@ namespace Facturar.Servicios
                 throw new InvalidOperationException("No se ha podido insertar el contrato en la base de datos");
             }
 
-            // Obtiene el Id asignado al dar de alta el contrato
-            contrato.Id = (int)GestorDatos.ObtenerUltimoId();
             return true; // Indica que la inserción fue exitosa
         }
 
@@ -334,7 +332,7 @@ namespace Facturar.Servicios
             if(contratosLocal.Any()) // Si hay algun contrato
             {
                 var contratoActivo = ObtenerContratoActivoPorLocal(IdLocal: contrato.Id);
-                if(contratosLocal != null)
+                if(contratoActivo != null)
                 {
                     throw new InvalidOperationException(
                         $"El local ya tiene un contrato activo. Debe dar de baja el contrato anterior antes de crear uno nuevo");

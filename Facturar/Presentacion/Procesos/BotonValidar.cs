@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
 using Facturar.Presentacion.Controles;
@@ -364,7 +365,7 @@ namespace Facturar.Presentacion.Procesos
 
                     // Se obtiene el contrato seleccionado
                     contrato = ucContratos.ContratoActual;
-                    
+
                     // Hacemos una copia del contrato actual por si la edicion falla
                     copiaContrato = new Contrato(contrato);
 
@@ -390,13 +391,30 @@ namespace Facturar.Presentacion.Procesos
                     // Se graban las propiedades segun los campos de la pantalla
                     ucContratos.ActualizaPropiedadesContrato(contrato);
 
-                    // TODO: Pendiente de revisar que se agrega bien el IdContrato en el Local
                     // Agrega el nuevo contrato a la base de datos
-                    contrato.Local.IdContrato = contrato.Id;
                     gestorContratos.Agregar(contrato);
 
-                    // Graba el importe del alquiler en el local
-                    local.ImporteAlquiler = contrato.PrecioMensual;
+                    // Carga el contrato recien añadido segun el Id del local para obtener el Id y asignarlo al local.IdContrato
+                    var contratoAgregado = gestorContratos.ListarContratosPorLocal(contrato.Local.Id).FirstOrDefault();
+
+                    int? IdNuevoContrato = null;
+                    if(contratoAgregado != null)
+                    {
+                        // Obtiene el Id del contrato recien generado
+                        IdNuevoContrato = contratoAgregado.Id;
+
+                        // Asigna el IdContrato al objeto local del contrato original
+                        contrato.Local.IdContrato = IdNuevoContrato;
+
+                        // Se actualiza el contrato en la base de datos
+                        gestorLocales.Actualizar(contrato.Local);
+                    }
+
+                    // Actualiza las propiedades del Local segun el nuevo contrato
+                    //local.IdContrato = IdNuevoContrato;
+                    contrato.Local.ImporteAlquiler = contratoAgregado.PrecioMensual;
+
+                    // Actualiza el local
                     gestorLocales.Actualizar(local);
 
                     // Mensaje de proceso correcto

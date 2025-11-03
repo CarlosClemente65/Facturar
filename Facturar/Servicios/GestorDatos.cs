@@ -141,17 +141,5 @@ namespace Facturar.Servicios
             // Mapea la fila obtenida en la tabla anterior al tipo de objeto pasado 'T'
             return MapeadorDatos.MapearFila<T>(tabla.Rows[0]);
         }
-
-        public static long ObtenerUltimoId()
-        {
-            using(var conexion = AbrirConexion())
-            {
-                conexion.Open();
-                using(var comando = new SQLiteCommand("SELECT last_insert_rowid()", conexion))
-                {
-                    return (long)comando.ExecuteScalar();
-                }
-            }
-        }
     }
 }

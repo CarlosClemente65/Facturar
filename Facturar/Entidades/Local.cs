@@ -19,7 +19,7 @@ namespace Facturar.Entidades
         [DisplayName("Nombre empresa")]
         public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
 
-        public int IdContrato { get; set; }
+        public int? IdContrato { get; set; }
 
         public Contrato Contrato { get; set; }
         public bool ContratoActivo => IdContrato > 0; // Indica si el local tiene algun contrato grabado
@@ -99,7 +99,14 @@ namespace Facturar.Entidades
         {
             // Carga la empresa emisora
             Empresa = gestorEmpresas.ObtenerPorId(IdEmpresa);
-            Contrato = gestorContratos.ObtenerContratoActivoPorLocal(IdContrato);
+            if(IdContrato.HasValue)
+            {
+                Contrato = gestorContratos.ObtenerContratoActivoPorLocal(IdContrato.Value);
+            }
+            else
+            {
+                Contrato = null;
+            }
         }
     }
 

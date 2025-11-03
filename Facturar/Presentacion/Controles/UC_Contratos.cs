@@ -121,18 +121,16 @@ namespace Facturar.Presentacion.Controles
                 contrato.IdCliente = ClienteContrato.Id;
                 contrato.IdLocal = LocalContrato.Id;
                 contrato.IdEmpresa = EmpresaContrato.Id;
-                
-                // TODO: Pendiente de revisar como agregar el IdContrato al Local (revisar creacion de base de datos por que he quitado la propiedad 'CodigoContrato')
-            }
 
-            // Establece las propiedades al objeto 'Local' que tiene el contrato
+            }
 
             // Establece las propiedades del contrato
             contrato.PrecioMensual = Convert.ToDecimal(txtPrecioMensual.Text);
-            contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
             contrato.FechaInicio = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaInicio.Text) ?? DateTime.Today;
             contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
             contrato.Observaciones = txtObservaciones.Text;
+            contrato.Local = LocalContrato;
+            contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
         }
 
         // Define las columnas a mostrar en el grid base y el orden que tendran
