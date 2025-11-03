@@ -80,17 +80,16 @@ namespace Facturar.Servicios
                 }
 
                 // Inserta el nuevo contrato en la base de datos
-                // Nota: Solo se permite añadir la fecha de fin, el importe o modificar los comentarios
+                // Nota: Solo se permite añadir el importe del precio mensual o las observaciones
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", contrato.Id),
                     new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
-                    new SQLiteParameter("@FechaFin", contrato.FechaFin.HasValue ? (object) contrato.FechaFin.Value.Date: DBNull.Value),
                     new SQLiteParameter("@Observaciones", contrato.Observaciones)
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas actualizadas
-                string sqlActualizarContrato = "UPDATE Contratos SET FechaFin = @FechaFin, PrecioMensual = @PrecioMensual, Observaciones = @Observaciones WHERE Id = @Id";
+                string sqlActualizarContrato = "UPDATE Contratos SET PrecioMensual = @PrecioMensual, Observaciones = @Observaciones WHERE Id = @Id";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlActualizarContrato, parametros));
 

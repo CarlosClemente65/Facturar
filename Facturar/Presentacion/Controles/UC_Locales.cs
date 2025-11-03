@@ -153,13 +153,15 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos de la empresa en los textBox correspondientes
         private void MostrarDatosLocal(Local local)
         {
-            // Pendiente de desarrollo y poner los campos que corresponda
+            // TODO: Cambiar la descripcion del local por un comboBox de locales
             txtDescripcion.Text = local.Descripcion;
             txtImporte.Text = local.ImporteAlquiler.ToString("F2");
             txtDireccion.Text = local.Direccion;
             txtCodigoPostal.Text = local.CodigoPostal;
             txtPoblacion.Text = local.Poblacion;
             txtProvincia.Text = local.Provincia;
+
+            // TODO: Cambiar el NifEmpresa por un comboBox de empresas
             txtNifEmpresa.Text = local.NIFEmpresa;
             txtNombreEmpresa.Text = local.NombreEmpresa;
             txtObservaciones.Text = local.Observaciones;

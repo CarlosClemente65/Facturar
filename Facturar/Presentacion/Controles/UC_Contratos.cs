@@ -85,6 +85,7 @@ namespace Facturar.Presentacion.Controles
             foreach(var contrato in listaContratos)
             {
                 contrato.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorClientes: gestorClientes, gestorLocales: gestorLocales);
+                //LocalContrato = ObtenerLocalPorId(contrato.IdLocal);
             }
 
             // Carga los datos de los contratos en el gridBase
@@ -117,11 +118,16 @@ namespace Facturar.Presentacion.Controles
 
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
-                // En el caso del alta, hay que seleccionar un cliente y local para asignarlos al contrato (la empresa esta vinculada al local)
+                // En el caso del alta, la empresa, cliente y local no se modifican
                 contrato.IdCliente = ClienteContrato.Id;
                 contrato.IdLocal = LocalContrato.Id;
                 contrato.IdEmpresa = EmpresaContrato.Id;
             }
+            // Establece las propiedades al objeto 'Local' que tiene el contrato
+            contrato.Local.IdContrato = contrato.Id;
+            contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
+
+            // Establece las propiedades del contrato
             contrato.PrecioMensual = Convert.ToDecimal(txtPrecioMensual.Text);
             contrato.FechaInicio = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaInicio.Text) ?? DateTime.Today;
             contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
@@ -229,11 +235,12 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos del contrato en los textBox correspondientes
         private void MostrarDatoscontrato(Contrato contrato)
         {
+            // TODO: Cambiar el NifCliente por un comboBox de clientes
             txtNifCliente.Text = contrato.NIFCliente;
             txtNombreCliente.Text = contrato.NombreCliente;
-            txtIdLocal.Text = contrato.IdLocal.ToString();
 
             // TODO: Cambiar la descripcion del local por un comboBox de locales
+            txtIdLocal.Text = contrato.IdLocal.ToString();
             txtDescripcion.Text = contrato.DescripcionLocal;
 
             txtPrecioMensual.Text = contrato.PrecioMensual.ToString("N2");
@@ -345,10 +352,26 @@ namespace Facturar.Presentacion.Controles
 
         private void txtImporte_Leave(object sender, EventArgs e)
         {
-            if (txtPrecioMensual.Text == "")
+            TextBox txt = sender as TextBox;
+            decimal importe;
+
+            // Valida que no se introduzca algo que no sean numeros
+            if(!decimal.TryParse(txt.Text, out importe))
             {
-                txtPrecioMensual.Text = "0";
+                MessageBox.Show("Debe introducir un importe numerico valido.", "Importe incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                return;
             }
+
+            // Valida que sea un importe positivo
+            if(importe <= 0)
+            {
+                MessageBox.Show("El importe debe ser mayor que cero", "Importe erroneo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                return;
+            }
+
+            // Si no hay errores, formatea el importe
             Utiles.FormatearImporte(sender as TextBox);
         }
 

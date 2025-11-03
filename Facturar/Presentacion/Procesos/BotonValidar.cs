@@ -136,7 +136,7 @@ namespace Facturar.Presentacion.Procesos
 
                     case Enumerador.TipoEntidad.Contrato:
                         // Ejecucion del proceso al validar el contrato
-                        EjecutarProcesoContrato(gestorContratos, tipoProceso, ref copiaContrato, ref contrato);
+                        EjecutarProcesoContrato(gestorContratos, gestorLocales, tipoProceso, ref copiaContrato, ref contrato, ref local);
 
                         // Marca que no ha habido error en el proceso
                         formulario.errorProceso = false;
@@ -354,7 +354,7 @@ namespace Facturar.Presentacion.Procesos
         }
 
         // Metodo para ejecutar los procesos de editar o alta de un contrato
-        private void EjecutarProcesoContrato(GestorContratos gestorContratos, TipoProceso tipoProceso, ref Contrato copiaContrato, ref Contrato contrato)
+        private void EjecutarProcesoContrato(GestorContratos gestorContratos, GestorLocales gestorLocales, TipoProceso tipoProceso, ref Contrato copiaContrato, ref Contrato contrato, ref Local local)
         {
             switch(tipoProceso)
             {
@@ -364,7 +364,7 @@ namespace Facturar.Presentacion.Procesos
 
                     // Se obtiene el contrato seleccionado
                     contrato = ucContratos.ContratoActual;
-
+                    
                     // Hacemos una copia del contrato actual por si la edicion falla
                     copiaContrato = new Contrato(contrato);
 
@@ -373,6 +373,13 @@ namespace Facturar.Presentacion.Procesos
 
                     // Graba los cambios en la base de datos
                     gestorContratos.Actualizar(contrato);
+
+                    //// Graba el importe del alquiler en el local
+                    //if(contrato.Local.ImporteAlquiler != contrato.PrecioMensual)
+                    //{
+                    //    contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
+                    //}
+                    gestorLocales.Actualizar(contrato.Local);
 
                     // Mensaje de proceso correcto
                     mensajeOk = "Contrato actualizado correctamente.";
@@ -390,6 +397,10 @@ namespace Facturar.Presentacion.Procesos
 
                     // Agrega el nuevo contrato a la base de datos
                     gestorContratos.Agregar(contrato);
+
+                    // Graba el importe del alquiler en el local
+                    local.ImporteAlquiler = contrato.PrecioMensual;
+                    gestorLocales.Actualizar(local);
 
                     // Mensaje de proceso correcto
                     mensajeOk = "Contrato creado correctamente.";
