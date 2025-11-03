@@ -108,12 +108,13 @@ namespace Facturar.Presentacion.Controles
                 ("NombreEmpresa",7),
                 ("ImporteAlquiler", 8),
                 ("Observaciones", 9),
-                ("FechaAlta", 10),
-                ("FechaBaja", 11)
-            };
+                ("IdContrato", 10),
+                ("FechaAlta", 11),
+                ("FechaBaja", 12)
+            }; 
 
             // Pasa las columnas al grid base para que las configure
-            ConfigurarColumnas<Empresa>(columnas);
+            ConfigurarColumnas<Local>(columnas);
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
@@ -237,7 +238,7 @@ namespace Facturar.Presentacion.Controles
             if(dgvBase.Columns.Count == 0) return; // Protege contra columnas vacías
 
             // Lista con los nombres de las propiedades a ajustar
-            string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja" };
+            string[] columnasCentradas = { "Id", "CodigoPostal", "FechaAlta", "FechaBaja", "IdContrato" };
             string[] columnasFecha = { "FechaAlta", "FechaBaja" };
             string[] columnasImportes = { "ImporteAlquiler" };
 

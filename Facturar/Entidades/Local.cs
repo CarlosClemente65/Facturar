@@ -19,6 +19,7 @@ namespace Facturar.Entidades
         [DisplayName("Nombre empresa")]
         public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
 
+        [DisplayName("Id contrato activo")]
         public int? IdContrato { get; set; }
 
         public Contrato Contrato { get; set; }

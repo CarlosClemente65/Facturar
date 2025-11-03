@@ -410,13 +410,6 @@ namespace Facturar.Presentacion.Procesos
                         gestorLocales.Actualizar(contrato.Local);
                     }
 
-                    // Actualiza las propiedades del Local segun el nuevo contrato
-                    //local.IdContrato = IdNuevoContrato;
-                    contrato.Local.ImporteAlquiler = contratoAgregado.PrecioMensual;
-
-                    // Actualiza el local
-                    gestorLocales.Actualizar(local);
-
                     // Mensaje de proceso correcto
                     mensajeOk = "Contrato creado correctamente.";
                     break;

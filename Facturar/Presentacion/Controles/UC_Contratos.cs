@@ -129,7 +129,7 @@ namespace Facturar.Presentacion.Controles
             contrato.FechaInicio = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaInicio.Text) ?? DateTime.Today;
             contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
             contrato.Observaciones = txtObservaciones.Text;
-            contrato.Local = LocalContrato;
+            contrato.Local = LocalContrato; // Asigna el objeto 'Local' al contrato
             contrato.Local.ImporteAlquiler = contrato.PrecioMensual;
         }
 
