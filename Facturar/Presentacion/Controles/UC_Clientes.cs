@@ -169,6 +169,7 @@ namespace Facturar.Presentacion.Controles
             txtNifCliente.Enabled = false;
             txtNombreCliente.Enabled = false;
             txtFechaAlta.Enabled = false;
+            txtFechaBaja.Enabled = false;
         }
 
         // Define las columnas a mostrar en el grid base y el orden que tendran

@@ -75,7 +75,7 @@ namespace Facturar.Presentacion.Procesos
                     ucContratos.ActualizarContratoSeleccionado();
 
                     // Aplica el efecto de bloqueo de edicion
-                    Utiles.BloqueoEdicionDgv(_grid: ucClientes.GridBase, bloquear: true);
+                    Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: true);
 
                     break;
 

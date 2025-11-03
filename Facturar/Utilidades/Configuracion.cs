@@ -9,7 +9,7 @@ namespace Facturar.Utilidades
         {
             get
             {
-                string Carpeta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "FacturarApp");
+                string Carpeta = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "FacturarApp");
                 return ChequeoCarpeta(Carpeta);
             }
         }

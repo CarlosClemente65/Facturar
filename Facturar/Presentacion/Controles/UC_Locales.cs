@@ -82,7 +82,7 @@ namespace Facturar.Presentacion.Controles
             // Carga las empresas relacionadas para mostrar los datos en el grid
             foreach(var local in listaLocales)
             {
-                local.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorContratos: gestorContratos );
+                local.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorContratos: gestorContratos);
             }
 
             // Carga los datos de los locales
@@ -210,12 +210,11 @@ namespace Facturar.Presentacion.Controles
 
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
-                // En el caso del alta, se localiza el IdEmpresa a grabar en el local segun el NifEmpresa
+                // Campos a actualizar en el caso del alta (de momento no hay restricciones)
 
-                //var empresaAlta = gestorEmpresas.ObtenerPorNIF(txtNifEmpresa.Text);
-                local.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
             }
 
+            local.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
             // Campos comunes en el alta y edicion
             local.Descripcion = txtDescripcion.Text;
             local.Direccion = txtDireccion.Text;
@@ -343,7 +342,6 @@ namespace Facturar.Presentacion.Controles
             }
             else
             {
-                LocalSeleccionado.Empresa = EmpresaLocal;
                 txtNombreEmpresa.Text = EmpresaLocal?.Nombre ?? string.Empty;
             }
         }

@@ -30,6 +30,7 @@ namespace Facturar.Infraestructura
                     CREATE TABLE IF NOT EXISTS Locales (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdEmpresa INTEGER NOT NULL,
+                        IdContrato INTEGER,
                         Descripcion TEXT NOT NULL,
                         Direccion TEXT,
                         CodigoPostal TEXT,
@@ -39,7 +40,8 @@ namespace Facturar.Infraestructura
                         Observaciones TEXT,
                         FechaAlta DATETIME NOT NULL,
                         FechaBaja DATETIME,
-                        FOREIGN KEY(EmpresaId) REFERENCES Empresas(Id)
+                        FOREIGN KEY(IdEmpresa) REFERENCES Empresas(Id),
+                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id)
                     );
                 ";
 

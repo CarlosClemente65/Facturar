@@ -206,6 +206,7 @@ namespace Facturar.Presentacion.Controles
             txtNifEmpresa.Enabled = false;
             txtNombreEmpresa.Enabled = false;
             txtFechaInicio.Enabled = false;
+            txtFechaFin.Enabled = false; // No se permite poner la ficha fin en edicion
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
@@ -373,7 +374,6 @@ namespace Facturar.Presentacion.Controles
                 else
                 {
                     txtNombreCliente.Text = ClienteContrato?.Nombre ?? string.Empty;
-                    ContratoSeleccionado.Cliente = ClienteContrato;
                 }
             }
 
@@ -408,7 +408,6 @@ namespace Facturar.Presentacion.Controles
                 }
                 else
                 {
-                    ContratoSeleccionado.Local = LocalContrato;
                     // Se obtiene la empresa vinculada al local
                     EmpresaContrato = ObtenerEmpresaPorIdLocal(LocalContrato.IdEmpresa);
 
