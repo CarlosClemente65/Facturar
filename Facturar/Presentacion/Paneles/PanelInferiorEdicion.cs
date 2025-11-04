@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Diagnostics;
 using System.Windows.Forms;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Paneles
 {
@@ -14,20 +9,23 @@ namespace Facturar.Presentacion.Paneles
     {
         public event EventHandler CancelarClicked;
         public event EventHandler ValidarClicked;
+        public event EventHandler CancelarMouseDown;
+
+
         public PanelInferior_Edicion()
         {
             InitializeComponent();
             btnCancelar.Click += btnCancelar_Click;
         }
+        
+        private void btnValidar_Click(object sender, EventArgs e)
+        {
+            ValidarClicked?.Invoke(this, EventArgs.Empty);
+        }
 
         private void btnCancelar_Click(object sender, EventArgs e)
         {
             CancelarClicked?.Invoke(this, EventArgs.Empty);
-        }
-
-        private void btnValidar_Click(object sender, EventArgs e)
-        {
-            ValidarClicked?.Invoke(this, EventArgs.Empty);
         }
     }
 }

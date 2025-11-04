@@ -42,7 +42,6 @@ namespace Facturar.Entidades
 
         public List<FacturaLinea> Lineas { get; set; } = new List<FacturaLinea>();
 
-        
         // Totales calculados automáticamente
         [DisplayName("Total base")]
         public decimal TotalBase { get; set; }
@@ -65,7 +64,7 @@ namespace Facturar.Entidades
         }
 
         // Constructor para crear una copia de una factura existente
-        public Factura(Factura copiaFactura) 
+        public Factura(Factura copiaFactura)
         {
             Id = copiaFactura.Id;
             IdEmpresa = copiaFactura.IdEmpresa;

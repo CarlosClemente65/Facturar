@@ -14,7 +14,6 @@ namespace Facturar.Presentacion.Procesos
         // Constructor que recibe las instancias de las entidades y las pasa a la clase base para almacenar los valores
         public BotonCancelar(UC_Empresas empresas, UC_Locales locales, UC_Clientes clientes, UC_Contratos contratos, UC_Facturas facturas) : base(empresas, locales, clientes, contratos, facturas)
         {
-
         }
 
         // Procesos a ejecutar segun el tipo de entidad (el parametro estado no se usa aqui).

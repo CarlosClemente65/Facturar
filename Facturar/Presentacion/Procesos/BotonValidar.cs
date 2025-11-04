@@ -355,7 +355,12 @@ namespace Facturar.Presentacion.Procesos
         }
 
         // Metodo para ejecutar los procesos de editar o alta de un contrato
-        private void EjecutarProcesoContrato(GestorContratos gestorContratos, GestorLocales gestorLocales, TipoProceso tipoProceso, ref Contrato copiaContrato, ref Contrato contrato, ref Local local)
+        private void EjecutarProcesoContrato(GestorContratos gestorContratos,
+                                             GestorLocales gestorLocales,
+                                             TipoProceso tipoProceso,
+                                             ref Contrato copiaContrato,
+                                             ref Contrato contrato,
+                                             ref Local local)
         {
             switch(tipoProceso)
             {

@@ -282,7 +282,7 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite validar que al agregar un contrato no sea nulo y que tenga empresa y local
         /// </summary>
-        /// <param name="cliente"></param>
+        /// <param name="contrato"></param>
         /// <exception cref="ArgumentNullException"></exception>
         /// <exception cref="ArgumentException"></exception>
         private void ValidarContrato(Contrato contrato)
@@ -335,7 +335,7 @@ namespace Facturar.Servicios
                 if(contratoActivo != null)
                 {
                     throw new InvalidOperationException(
-                        $"El local ya tiene un contrato activo. Debe dar de baja el contrato anterior antes de crear uno nuevo");
+                        $"El local ya tiene el contrato {contratoActivo.Id} activo. Solo puede haber un contrato activo.");
                 }
             }
 
@@ -375,8 +375,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Obtiene los contratos asociados a un cliente
         /// </summary>
-        /// <param name="nifCliente"></param>
         /// <param name="idCliente"></param>
+        /// <param name="nifCliente"></param>
         /// <param name="activos"></param>
         /// <returns>Lista de contratos</returns>
         public IEnumerable<Contrato> ListarContratosPorCliente(int? idCliente = null, string nifCliente = null, bool? activos = null)

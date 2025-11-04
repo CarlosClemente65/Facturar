@@ -75,7 +75,6 @@ namespace Facturar.Utilidades
         /// </summary>
         /// <param name="contenedor">Control que contiene los TextBox</param>
         /// <param name="habilitar">true para habilitar, false para bloquear</param>
-        /// <param name="limpiar">true para que ademas de habilitar se borre el contenido (en alta); defecto = false</param>
         public static void HabilitarTextBoxes(Control contenedor, bool habilitar)
         {
             TextBox primerCampo = null;
@@ -129,7 +128,7 @@ namespace Facturar.Utilidades
             Color grisOscuro = Color.FromArgb(200, 200, 200);
 
             // Guardar los colores originales solo la primera vez
-            if(coloresOriginalesGuardados == false)
+            if(!coloresOriginalesGuardados)
             {
                 // Guardamos los colores originales
                 colorOriginalFondo = dgv.BackgroundColor;
@@ -178,7 +177,10 @@ namespace Facturar.Utilidades
             dgv.Refresh();
         }
 
-        public static void RestablecerPaneles<TGestor, TEntidad>(DataGridView grid, bool bloquear, TGestor gestor) where TGestor : IRepositorioBase<TEntidad>
+        public static void RestablecerPaneles<TGestor, TEntidad>(
+            DataGridView grid,
+            bool bloquear,
+            TGestor gestor) where TGestor : IRepositorioBase<TEntidad>
         {
             // Quita el efecto de bloqueo de edicion
             BloqueoEdicionDgv(_grid: grid, bloquear: bloquear);
@@ -224,6 +226,6 @@ namespace Facturar.Utilidades
                 // Formatea con dos decimales y coma como separador decimal
                 txt.Text = valor.ToString("N2");
             }
-        }
+        }        
     }
 }

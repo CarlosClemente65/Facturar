@@ -49,6 +49,7 @@
             this.txtObservaciones = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.txtIdLocal = new System.Windows.Forms.TextBox();
+            this.btnRevisionContrato = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // label2
@@ -297,11 +298,29 @@
             this.txtIdLocal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtIdLocal.Leave += new System.EventHandler(this.txtIdLocal_Leave);
             // 
+            // btnRevisionContrato
+            // 
+            this.btnRevisionContrato.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnRevisionContrato.BackColor = System.Drawing.Color.Wheat;
+            this.btnRevisionContrato.FlatAppearance.BorderColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
+            this.btnRevisionContrato.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
+            this.btnRevisionContrato.FlatAppearance.MouseOverBackColor = System.Drawing.Color.OldLace;
+            this.btnRevisionContrato.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnRevisionContrato.Font = new System.Drawing.Font("Verdana", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnRevisionContrato.Location = new System.Drawing.Point(571, 269);
+            this.btnRevisionContrato.Name = "btnRevisionContrato";
+            this.btnRevisionContrato.Size = new System.Drawing.Size(182, 39);
+            this.btnRevisionContrato.TabIndex = 78;
+            this.btnRevisionContrato.Text = "Revisiones contrato";
+            this.btnRevisionContrato.UseVisualStyleBackColor = false;
+            this.btnRevisionContrato.Click += new System.EventHandler(this.btnRevisionContrato_Click);
+            // 
             // UC_Contratos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.btnRevisionContrato);
             this.Controls.Add(this.txtIdLocal);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label8);
@@ -348,6 +367,7 @@
             this.Controls.SetChildIndex(this.label8, 0);
             this.Controls.SetChildIndex(this.label4, 0);
             this.Controls.SetChildIndex(this.txtIdLocal, 0);
+            this.Controls.SetChildIndex(this.btnRevisionContrato, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -376,5 +396,6 @@
         private System.Windows.Forms.TextBox txtObservaciones;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtIdLocal;
+        private System.Windows.Forms.Button btnRevisionContrato;
     }
 }

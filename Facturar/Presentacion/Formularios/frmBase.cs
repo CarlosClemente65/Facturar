@@ -8,7 +8,7 @@ using Facturar.Presentacion.Procesos;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using Proceso = Facturar.Presentacion.Procesos;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion
 {
@@ -184,10 +184,10 @@ namespace Facturar.Presentacion
                     AlternarPanelInferior(panelEdicion);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+                    UtilesUI.HabilitarTextBoxes(contenedor: this, habilitar: true);
 
                     // Limpiar los TextBoxes para poder introducir datos del alta
-                    Utiles.LimpiarTextBoxes(contenedor: this);
+                    UtilesUI.LimpiarTextBoxes(contenedor: this);
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
@@ -226,7 +226,7 @@ namespace Facturar.Presentacion
                     AlternarPanelInferior(panelEdicion);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+                    UtilesUI.HabilitarTextBoxes(contenedor: this, habilitar: true);
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonEditar = new Proceso.BotonEditar(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
@@ -291,7 +291,7 @@ namespace Facturar.Presentacion
                     AlternarPanelInferior(panelGeneral);
 
                     // Deshabilitar los TextBox
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+                    UtilesUI.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
                     // Deja el proceso libre para siguientes procesos
                     tipoProceso = Enumerador.TipoProceso.Ninguno;
@@ -316,7 +316,7 @@ namespace Facturar.Presentacion
                         AlternarPanelInferior(panelGeneral);
 
                         // Deshabilitar los TextBox
-                        Utiles.HabilitarTextBoxes(contenedor: this, habilitar: false);
+                        UtilesUI.HabilitarTextBoxes(contenedor: this, habilitar: false);
 
                         // Deja el proceso libre para siguientes procesos
                         tipoProceso = Enumerador.TipoProceso.Ninguno;
@@ -339,10 +339,10 @@ namespace Facturar.Presentacion
                     AlternarPanelInferior(panelEdicion);
 
                     // Habilitar los TextBox y poner el foco en el primer campo
-                    Utiles.HabilitarTextBoxes(contenedor: this, habilitar: true);
+                    UtilesUI.HabilitarTextBoxes(contenedor: this, habilitar: true);
 
                     // Limpiar los TextBoxes para poder introducir datos del alta
-                    Utiles.LimpiarTextBoxes(contenedor: this);
+                    UtilesUI.LimpiarTextBoxes(contenedor: this);
 
                     // Crea una instancia del boton para pasar las instancias de las entidades y ejecutar el proceso correspondiente
                     var botonAlta = new Proceso.BotonAlta(ucEmpresas, ucLocales, ucClientes, ucContratos, ucFacturas);
@@ -363,18 +363,6 @@ namespace Facturar.Presentacion
         private void imgCerrar_Click(object sender, EventArgs e)
         {
             Application.Exit();
-        }
-
-        private void BotonGeneral_Click(object sender, EventArgs e)
-        {
-            //CambiarEstadoEdicion(true);
-            // Estaba pensado para mostrar / ocultar los paneles inferiores
-        }
-
-        private void BotonEditar_Click(object sender, EventArgs e)
-        {
-            //CambiarEstadoEdicion(false);
-            // Estaba pensado para mostrar / ocultar los paneles inferiores
         }
 
         private void btnAbrirPanel_Click(object sender, EventArgs e)
@@ -475,7 +463,7 @@ namespace Facturar.Presentacion
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
 
             // Evita abrir varias veces el panelGeneral
-            if(panelGeneral.Visible == false)
+            if(!panelGeneral.Visible)
             {
                 panelGeneral.Visible = true;
             }
@@ -489,7 +477,7 @@ namespace Facturar.Presentacion
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
 
             // Evita abrir varias veces el panelGeneral
-            if(panelGeneral.Visible == false)
+            if(!panelGeneral.Visible)
             {
                 panelGeneral.Visible = true;
             }
@@ -503,7 +491,7 @@ namespace Facturar.Presentacion
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
 
             // Evita abrir varias veces el panelGeneral
-            if(panelGeneral.Visible == false)
+            if(!panelGeneral.Visible)
             {
                 panelGeneral.Visible = true;
             }
@@ -517,7 +505,7 @@ namespace Facturar.Presentacion
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
 
             // Evita abrir varias veces el panelGeneral
-            if(panelGeneral.Visible == false)
+            if(!panelGeneral.Visible)
             {
                 panelGeneral.Visible = true;
             }
@@ -530,7 +518,7 @@ namespace Facturar.Presentacion
             //panelGeneral.Visible = false; // Se oculta para evitar suponerlo a otro que pueda haberse abierto
             ucFacturas.Dock = DockStyle.Fill;
             btnAbrirPanel_Click(btnAbrirPanel, EventArgs.Empty);
-            if(panelGeneral.Visible == false)
+            if(!panelGeneral.Visible)
             {
                 panelGeneral.Visible = true;
             }
@@ -553,7 +541,6 @@ namespace Facturar.Presentacion
             panelCentral.Controls.Clear();
             panelGeneral.Visible = false;
         }
-
 
     }
 

@@ -74,7 +74,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite actualizar los datos de un cliente en la BBDD
         /// </summary>
-        /// <param name="cliente"></param>
+        /// <param name="local">Objeto del tipo Local para actualizar</param>
+        /// <param name="esBaja">Control de si el local esta o no de baja</param>
         /// <returns>True si se ha podido actualizar</returns>
         /// <exception cref="InvalidOperationException"></exception>
 
@@ -141,7 +142,7 @@ namespace Facturar.Servicios
         /// <summary>
         /// Permite eliminar un local de la base de datos pasando el Id del local
         /// </summary>
-        /// <param name="nif"></param>
+        /// <param name="id"></param>
         /// <returns>True si se ha podido eliminar</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool EliminarLocal(int id)
@@ -209,7 +210,7 @@ namespace Facturar.Servicios
         }
 
 
-        /// No se implementa este metodo porque la baja se hace por Id
+        // No se implementa este metodo porque la baja se hace por Id
         public bool Baja(string nif, DateTime? fechaBaja)
         {
             throw new NotImplementedException();

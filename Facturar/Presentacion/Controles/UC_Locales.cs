@@ -111,7 +111,7 @@ namespace Facturar.Presentacion.Controles
                 ("IdContrato", 10),
                 ("FechaAlta", 11),
                 ("FechaBaja", 12)
-            }; 
+            };
 
             // Pasa las columnas al grid base para que las configure
             ConfigurarColumnas<Local>(columnas);
@@ -271,21 +271,19 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaAlta_Enter(object sender, EventArgs e)
         {
-            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
-            DateTime fechaValida;
-
             bool esValida = DateTime.TryParseExact(
                 txtFechaAlta.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out fechaValida                                     // Fecha resultante
+                out _                                     // Fecha resultante
                 );
 
             if(!esValida)
@@ -297,15 +295,13 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaBaja_Enter(object sender, EventArgs e)
         {
-            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
-            DateTime fechaValida;
-
             if(txtFechaBaja.Text.Trim() == "")
             {
                 // Si el campo está vacío, no se realiza la validación
@@ -317,7 +313,7 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out fechaValida                                     // Fecha resultante
+                out _                                     // Fecha resultante
                 );
 
             if(!esValida)
@@ -356,8 +352,7 @@ namespace Facturar.Presentacion.Controles
 
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
-            TextBox txt = sender as TextBox;
-            if(txt != null)
+            if(sender is TextBox txt)
             {
                 txt.Text = txt.Text.ToUpper();
             }

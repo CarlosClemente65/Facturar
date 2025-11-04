@@ -158,17 +158,17 @@
     <Compile Include="Presentacion\Controles\UC_GridBase.Designer.cs">
       <DependentUpon>UC_GridBase.cs</DependentUpon>
     </Compile>
-    <Compile Include="Presentacion\Formularios\frmGenerarFactura.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Presentacion\Formularios\frmGenerarFactura.Designer.cs">
-      <DependentUpon>frmGenerarFactura.cs</DependentUpon>
-    </Compile>
     <Compile Include="Presentacion\Formularios\frmBase.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Presentacion\Formularios\frmBase.Designer.cs">
       <DependentUpon>frmBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Presentacion\Formularios\frmRevisionContrato.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Presentacion\Formularios\frmRevisionContrato.Designer.cs">
+      <DependentUpon>frmRevisionContrato.cs</DependentUpon>
     </Compile>
     <Compile Include="Presentacion\Paneles\PanelInferiorEdicion.cs">
       <SubType>UserControl</SubType>
@@ -241,6 +241,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Formularios\frmBase.resx">
       <DependentUpon>frmBase.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Presentacion\Formularios\frmRevisionContrato.resx">
+      <DependentUpon>frmRevisionContrato.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Presentacion\Paneles\PanelInferiorEdicion.resx">
       <DependentUpon>PanelInferiorEdicion.cs</DependentUpon>

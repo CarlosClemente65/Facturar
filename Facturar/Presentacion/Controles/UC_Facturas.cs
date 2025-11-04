@@ -268,8 +268,7 @@ namespace Facturar.Presentacion.Controles
 
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
-            TextBox txt = sender as TextBox;
-            if(txt != null)
+            if(sender is TextBox txt)
             {
                 txt.Text = txt.Text.ToUpper();
             }
@@ -289,14 +288,12 @@ namespace Facturar.Presentacion.Controles
         {
             // Validacion de la fecha de factura
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
-            DateTime fechaValida;
-
             bool esValida = DateTime.TryParseExact(
                 txtFechaFactura.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out fechaValida                                     // Fecha resultante
+                out _                                     // Fecha resultante
                 );
 
             if(!esValida)

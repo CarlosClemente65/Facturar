@@ -7,7 +7,7 @@ namespace Facturar.Infraestructura
     public static class InicializadorBaseDatos
     {
         // Configuracion para la creacion de las tablas
-        static string sqlEmpresas = @"
+        static readonly string sqlEmpresas = @"
                     CREATE TABLE IF NOT EXISTS Empresas (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         NIF TEXT NOT NULL UNIQUE,
@@ -26,7 +26,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlLocales = @"
+        static readonly string sqlLocales = @"
                     CREATE TABLE IF NOT EXISTS Locales (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdEmpresa INTEGER NOT NULL,
@@ -45,7 +45,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlClientes = @"
+        static readonly string sqlClientes = @"
                     CREATE TABLE IF NOT EXISTS Clientes (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         NIF TEXT NOT NULL UNIQUE,
@@ -65,7 +65,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlClientesEmpresas = @"
+        static readonly string sqlClientesEmpresas = @"
                     CREATE TABLE IF NOT EXISTS ClientesEmpresas (
                         IdCliente INTEGER NOT NULL,
                         IdEmpresa INTEGER NOT NULL,
@@ -75,7 +75,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlContratos = @"
+        static readonly string sqlContratos = @"
                     CREATE TABLE IF NOT EXISTS Contratos (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdEmpresa INTEGER NOT NULL,
@@ -91,7 +91,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlRevisionesContrato = @"
+        static readonly string sqlRevisionesContrato = @"
                     CREATE TABLE IF NOT EXISTS RevisionesContrato (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdContrato INTEGER NOT NULL,
@@ -104,7 +104,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlFacturas = @"
+        static readonly string sqlFacturas = @"
                     CREATE TABLE IF NOT EXISTS Facturas (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdEmpresa INTEGER NOT NULL,
@@ -122,7 +122,7 @@ namespace Facturar.Infraestructura
                     );
                 ";
 
-        static string sqlLineasFactura = @"
+        static readonly string sqlLineasFactura = @"
                     CREATE TABLE IF NOT EXISTS LineasFactura (
                         Id INTEGER PRIMARY KEY AUTOINCREMENT,
                         IdFactura INTEGER NOT NULL,

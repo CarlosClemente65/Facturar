@@ -147,13 +147,12 @@
             this.panelActivos.BackColor = System.Drawing.Color.Transparent;
             this.panelActivos.Controls.Add(this.label1);
             this.panelActivos.Controls.Add(this.cbEstado);
-            this.panelActivos.Location = new System.Drawing.Point(0, 0);
+            this.panelActivos.Location = new System.Drawing.Point(0, 2);
             this.panelActivos.Margin = new System.Windows.Forms.Padding(0);
             this.panelActivos.Name = "panelActivos";
             this.panelActivos.Padding = new System.Windows.Forms.Padding(5);
             this.panelActivos.Size = new System.Drawing.Size(90, 58);
-            this.panelActivos.TabIndex = 5;
-            this.panelActivos.Visible = false;
+            this.panelActivos.TabIndex = 7;
             // 
             // label1
             // 
@@ -182,7 +181,6 @@
             this.cbEstado.Name = "cbEstado";
             this.cbEstado.Size = new System.Drawing.Size(75, 22);
             this.cbEstado.TabIndex = 0;
-            this.cbEstado.SelectedIndexChanged += new System.EventHandler(this.cbEstado_SelectedIndexChanged);
             // 
             // PanelInferior_general
             // 
@@ -206,9 +204,9 @@
         private System.Windows.Forms.Button btnEditar;
         private System.Windows.Forms.Button btnAlta;
         private System.Windows.Forms.FlowLayoutPanel panelBotonesGeneral;
-        private System.Windows.Forms.ComboBox cbEstado;
-        private System.Windows.Forms.Label label1;
-        public System.Windows.Forms.Panel panelActivos;
         private System.Windows.Forms.Button btnEliminar;
+        public System.Windows.Forms.Panel panelActivos;
+        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cbEstado;
     }
 }

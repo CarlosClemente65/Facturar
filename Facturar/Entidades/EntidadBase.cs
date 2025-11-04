@@ -10,7 +10,7 @@ namespace Facturar.Entidades
     public class EntidadBase
     {
         // Constructor por defecto
-        public EntidadBase() 
+        public EntidadBase()
         {
 
         }

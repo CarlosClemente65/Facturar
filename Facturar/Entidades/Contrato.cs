@@ -108,7 +108,7 @@ namespace Facturar.Entidades
                 throw new ArgumentException("El precio mensual debe ser mayor que cero.");
             }
 
-            if(FechaInicio == default(DateTime))
+            if(FechaInicio == default)
             {
                 throw new ArgumentException("La fecha de inicio es obligatoria.");
             }
@@ -131,7 +131,7 @@ namespace Facturar.Entidades
         public void ValidarPropiedadesRevision()
         {
             // Valida la fecha de revision y si no se ha puesto, le pone la actual
-            if(FechaRevision == default(DateTime))
+            if(FechaRevision == default)
             {
                 FechaRevision = Utiles.ValidarFecha(FechaRevision);
             }

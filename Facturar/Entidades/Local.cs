@@ -84,7 +84,7 @@ namespace Facturar.Entidades
         public void ValidarPropiedadesObjeto()
         {
             // Al agregar un local, si no se pasa una fecha de alta se le pone la actual, pero dejo el metodo por coherencia con el resto
-            if(FechaAlta == default(DateTime))
+            if(FechaAlta == default)
             {
                 throw new ArgumentException("La fecha de alta es obligatoria.");
             }

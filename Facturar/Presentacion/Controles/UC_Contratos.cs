@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.Remoting.Messaging;
 using System.Windows.Forms;
 using Facturar.Entidades;
+using Facturar.Presentacion.Formularios;
 using Facturar.Servicios;
-using static System.Net.Mime.MediaTypeNames;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -36,6 +34,9 @@ namespace Facturar.Presentacion.Controles
         private bool ordenAscendente = true;
 
         private bool datosCargados = false;
+
+        private int erroresFormulario;
+
 
         public UC_Contratos()
         {
@@ -224,7 +225,7 @@ namespace Facturar.Presentacion.Controles
                 ContratoSeleccionado = contrato;
 
                 // Limpia los textBox y muestra los datos de la empresa seleccionada
-                Utiles.LimpiarTextBoxes(this);
+                UtilesUI.LimpiarTextBoxes(this);
 
                 // Muestra los datos del contrato seleccionado
                 MostrarDatoscontrato(contrato);
@@ -267,11 +268,11 @@ namespace Facturar.Presentacion.Controles
 
             if(ordenAscendente)
             {
-                GridBase.DataSource = listaContratos.OrderBy(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaContratos.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
             else
             {
-                GridBase.DataSource = listaContratos.OrderByDescending(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaContratos.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
 
             ordenAscendente = !ordenAscendente;
@@ -279,21 +280,19 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaInicio_Enter(object sender, EventArgs e)
         {
-            txtFechaInicio.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+            txtFechaInicio.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaInicio_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de inicio
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
-            DateTime fechaValida;
-
             bool esValida = DateTime.TryParseExact(
                 txtFechaInicio.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out fechaValida                                     // Fecha resultante
+                out _                                     // Fecha resultante
                 );
 
             if(!esValida)
@@ -305,14 +304,13 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaFin_Enter(object sender, EventArgs e)
         {
-            txtFechaFin.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today).ToString();
+            txtFechaFin.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaFin_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
-            DateTime fechaValida;
 
             if(txtFechaFin.Text.Trim() == "")
             {
@@ -325,7 +323,7 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out fechaValida                                     // Fecha resultante
+                out _                                     // Fecha resultante
                 );
 
             if(!esValida)
@@ -337,8 +335,7 @@ namespace Facturar.Presentacion.Controles
 
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
-            TextBox txt = sender as TextBox;
-            if(txt != null)
+            if(sender is TextBox txt)
             {
                 txt.Text = txt.Text.ToUpper();
             }
@@ -346,16 +343,15 @@ namespace Facturar.Presentacion.Controles
 
         private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Utiles.ValidarImporte(sender as TextBox, e);
+            UtilesUI.ValidarImporte(sender as TextBox, e);
         }
 
         private void txtImporte_Leave(object sender, EventArgs e)
         {
             TextBox txt = sender as TextBox;
-            decimal importe;
 
             // Valida que no se introduzca algo que no sean numeros
-            if(!decimal.TryParse(txt.Text, out importe))
+            if(!decimal.TryParse(txt.Text, out decimal importe))
             {
                 MessageBox.Show("Debe introducir un importe numerico valido.", "Importe incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txt.Focus();
@@ -371,7 +367,7 @@ namespace Facturar.Presentacion.Controles
             }
 
             // Si no hay errores, formatea el importe
-            Utiles.FormatearImporte(sender as TextBox);
+            UtilesUI.FormatearImporte(sender as TextBox);
         }
 
         private void txtNifCliente_Leave(object sender, EventArgs e)
@@ -390,11 +386,16 @@ namespace Facturar.Presentacion.Controles
                                     "Cliente no encontrado",
                                     MessageBoxButtons.OK,
                                     MessageBoxIcon.Warning);
-                    txtNombreCliente.Text = string.Empty;
-                    txtNifCliente.Focus();
+                    txtNombreCliente.Text = "Cliente no encontrado";
+                    txtNombreCliente.BackColor = Color.Red;
+                    txtNombreCliente.ForeColor = Color.White;
+                    erroresFormulario++;
+                    //txtNifCliente.Focus();
                 }
                 else
                 {
+                    txtNombreCliente.BackColor = SystemColors.Window;
+                    txtNombreCliente.ForeColor = SystemColors.WindowText;
                     txtNombreCliente.Text = ClienteContrato?.Nombre ?? string.Empty;
                 }
             }
@@ -403,42 +404,42 @@ namespace Facturar.Presentacion.Controles
 
         private void txtIdLocal_Leave(object sender, EventArgs e)
         {
-            if(tipoProceso == Enumerador.TipoProceso.Alta)
-            {
-                // Solo en el alta se permite acceder al local
-                LocalContrato = ObtenerLocalPorId(Convert.ToInt32(txtIdLocal.Text));
-                if(LocalContrato == null)
-                {
-                    MessageBox.Show("El local indicado no existe",
-                                    "Local no encontrado",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning);
-                    txtIdLocal.Text = string.Empty;
-                    txtIdLocal.Focus();
-                }
+            //if(tipoProceso == Enumerador.TipoProceso.Alta)
+            //{
+            //    // Solo en el alta se permite acceder al local
+            //    LocalContrato = ObtenerLocalPorId(Convert.ToInt32(txtIdLocal.Text));
+            //    if(LocalContrato == null)
+            //    {
+            //        MessageBox.Show("El local indicado no existe",
+            //                        "Local no encontrado",
+            //                        MessageBoxButtons.OK,
+            //                        MessageBoxIcon.Warning);
+            //        txtIdLocal.Text = string.Empty;
+            //        txtIdLocal.Focus();
+            //    }
 
 
-                // Chequeo de que el local no tiene un contrato activo
-                else if(LocalContrato.ContratoActivo)
-                {
-                    MessageBox.Show("El local ya tiene un contrato activo.",
-                                     "Local con contrato activo",
-                                     MessageBoxButtons.OK,
-                                     MessageBoxIcon.Warning);
-                    txtIdLocal.Text = string.Empty;
-                    txtIdLocal.Focus();
-                }
-                else
-                {
-                    // Se obtiene la empresa vinculada al local
-                    EmpresaContrato = ObtenerEmpresaPorIdLocal(LocalContrato.IdEmpresa);
+            //    // Chequeo de que el local no tiene un contrato activo
+            //    else if(LocalContrato.ContratoActivo)
+            //    {
+            //        MessageBox.Show("El local ya tiene un contrato activo.",
+            //                         "Local con contrato activo",
+            //                         MessageBoxButtons.OK,
+            //                         MessageBoxIcon.Warning);
+            //        txtIdLocal.Text = string.Empty;
+            //        txtIdLocal.Focus();
+            //    }
+            //    else
+            //    {
+            //        // Se obtiene la empresa vinculada al local
+            //        EmpresaContrato = ObtenerEmpresaPorIdLocal(LocalContrato.IdEmpresa);
 
-                    //Carga los datos del local y la empresa en los textBox correspondientes
-                    txtDescripcion.Text = LocalContrato?.Descripcion ?? string.Empty;
-                    txtNifEmpresa.Text = EmpresaContrato?.NIF ?? string.Empty;
-                    txtNombreEmpresa.Text = EmpresaContrato?.Nombre ?? string.Empty;
-                }
-            }
+            //        //Carga los datos del local y la empresa en los textBox correspondientes
+            //        txtDescripcion.Text = LocalContrato?.Descripcion ?? string.Empty;
+            //        txtNifEmpresa.Text = EmpresaContrato?.NIF ?? string.Empty;
+            //        txtNombreEmpresa.Text = EmpresaContrato?.Nombre ?? string.Empty;
+            //    }
+            //}
         }
 
         private Cliente ObtenerClientePorNif(string nif)
@@ -457,6 +458,12 @@ namespace Facturar.Presentacion.Controles
         {
             var gestorEmpresas = new GestorEmpresas();
             return gestorEmpresas.ObtenerPorId(id);
+        }
+
+        private void btnRevisionContrato_Click(object sender, EventArgs e)
+        {
+            var frmRevisiones = new frmRevisionContrato(ContratoActual);
+            frmRevisiones.ShowDialog();
         }
     }
 }
