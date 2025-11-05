@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
 using Facturar.Servicios;
-using static System.Net.Mime.MediaTypeNames;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 
 namespace Facturar.Presentacion.Controles
@@ -85,15 +86,56 @@ namespace Facturar.Presentacion.Controles
                 local.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorContratos: gestorContratos);
             }
 
-            // Carga los datos de los locales
-            // Carga los datos de las empresas en el gridBase
+            // Carga los datos de los locales en e gridbase
             GridBase.DataSource = null;
             GridBase.DataSource = listaLocales.ToList();
 
             AplicarFormatoColumnas();
+
+            // Carga la lista de empresas en el combobox
+            CargarListaEmpresas(activos);
         }
 
         // Define las columnas a mostrar en el grid base y el orden que tendran
+        public void ActualizarLocalSeleccionado()
+        {
+            if(dgvBase.CurrentRow?.DataBoundItem is Local local)
+            {
+                // Carga el objeto local segun la fila seleccionada
+                LocalSeleccionado = local;
+                EmpresaLocal = local.Empresa ?? gestorEmpresas.ObtenerPorId(local.IdEmpresa); // Carga la empresa del contrato y si no existe lo obtiene del gestor
+            }
+        }
+
+        // Actualiza las propiedades del local segun el contenido de los textBox
+        public void ActualizaPropiedadesLocal(Local local)
+        {
+            if(local == null)
+            {
+                throw new ArgumentNullException("No se han pasado datos del local para actualizar");
+            }
+
+            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // Campos a actualizar en el caso del alta (de momento no hay restricciones)
+                local.IdEmpresa = EmpresaLocal.Id;
+            }
+
+            // Resto de campos comunes
+            local.Descripcion = txtDescripcion.Text;
+            local.Direccion = txtDireccion.Text;
+            local.CodigoPostal = txtCodigoPostal.Text;
+            local.Poblacion = txtPoblacion.Text;
+
+            // Solo asigna el importe si es un valor decimal valido
+            if(decimal.TryParse(txtImporte.Text, out decimal importe))
+            {
+                local.ImporteAlquiler = importe;
+            }
+            local.Observaciones = txtObservaciones.Text;
+            local.FechaAlta = Utiles.ConvertirFecha(txtFechaAlta.Text) ?? DateTime.Today;
+        }
+
         private void InicializaColumnas()
         {
             var columnas = new (string nombrePropiedad, int orden)[]
@@ -115,122 +157,6 @@ namespace Facturar.Presentacion.Controles
 
             // Pasa las columnas al grid base para que las configure
             ConfigurarColumnas<Local>(columnas);
-        }
-
-        // Evento que se lanza al seleccionar una fila en el grid base
-        private void GridBase_FilaSeleccionada(object sender, object entidad)
-        {
-            // Como recibe un objeto genérico, se chequea que sea del tipo Local
-            if(entidad is Local local)
-            {
-                // Actualiza la empresa seleccionada
-                LocalSeleccionado = local;
-
-                // Limpia los textBox y muestra los datos de la empresa seleccionada
-                Utiles.LimpiarTextBoxes(this);
-
-                // Muestra los datos del local seleccionado
-                MostrarDatosLocal(local);
-            }
-        }
-
-        // Evento que se lanza al ordenar una columna en el grid base
-        private void GridBase_Columnaseleccionada(object sender, int columnaIndex)
-        {
-            string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
-
-            if(ordenAscendente)
-            {
-                GridBase.DataSource = listaLocales.OrderBy(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
-            }
-            else
-            {
-                GridBase.DataSource = listaLocales.OrderByDescending(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
-            }
-
-            ordenAscendente = !ordenAscendente;
-        }
-
-        // Muestra los datos de la empresa en los textBox correspondientes
-        private void MostrarDatosLocal(Local local)
-        {
-            // TODO: Cambiar la descripcion del local por un comboBox de locales
-            txtDescripcion.Text = local.Descripcion;
-            txtImporte.Text = local.ImporteAlquiler.ToString("F2");
-            txtDireccion.Text = local.Direccion;
-            txtCodigoPostal.Text = local.CodigoPostal;
-            txtPoblacion.Text = local.Poblacion;
-            txtProvincia.Text = local.Provincia;
-
-            // TODO: Cambiar el NifEmpresa por un comboBox de empresas
-            txtNifEmpresa.Text = local.NIFEmpresa;
-            txtNombreEmpresa.Text = local.NombreEmpresa;
-            txtObservaciones.Text = local.Observaciones;
-            txtFechaAlta.Text = local.FechaAlta.ToString("dd.MM.yyyy");
-
-            // La fecha de baja puede ser nula
-            if(local.FechaBaja.HasValue)
-            {
-                txtFechaBaja.Text = local.FechaBaja.Value.ToString("dd.MM.yyyy");
-            }
-            else
-            {
-                txtFechaBaja.Text = "";
-            }
-        }
-
-        public void BloqueoTextBoxAlta()
-        {
-            // Deshabilita los TextBox que no se pueden editar
-            txtFechaBaja.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
-        }
-
-        public void BloqueoTextBoxEdicion()
-        {
-            // Deshabilita los TextBox que no se pueden editar
-            txtFechaAlta.Enabled = false;
-            txtFechaBaja.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
-        }
-
-        public void ActualizarLocalSeleccionado()
-        {
-            if(dgvBase.CurrentRow != null)
-            {
-                // Carga el objeto local segun la fila seleccionada
-                LocalSeleccionado = dgvBase.CurrentRow.DataBoundItem as Local;
-            }
-        }
-
-        // Actualiza las propiedades del local segun el contenido de los textBox
-        public void ActualizaPropiedadesLocal(Local local)
-        {
-            if(local == null)
-            {
-                throw new ArgumentNullException("No se han pasado datos del local para actualizar");
-            }
-
-            if(tipoProceso == Enumerador.TipoProceso.Alta)
-            {
-                // Campos a actualizar en el caso del alta (de momento no hay restricciones)
-
-            }
-
-            local.IdEmpresa = ObtenerEmpresaPorNif(txtNifEmpresa.Text).Id;
-            // Campos comunes en el alta y edicion
-            local.Descripcion = txtDescripcion.Text;
-            local.Direccion = txtDireccion.Text;
-            local.CodigoPostal = txtCodigoPostal.Text;
-            local.Poblacion = txtPoblacion.Text;
-
-            // Solo asigna el importe si es un valor decimal valido
-            if(decimal.TryParse(txtImporte.Text, out decimal importe))
-            {
-                local.ImporteAlquiler = importe;
-            }
-            local.Observaciones = txtObservaciones.Text;
-            local.FechaAlta = DateTime.Parse(txtFechaAlta.Text);
         }
 
         private void AplicarFormatoColumnas()
@@ -269,9 +195,111 @@ namespace Facturar.Presentacion.Controles
             GridBase.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
         }
 
+        // Evento que se lanza al seleccionar una fila en el grid base
+        public void BloqueoTextBoxAlta()
+        {
+            // Gestion de los controles que se pueden editar en modo alta
+            cbEmpresa.Enabled = true;
+            cbEmpresa.SelectedIndex = 0;
+            txtImporte.Enabled = false;
+            txtFechaBaja.Enabled = false;
+            txtDescripcion.Focus();
+        }
+
+        public void BloqueoTextBoxEdicion()
+        {
+            // Deshabilita los TextBox que no se pueden editar
+            cbEmpresa.Enabled = false;
+            txtImporte.Enabled = false;
+            txtFechaAlta.Enabled = false;
+            txtFechaBaja.Enabled = false;
+        }
+
+        private void GridBase_FilaSeleccionada(object sender, object entidad)
+        {
+            // Como recibe un objeto genérico, se chequea que sea del tipo Local
+            if(entidad is Local local)
+            {
+                // Actualiza la empresa seleccionada
+                LocalSeleccionado = local;
+
+                // Limpia los textBox y muestra los datos de la empresa seleccionada
+                UtilesUI.LimpiarTextBoxes(this);
+
+                // Muestra los datos del local seleccionado
+                MostrarDatosLocal(local);
+            }
+        }
+
+        // Evento que se lanza al ordenar una columna en el grid base
+        private void GridBase_Columnaseleccionada(object sender, int columnaIndex)
+        {
+            string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
+
+            if(ordenAscendente)
+            {
+                GridBase.DataSource = listaLocales.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
+            }
+            else
+            {
+                GridBase.DataSource = listaLocales.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
+            }
+
+            ordenAscendente = !ordenAscendente;
+        }
+
+        // Muestra los datos de la empresa en los textBox correspondientes
+        private void MostrarDatosLocal(Local local)
+        {
+            // Carga los valores en los campos
+            txtDescripcion.Text = local.Descripcion;
+            txtImporte.Text = local.ImporteAlquiler.ToString("F2");
+            txtFechaAlta.Text = Utiles.FormatearFecha(local.FechaAlta);
+            if(local.FechaBaja.HasValue) // La fecha de baja puede ser nula
+            {
+                txtFechaBaja.Text = Utiles.FormatearFecha(local.FechaBaja.Value);
+            }
+            else
+            {
+                txtFechaBaja.Text = "";
+            }
+            txtDireccion.Text = local.Direccion;
+            txtCodigoPostal.Text = local.CodigoPostal;
+            txtPoblacion.Text = local.Poblacion;
+            txtProvincia.Text = local.Provincia;
+            cbEmpresa.SelectedValue = local.IdEmpresa; // Carga en el combobox la empresa del local
+            txtObservaciones.Text = local.Observaciones;
+        }
+
+        // Rellena la lista de empresas en el campo de empresas
+        private void CargarListaEmpresas(bool? activos)
+        {
+            // Carga los valores en el campo de seleccion de la empresa
+            var listaEmpresas = gestorEmpresas.ListarTodos(activas: activos);
+
+            // Ordenar la lista alfabeticamente
+            listaEmpresas = listaEmpresas.OrderBy(e => e.Nombre);
+
+            // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
+            var datosEmpresas = new List<Empresa>
+            {
+                // Añade a la lista el elemento inicial
+                new Empresa { Id = 0, NIF = "", Nombre = "" }
+            };
+
+            // Añade la lista de empresas a continuacion
+            datosEmpresas.AddRange(listaEmpresas);
+
+            // Carga en el combobox la lista de empresas.
+            cbEmpresa.DataSource = datosEmpresas.ToList(); // Origen de datos
+            cbEmpresa.DisplayMember = "DatosEmpresa"; // Campo de la clase que se mostrara (campo calculado)
+            cbEmpresa.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
+            cbEmpresa.SelectedValue = LocalSeleccionado.IdEmpresa; // Muestra en el campo el elemento seleccionado
+        }
+
         private void txtFechaAlta_Enter(object sender, EventArgs e)
         {
-            txtFechaAlta.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
+            txtFechaAlta.Text = Utiles.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaAlta_Leave(object sender, EventArgs e)
@@ -295,7 +323,7 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaBaja_Enter(object sender, EventArgs e)
         {
-            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
+            txtFechaBaja.Text = Utiles.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
@@ -323,33 +351,6 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-        private void txtNifEmpresa_Leave(object sender, EventArgs e)
-        {
-            txtNifEmpresa.Text = txtNifEmpresa.Text.ToUpper();
-
-            // Busca la empresa por su NIF en la base de datos
-            EmpresaLocal = ObtenerEmpresaPorNif(txtNifEmpresa.Text);
-            if(EmpresaLocal == null)
-            {
-                MessageBox.Show("La empresa indicada no existe",
-                                "Empresa no encontrada",
-                                MessageBoxButtons.OK,
-                                MessageBoxIcon.Warning);
-
-                txtNombreEmpresa.Text = string.Empty;
-                txtNifEmpresa.Focus();
-            }
-            else
-            {
-                txtNombreEmpresa.Text = EmpresaLocal?.Nombre ?? string.Empty;
-            }
-        }
-
-        private Empresa ObtenerEmpresaPorNif(string nif)
-        {
-            return gestorEmpresas.ObtenerPorNIF(nif);
-        }
-
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
             if(sender is TextBox txt)
@@ -360,12 +361,25 @@ namespace Facturar.Presentacion.Controles
 
         private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Utiles.ValidarImporte(sender as TextBox, e);
+            UtilesUI.ValidarImporte(sender as TextBox, e);
         }
-
+        
         private void txtImporte_Leave(object sender, EventArgs e)
         {
-            Utiles.FormatearImporte(sender as TextBox);
+            UtilesUI.FormatearImporte(sender as TextBox);
+        }
+
+
+        // Evento al seleccionar un elemento y cerrar la lista
+        private void cbEmpresa_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            EmpresaLocal = cbEmpresa.SelectedItem as Empresa;
+            txtObservaciones.Focus();
+        }
+
+        private void cbEmpresa_Enter(object sender, EventArgs e)
+        {
+            cbEmpresa.SelectedIndex = 0;
         }
     }
 }

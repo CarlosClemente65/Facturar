@@ -9,6 +9,7 @@ using Facturar.Presentacion.Formularios;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using UtilesUI = Facturar.Utilidades.UtilidadesUI;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -35,9 +36,6 @@ namespace Facturar.Presentacion.Controles
         private bool ordenAscendente = true;
 
         private bool datosCargados = false;
-
-        private int erroresFormulario;
-
 
         public UC_Contratos()
         {
@@ -130,7 +128,7 @@ namespace Facturar.Presentacion.Controles
                 contrato.IdEmpresa = EmpresaContrato.Id;
             }
 
-            // Establece las propiedades del contrato
+            // Resto de campos comunes
             contrato.PrecioMensual = Convert.ToDecimal(txtPrecioMensual.Text);
             contrato.FechaInicio = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaInicio.Text) ?? DateTime.Today;
             contrato.FechaFin = Utilidades.UtilesGenerales.ConvertirFecha(txtFechaFin.Text);
@@ -236,6 +234,23 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
+        // Evento que se lanza al ordenar una columna en el grid base
+        private void GridBase_Columnaseleccionada(object sender, int columnaIndex)
+        {
+            string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
+
+            if(ordenAscendente)
+            {
+                GridBase.DataSource = listaContratos.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
+            }
+            else
+            {
+                GridBase.DataSource = listaContratos.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
+            }
+
+            ordenAscendente = !ordenAscendente;
+        }
+
         // Muestra los datos del contrato en los textBox correspondientes
         private void MostrarDatoscontrato(Contrato contrato)
         {
@@ -246,12 +261,12 @@ namespace Facturar.Presentacion.Controles
 
             // Carga el resto de valores
             txtPrecioMensual.Text = contrato.PrecioMensual.ToString("N2");
-            txtFechaInicio.Text = contrato.FechaInicio.ToString("dd.MM.yyyy");
+            txtFechaInicio.Text = Utiles.FormatearFecha(contrato.FechaInicio);
 
             // La fecha de fin puede ser nula
             if(contrato.FechaFin.HasValue)
             {
-                txtFechaFin.Text = contrato.FechaFin.Value.ToString("dd.MM.yyyy");
+                txtFechaFin.Text = Utiles.FormatearFecha(contrato.FechaFin.Value);
             }
             else
             {
@@ -339,26 +354,9 @@ namespace Facturar.Presentacion.Controles
             cbCliente.SelectedValue = ContratoSeleccionado.IdCliente; // Muestra en el campo el elemento seleccionado
         }
 
-        // Evento que se lanza al ordenar una columna en el grid base
-        private void GridBase_Columnaseleccionada(object sender, int columnaIndex)
-        {
-            string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
-
-            if(ordenAscendente)
-            {
-                GridBase.DataSource = listaContratos.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
-            }
-            else
-            {
-                GridBase.DataSource = listaContratos.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
-            }
-
-            ordenAscendente = !ordenAscendente;
-        }
-
         private void txtFechaInicio_Enter(object sender, EventArgs e)
         {
-            txtFechaInicio.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
+            txtFechaInicio.Text = Utiles.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaInicio_Leave(object sender, EventArgs e)
@@ -382,7 +380,7 @@ namespace Facturar.Presentacion.Controles
 
         private void txtFechaFin_Enter(object sender, EventArgs e)
         {
-            txtFechaFin.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
+            txtFechaFin.Text = Utiles.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaFin_Leave(object sender, EventArgs e)

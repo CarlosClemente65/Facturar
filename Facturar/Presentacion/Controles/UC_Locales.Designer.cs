@@ -39,19 +39,17 @@
             this.txtDireccion = new System.Windows.Forms.TextBox();
             this.lblNombre = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
-            this.label11 = new System.Windows.Forms.Label();
             this.txtCodigoPostal = new System.Windows.Forms.TextBox();
             this.label10 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.txtPoblacion = new System.Windows.Forms.TextBox();
-            this.txtNombreEmpresa = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
             this.txtImporte = new System.Windows.Forms.TextBox();
             this.txtProvincia = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.txtObservaciones = new System.Windows.Forms.TextBox();
-            this.txtNifEmpresa = new System.Windows.Forms.TextBox();
+            this.cbEmpresa = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // panelDgv
@@ -184,17 +182,6 @@
             this.label6.TabIndex = 41;
             this.label6.Text = "Cod. postal";
             // 
-            // label11
-            // 
-            this.label11.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label11.AutoSize = true;
-            this.label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label11.Location = new System.Drawing.Point(113, 351);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(101, 13);
-            this.label11.TabIndex = 53;
-            this.label11.Text = "Nombre empresa";
-            // 
             // txtCodigoPostal
             // 
             this.txtCodigoPostal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -213,9 +200,9 @@
             this.label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label10.Location = new System.Drawing.Point(11, 351);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(78, 13);
+            this.label10.Size = new System.Drawing.Size(55, 13);
             this.label10.TabIndex = 51;
-            this.label10.Text = "NIF empresa";
+            this.label10.Text = "Empresa";
             // 
             // label8
             // 
@@ -249,17 +236,6 @@
             this.txtPoblacion.Size = new System.Drawing.Size(130, 22);
             this.txtPoblacion.TabIndex = 7;
             this.txtPoblacion.Leave += new System.EventHandler(this.TextBox_ToUpper);
-            // 
-            // txtNombreEmpresa
-            // 
-            this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNombreEmpresa.Enabled = false;
-            this.txtNombreEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreEmpresa.Location = new System.Drawing.Point(107, 367);
-            this.txtNombreEmpresa.Name = "txtNombreEmpresa";
-            this.txtNombreEmpresa.Size = new System.Drawing.Size(303, 22);
-            this.txtNombreEmpresa.TabIndex = 10;
             // 
             // label7
             // 
@@ -315,32 +291,34 @@
             this.txtObservaciones.Location = new System.Drawing.Point(416, 367);
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(338, 22);
-            this.txtObservaciones.TabIndex = 11;
+            this.txtObservaciones.TabIndex = 10;
             this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
-            // txtNifEmpresa
+            // cbEmpresa
             // 
-            this.txtNifEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtNifEmpresa.Enabled = false;
-            this.txtNifEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNifEmpresa.Location = new System.Drawing.Point(11, 367);
-            this.txtNifEmpresa.Name = "txtNifEmpresa";
-            this.txtNifEmpresa.Size = new System.Drawing.Size(91, 22);
-            this.txtNifEmpresa.TabIndex = 9;
-            this.txtNifEmpresa.Leave += new System.EventHandler(this.txtNifEmpresa_Leave);
+            this.cbEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbEmpresa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEmpresa.Enabled = false;
+            this.cbEmpresa.FormattingEnabled = true;
+            this.cbEmpresa.Location = new System.Drawing.Point(11, 368);
+            this.cbEmpresa.Name = "cbEmpresa";
+            this.cbEmpresa.Size = new System.Drawing.Size(395, 21);
+            this.cbEmpresa.TabIndex = 9;
+            this.cbEmpresa.SelectionChangeCommitted += new System.EventHandler(this.cbEmpresa_SelectionChangeCommitted);
+            this.cbEmpresa.Enter += new System.EventHandler(this.cbEmpresa_Enter);
             // 
             // UC_Locales
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.Controls.Add(this.txtNifEmpresa);
+            this.Controls.Add(this.cbEmpresa);
             this.Controls.Add(this.panelDgv);
             this.Controls.Add(this.txtObservaciones);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.txtProvincia);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtNombreEmpresa);
             this.Controls.Add(this.txtImporte);
             this.Controls.Add(this.txtPoblacion);
             this.Controls.Add(this.txtDescripcion);
@@ -348,7 +326,6 @@
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtCodigoPostal);
             this.Controls.Add(this.txtFechaBaja);
-            this.Controls.Add(this.label11);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtDireccion);
             this.Controls.Add(this.txtFechaAlta);
@@ -371,7 +348,6 @@
             this.Controls.SetChildIndex(this.txtFechaAlta, 0);
             this.Controls.SetChildIndex(this.txtDireccion, 0);
             this.Controls.SetChildIndex(this.label4, 0);
-            this.Controls.SetChildIndex(this.label11, 0);
             this.Controls.SetChildIndex(this.txtFechaBaja, 0);
             this.Controls.SetChildIndex(this.txtCodigoPostal, 0);
             this.Controls.SetChildIndex(this.label7, 0);
@@ -379,13 +355,12 @@
             this.Controls.SetChildIndex(this.txtDescripcion, 0);
             this.Controls.SetChildIndex(this.txtPoblacion, 0);
             this.Controls.SetChildIndex(this.txtImporte, 0);
-            this.Controls.SetChildIndex(this.txtNombreEmpresa, 0);
             this.Controls.SetChildIndex(this.label2, 0);
             this.Controls.SetChildIndex(this.txtProvincia, 0);
             this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.txtObservaciones, 0);
             this.Controls.SetChildIndex(this.panelDgv, 0);
-            this.Controls.SetChildIndex(this.txtNifEmpresa, 0);
+            this.Controls.SetChildIndex(this.cbEmpresa, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -403,18 +378,16 @@
         private System.Windows.Forms.TextBox txtDireccion;
         private System.Windows.Forms.Label lblNombre;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox txtCodigoPostal;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.TextBox txtPoblacion;
-        public System.Windows.Forms.TextBox txtNombreEmpresa;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtImporte;
         private System.Windows.Forms.TextBox txtProvincia;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.TextBox txtObservaciones;
-        private System.Windows.Forms.TextBox txtNifEmpresa;
+        private System.Windows.Forms.ComboBox cbEmpresa;
     }
 }
