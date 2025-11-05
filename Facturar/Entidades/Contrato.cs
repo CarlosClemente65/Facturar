@@ -121,6 +121,7 @@ namespace Facturar.Entidades
     }
     public class RevisionContrato
     {
+        public int Id { get; set; }
         public int IdContrato { get; set; }
         public DateTime FechaRevision { get; set; } // Fecha en que se revisa el contrato
         public decimal? PrecioAnterior { get; set; } // Precio antes de la revisión

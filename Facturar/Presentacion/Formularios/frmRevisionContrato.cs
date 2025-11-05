@@ -18,6 +18,8 @@ namespace Facturar.Presentacion.Formularios
         public frmRevisionContrato(Contrato contrato)
         {
             InitializeComponent();
+            ConfigurarGrid();
+
             contratoActual = contrato;
 
             panelRevisionContrato_general.AltaClicked += PanelInferior_general_altaClicked;
@@ -27,6 +29,12 @@ namespace Facturar.Presentacion.Formularios
             panelRevisionContrato_general.SeleccionActivos += PanelRevisionContrato_general_SeleccionActivos;
             panelRevisionContrato_Edicion.ValidarClicked += PanelRevisionContrato_Edicion_ValidarClicked;
             panelRevisionContrato_Edicion.CancelarClicked += PanelRevisionContrato_Edicion_CancelarClicked;
+        }
+
+        private void ConfigurarGrid()
+        {
+            dgvRevisiones.DefaultCellStyle.SelectionBackColor = Color.Wheat;
+            dgvRevisiones.DefaultCellStyle.SelectionForeColor = Color.Black;
         }
 
         private void frmRevisionContrato_Load(object sender, EventArgs e)
@@ -41,17 +49,18 @@ namespace Facturar.Presentacion.Formularios
 
         private void PanelInferior_general_bajaClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            MostrarPanelGeneral(false);
         }
 
         private void PanelInferior_general_editarClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            MostrarPanelGeneral(false);
         }
 
         private void PanelInferior_general_eliminarClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            MostrarPanelGeneral(false);
+
         }
 
         private void PanelRevisionContrato_general_SeleccionActivos(object sender, EventArgs e)
@@ -66,7 +75,7 @@ namespace Facturar.Presentacion.Formularios
 
         private void PanelRevisionContrato_Edicion_ValidarClicked(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            MostrarPanelGeneral(true);
         }
 
         // Metodo para mostrar u ocultar los paneles general y edicion alternativamente
@@ -75,8 +84,12 @@ namespace Facturar.Presentacion.Formularios
             panelRevisionContrato_general.Visible = mostrar;
             panelRevisionContrato_Edicion.Visible = !mostrar;
             panelRevisionContrato_general.EstadoVisible = mostrar;
+            btnContratos.Visible = mostrar;
         }
 
-        
+        private void btnContratos_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }

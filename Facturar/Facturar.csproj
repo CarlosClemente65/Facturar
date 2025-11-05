@@ -104,6 +104,7 @@
     </Compile>
     <Compile Include="Infraestructura\Excepciones.cs" />
     <Compile Include="Infraestructura\InicializadorBaseDatos.cs" />
+    <Compile Include="Interfaces\IRepositorioRevisiones.cs" />
     <Compile Include="Interfaces\IRepositorioBase.cs" />
     <Compile Include="Interfaces\IRepositorioClientes.cs" />
     <Compile Include="Interfaces\IRepositorioContratos.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Servicios\GestorEmpresas.cs" />
     <Compile Include="Servicios\GestorFacturas.cs" />
     <Compile Include="Servicios\GestorLocales.cs" />
+    <Compile Include="Servicios\GestorRevisiones.cs" />
     <Compile Include="Utilidades\Configuracion.cs" />
     <Compile Include="Utilidades\Enumeradores.cs" />
     <Compile Include="Utilidades\MetodosExtension.cs" />
