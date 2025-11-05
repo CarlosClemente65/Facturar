@@ -4,7 +4,7 @@ using Facturar.Entidades;
 using Facturar.Presentacion.Controles;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Procesos
 {
@@ -54,7 +54,7 @@ namespace Facturar.Presentacion.Procesos
                         }
 
                         // Restablece el bloqueo del grid y carga las empresas
-                        Utiles.RestablecerPaneles<GestorEmpresas, Empresa>(ucEmpresas.GridBase, false, gestorEmpresas);
+                        UtilesUI.RestablecerPaneles<GestorEmpresas, Empresa>(ucEmpresas.GridBase, false, gestorEmpresas);
 
                         // Refresca el grid de empresas
                         ucEmpresas.CargarEmpresas(); // Refresca el grid
@@ -77,7 +77,7 @@ namespace Facturar.Presentacion.Procesos
                         }
 
                         // Restablece el bloqueo y habilita el grid
-                        Utiles.RestablecerPaneles<GestorLocales, Local>(ucLocales.GridBase, false, gestorLocales);
+                        UtilesUI.RestablecerPaneles<GestorLocales, Local>(ucLocales.GridBase, false, gestorLocales);
 
                         // Refresca el grid de locales
                         ucLocales.CargarLocales(); // Refresca el grid
@@ -99,7 +99,7 @@ namespace Facturar.Presentacion.Procesos
                         }
 
                         // Restablece el bloqueo y habilita el grid
-                        Utiles.RestablecerPaneles<GestorClientes, Cliente>(ucClientes.GridBase, false, gestorClientes);
+                        UtilesUI.RestablecerPaneles<GestorClientes, Cliente>(ucClientes.GridBase, false, gestorClientes);
 
                         // Refresca el grid de clientes
                         ucClientes.CargarClientes(); // Refresca el grid
@@ -121,8 +121,9 @@ namespace Facturar.Presentacion.Procesos
                             mensajeKo = $"{ex.Message}";
                         }
 
+                        ucContratos.RestauraControles(activar: true);
                         // Restablece el bloqueo y habilita el grid
-                        Utiles.RestablecerPaneles<GestorContratos, Contrato>(ucContratos.GridBase, false, gestorContratos);
+                        UtilesUI.RestablecerPaneles<GestorContratos, Contrato>(ucContratos.GridBase, false, gestorContratos);
 
                         // Refresca el grid de contratos
                         ucContratos.CargarContratos(); // Refresca el grid
@@ -151,7 +152,7 @@ namespace Facturar.Presentacion.Procesos
             {
                 case Enumerador.TipoEntidad.Empresa:
                     // Restablece el bloqueo y habilita el grid
-                    Utiles.RestablecerPaneles<GestorEmpresas, Empresa>(ucEmpresas.GridBase, false, gestorEmpresas);
+                    UtilesUI.RestablecerPaneles<GestorEmpresas, Empresa>(ucEmpresas.GridBase, false, gestorEmpresas);
 
                     // Refresca el grid de empresas
                     ucEmpresas.CargarEmpresas(); // Refresca el grid
@@ -160,7 +161,7 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Local:
                     // Restablece el bloqueo y habilita el grid
-                    Utiles.RestablecerPaneles<GestorLocales, Local>(ucLocales.GridBase, false, gestorLocales);
+                    UtilesUI.RestablecerPaneles<GestorLocales, Local>(ucLocales.GridBase, false, gestorLocales);
 
                     // Refresca el grid de locales
                     ucLocales.CargarLocales(); // Refresca el grid
@@ -169,7 +170,7 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Cliente:
                     // Restablece el bloqueo y habilita el grid
-                    Utiles.RestablecerPaneles<GestorClientes, Cliente>(ucClientes.GridBase, false, gestorClientes);
+                    UtilesUI.RestablecerPaneles<GestorClientes, Cliente>(ucClientes.GridBase, false, gestorClientes);
 
                     // Refresca el grid de clientes
                     ucClientes.CargarClientes(); // Refresca el grid
@@ -178,7 +179,7 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Contrato:
                     // Restablece el bloqueo y habilita el grid
-                    Utiles.RestablecerPaneles<GestorContratos, Contrato>(ucContratos.GridBase, false, gestorContratos);
+                    UtilesUI.RestablecerPaneles<GestorContratos, Contrato>(ucContratos.GridBase, false, gestorContratos);
 
                     // Refresca el grid de contratos
                     ucContratos.CargarContratos(); // Refresca el grid

@@ -32,7 +32,6 @@ namespace Facturar.Presentacion.Procesos
 
                 case Enumerador.TipoEntidad.Contrato:
                     ucContratos?.CargarContratos(activos: estado);
-                    //gestorContratos.Actualizar(); // Pendiente de desarrollo
                     break;
             }
         }

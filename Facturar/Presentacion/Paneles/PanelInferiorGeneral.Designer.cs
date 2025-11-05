@@ -181,6 +181,7 @@
             this.cbEstado.Name = "cbEstado";
             this.cbEstado.Size = new System.Drawing.Size(75, 22);
             this.cbEstado.TabIndex = 0;
+            this.cbEstado.SelectedIndexChanged += new System.EventHandler(this.cbEstado_SelectedIndexChanged);
             // 
             // PanelInferior_general
             // 

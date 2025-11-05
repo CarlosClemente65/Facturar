@@ -142,15 +142,15 @@ namespace Facturar.Presentacion.Controles
             {
                 ("Id", 0),
                 ("Descripcion", 1),
-                ("Direccion", 2),
-                ("CodigoPostal", 3),
-                ("Poblacion", 4),
-                ("Provincia", 5),
-                ("NIFEmpresa",6),
-                ("NombreEmpresa",7),
-                ("ImporteAlquiler", 8),
-                ("Observaciones", 9),
-                ("IdContrato", 10),
+                ("IdContrato", 2),
+                ("ImporteAlquiler", 3),
+                ("Direccion", 4),
+                ("CodigoPostal", 5),
+                ("Poblacion", 6),
+                ("Provincia", 7),
+                ("NIFEmpresa",8),
+                ("NombreEmpresa",9),
+                ("Observaciones", 10),
                 ("FechaAlta", 11),
                 ("FechaBaja", 12)
             };
@@ -369,7 +369,6 @@ namespace Facturar.Presentacion.Controles
             UtilesUI.FormatearImporte(sender as TextBox);
         }
 
-
         // Evento al seleccionar un elemento y cerrar la lista
         private void cbEmpresa_SelectionChangeCommitted(object sender, EventArgs e)
         {
@@ -381,5 +380,7 @@ namespace Facturar.Presentacion.Controles
         {
             cbEmpresa.SelectedIndex = 0;
         }
+
+
     }
 }

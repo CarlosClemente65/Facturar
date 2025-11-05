@@ -2,8 +2,12 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
+using System.Drawing;
+using System.Linq;
+using System.Windows;
 using Facturar.Entidades;
 using Facturar.Interfaces;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 
@@ -153,6 +157,18 @@ namespace Facturar.Servicios
             {
                 throw new InvalidOperationException("El local no existe en la base de datos.");
             }
+
+            // Comprueba si el local tiene contratos activos (se miran todos para evitar errores de estructura de la base de datos)
+            var contratoLocal= ConsultaContratosLocal(idLocal: local.Id, activos: null);
+            if(contratoLocal != null)
+            {
+                throw new InvalidOperationException($"No se puede eliminar el local. Debe eliminar el contrato {contratoLocal.Id} previamente");
+            }
+
+            if(local.IdContrato != null)
+            {
+                throw new InvalidOperationException($"No se puede eliminar el local. Debe eliminar el contrato {local.IdContrato} previamente");
+            }
             try
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
@@ -256,6 +272,31 @@ namespace Facturar.Servicios
             return listaLocales;
         }
 
+        public Contrato ConsultaContratosLocal(int idLocal, bool? activos = null)
+        {
+            // Asigna parametros y consulta SQL según si se quieren contratos activos o todos
+            string sql = @"SELECT * FROM Contratos WHERE IdLocal= @IdLocal";
+            var parametros = new[] { new SQLiteParameter("@IdLocal", idLocal) };
+            if(activos.HasValue)
+            {
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            // Si no hay filas no hay contratos
+            if(tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow fila = tabla.Rows[0]; // Solo se coge el primero porque en teoria no debe haber mas
+            var contrato = Utilidades.MapeadorDatos.MapearFila<Contrato>(fila);
+
+            return contrato;
+        }
 
         /// <summary>
         /// Obtiene todos los locales segun el parametro 'activos'
@@ -292,7 +333,6 @@ namespace Facturar.Servicios
 
             return listaLocales;
         }
-
 
         /// <summary>
         /// Obtiene un local por su Id

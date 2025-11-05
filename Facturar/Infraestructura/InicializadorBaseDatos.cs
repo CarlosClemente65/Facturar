@@ -40,8 +40,8 @@ namespace Facturar.Infraestructura
                         Observaciones TEXT,
                         FechaAlta DATETIME NOT NULL,
                         FechaBaja DATETIME,
-                        FOREIGN KEY(IdEmpresa) REFERENCES Empresas(Id),
-                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id)
+                        FOREIGN KEY(IdEmpresa) REFERENCES Empresas(Id) ON DELETE SET NULL,
+                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id) ON DELETE SET NULL
                     );
                 ";
 

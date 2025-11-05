@@ -81,16 +81,17 @@ namespace Facturar.Servicios
                 }
 
                 // Inserta el nuevo contrato en la base de datos
-                // Nota: Solo se permite añadir el importe del precio mensual o las observaciones
+                // Nota: Solo se permite añadir el importe del precio mensual, la fecha de baja o las observaciones
                 var parametros = new[]
                 {
                     new SQLiteParameter("@Id", contrato.Id),
                     new SQLiteParameter("@PrecioMensual", contrato.PrecioMensual),
+                    new SQLiteParameter("@FechaFin", contrato.FechaFin),
                     new SQLiteParameter("@Observaciones", contrato.Observaciones)
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas actualizadas
-                string sqlActualizarContrato = "UPDATE Contratos SET PrecioMensual = @PrecioMensual, Observaciones = @Observaciones WHERE Id = @Id";
+                string sqlActualizarContrato = "UPDATE Contratos SET PrecioMensual = @PrecioMensual, FechaFin = @FechaFin, Observaciones = @Observaciones WHERE Id = @Id";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlActualizarContrato, parametros));
 
@@ -196,7 +197,7 @@ namespace Facturar.Servicios
             }
             catch(Exception ex)
             {
-                throw new InvalidOperationException($"Error al eliminar el contrato de la base de datos: {ex.Message}", ex);
+                throw new InvalidOperationException($"Error al eliminar el contrato de la base de datos.\n{ex.Message}", ex);
             }
         }
 

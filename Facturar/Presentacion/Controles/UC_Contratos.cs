@@ -204,6 +204,7 @@ namespace Facturar.Presentacion.Controles
             cbLocal.Focus();
             cbCliente.Focus();
             txtFechaFin.Enabled = false;
+            btnRevisionContrato.Enabled = false;
         }
 
         public void BloqueoTextBoxEdicion()
@@ -215,6 +216,7 @@ namespace Facturar.Presentacion.Controles
 
             txtFechaInicio.Enabled = false;
             txtFechaFin.Enabled = false; // No se permite poner la ficha fin en edicion
+            txtPrecioMensual.Focus();
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
@@ -485,7 +487,7 @@ namespace Facturar.Presentacion.Controles
             else
             {
                 // Asigna el local seleccionado al contrato
-                LocalContrato = cbLocal.SelectedItem as Local; 
+                LocalContrato = cbLocal.SelectedItem as Local;
 
                 // Obtiene el objeto Empresa segun el IdEmpresa del local
                 EmpresaContrato = ObtenerEmpresaPorIdLocal(local.IdEmpresa);
@@ -505,8 +507,27 @@ namespace Facturar.Presentacion.Controles
         private void cbLocal_Enter(object sender, EventArgs e)
         {
             // Al entrar al campo del local , se selecciona el texto de ayuda (solo en el alta se puede acceder)
-            cbLocal.SelectedIndex = 0; 
+            cbLocal.SelectedIndex = 0;
             cbEmpresa.SelectedIndex = 0; // Como la empresa esta vinculada al local, se selecciona el texto de ayuda.
+        }
+
+        public void RestauraControles(bool activar)
+        {
+            switch(tipoProceso)
+            {
+                case Enumerador.TipoProceso.Alta:
+                    BloqueoTextBoxAlta();
+                    break;
+
+                case Enumerador.TipoProceso.Edicion:
+                    BloqueoTextBoxEdicion();
+                    break;
+            }
+            // Restablece el bloqueo y habilita el grid
+            UtilesUI.RestablecerPaneles<GestorContratos, Contrato>(GridBase, !activar, gestorContratos);
+
+            // Refresca el grid de contratos
+            CargarContratos(); // Refresca el grid
         }
     }
 }

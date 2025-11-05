@@ -19,7 +19,7 @@ namespace Facturar.Entidades
         [DisplayName("Nombre empresa")]
         public string NombreEmpresa => Empresa?.Nombre ?? string.Empty; // Nombre de la empresa emisora
 
-        [DisplayName("Id contrato activo")]
+        [DisplayName("Id contrato")]
         public int? IdContrato { get; set; }
 
         public Contrato Contrato { get; set; }
@@ -33,7 +33,7 @@ namespace Facturar.Entidades
         public string Poblacion { get; set; }
         public string Provincia { get; set; }
 
-        [DisplayName("Importe mensual alquiler")]
+        [DisplayName("Importe alquiler")]
         public decimal ImporteAlquiler { get; set; } = 0m;// Importe mensual actual del alquiler (se establece a cero inicialmente y se atualizara con los contratos
         public string Observaciones { get; set; } // Notas del local
 

@@ -154,6 +154,21 @@ namespace Facturar.Servicios
             {
                 throw new InvalidOperationException("La empresa no existe en la base de datos.");
             }
+
+            // Comprueba si la empresa tiene contratos activos antes de borrar (se miran todos para evitar errores de estructura de la base de datos)
+            var contratoEmpresa = ContratosEmpresa(idEmpresa: empresa.Id, activos: null);
+            if(contratoEmpresa != null)
+            {
+                throw new InvalidOperationException($"No se puede eliminar la empresa. Debe eliminar el contrato {contratoEmpresa.Id} previamente");
+            }
+
+            // Comprueba si la empresa tiene locales activos
+            var localEmpresa = ConsultaLocalesEmpresa(idEmpresa: empresa.Id, activos: null);
+            if (localEmpresa != null)
+            {
+                throw new InvalidOperationException($"No se puede eliminar la empresa. Debe eliminar el local {localEmpresa.Id} previamente");
+            }
+                
             try
             {
                 // Ejecuta el borrado y devuelve las filas afectadas
@@ -267,19 +282,57 @@ namespace Facturar.Servicios
             return listaEmpresas;
         }
 
-        public DataTable ConsultaLocalesEmpresa(string nif, bool? activas = true)
+        public Local ConsultaLocalesEmpresa(int idEmpresa, bool? activos = true)
         {
             // Asigna parametros y consulta SQL según si se quieren locales activos o todos
-            string sql = @"SELECT * FROM Empresas";
-            var parametros = new[] { new SQLiteParameter("@NIF", nif) };
-            if(activas.HasValue)
+            string sql = @"SELECT * FROM Locales WHERE IdEmpresa = @IdEmpresa";
+            var parametros = new[] { new SQLiteParameter("@IdEmpresa", idEmpresa) };
+            if(activos.HasValue)
             {
-                sql += activas.Value
-                    ? " WHERE FechaBaja IS NULL"
-                    : " WHERE FechaBaja IS NOT NULL";
+                sql += activos.Value
+                    ? " AND FechaBaja IS NULL"
+                    : " AND FechaBaja IS NOT NULL";
             }
 
-            return GestorDatos.EjecutarConsulta(sql, parametros);
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            // Si no hay filas no hay contratos
+            if(tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow fila = tabla.Rows[0]; // Solo se coge el primero porque en teoria no debe haber mas
+            var local = Utilidades.MapeadorDatos.MapearFila<Local>(fila);
+
+            return local;
+
+        }
+
+        public Contrato ContratosEmpresa(int idEmpresa, bool? activos = null)
+        {
+            // Asigna parametros y consulta SQL según si se quieren contratos activos o todos
+            string sql = @"SELECT * FROM Contratos WHERE IdEmpresa = @IdEmpresa";
+            var parametros = new[] { new SQLiteParameter("@IdEmpresa", idEmpresa) };
+            if(activos.HasValue)
+            {
+                sql += activos.Value
+                    ? " AND FechaFin IS NULL"
+                    : " AND FechaFin IS NOT NULL";
+            }
+
+            DataTable tabla = GestorDatos.EjecutarConsulta(sql, parametros);
+
+            // Si no hay filas no hay contratos
+            if(tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            DataRow fila = tabla.Rows[0];
+            var contrato = Utilidades.MapeadorDatos.MapearFila<Contrato>(fila);
+
+            return contrato;
         }
 
 
