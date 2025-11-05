@@ -46,6 +46,8 @@ namespace Facturar.Entidades
         [Browsable(false)] // Evita mostrarlo en el grid
         public bool Activo => !FechaBaja.HasValue || FechaBaja.Value.Date > DateTime.Today; // Indica si la entidad está activa (sin fecha de baja o con fecha de baja en el futuro)
 
+        // Permite rellenar el combobox del local seleccionado en los contratos
+        public string DatosLocal => $"{Descripcion} - {NombreEmpresa}";
 
         // Constructor por defecto
         public Local()

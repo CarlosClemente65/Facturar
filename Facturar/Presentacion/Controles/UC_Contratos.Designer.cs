@@ -30,26 +30,21 @@
         {
             this.label2 = new System.Windows.Forms.Label();
             this.panelDgv = new System.Windows.Forms.Panel();
-            this.txtNombreCliente = new System.Windows.Forms.TextBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.txtNifCliente = new System.Windows.Forms.TextBox();
-            this.txtNombreEmpresa = new System.Windows.Forms.TextBox();
             this.lblNombre = new System.Windows.Forms.Label();
-            this.txtNifEmpresa = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.txtFechaFin = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.txtFechaInicio = new System.Windows.Forms.TextBox();
             this.label6 = new System.Windows.Forms.Label();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtDescripcion = new System.Windows.Forms.TextBox();
             this.txtPrecioMensual = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtObservaciones = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.txtIdLocal = new System.Windows.Forms.TextBox();
             this.btnRevisionContrato = new System.Windows.Forms.Button();
+            this.cbCliente = new System.Windows.Forms.ComboBox();
+            this.cbLocal = new System.Windows.Forms.ComboBox();
+            this.cbEmpresa = new System.Windows.Forms.ComboBox();
             this.SuspendLayout();
             // 
             // label2
@@ -76,76 +71,16 @@
             this.panelDgv.Size = new System.Drawing.Size(743, 222);
             this.panelDgv.TabIndex = 33;
             // 
-            // txtNombreCliente
-            // 
-            this.txtNombreCliente.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNombreCliente.Enabled = false;
-            this.txtNombreCliente.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreCliente.Location = new System.Drawing.Point(117, 285);
-            this.txtNombreCliente.Name = "txtNombreCliente";
-            this.txtNombreCliente.Size = new System.Drawing.Size(339, 22);
-            this.txtNombreCliente.TabIndex = 2;
-            this.txtNombreCliente.Leave += new System.EventHandler(this.TextBox_ToUpper);
-            // 
-            // label1
-            // 
-            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label1.AutoSize = true;
-            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(118, 351);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(101, 13);
-            this.label1.TabIndex = 66;
-            this.label1.Text = "Nombre empresa";
-            // 
-            // txtNifCliente
-            // 
-            this.txtNifCliente.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtNifCliente.Enabled = false;
-            this.txtNifCliente.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNifCliente.Location = new System.Drawing.Point(11, 285);
-            this.txtNifCliente.Name = "txtNifCliente";
-            this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
-            this.txtNifCliente.TabIndex = 1;
-            this.txtNifCliente.Tag = "primerCampo";
-            this.txtNifCliente.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtNifCliente.Leave += new System.EventHandler(this.txtNifCliente_Leave);
-            // 
-            // txtNombreEmpresa
-            // 
-            this.txtNombreEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNombreEmpresa.Enabled = false;
-            this.txtNombreEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNombreEmpresa.Location = new System.Drawing.Point(117, 367);
-            this.txtNombreEmpresa.Name = "txtNombreEmpresa";
-            this.txtNombreEmpresa.Size = new System.Drawing.Size(335, 22);
-            this.txtNombreEmpresa.TabIndex = 7;
-            this.txtNombreEmpresa.Leave += new System.EventHandler(this.TextBox_ToUpper);
-            // 
             // lblNombre
             // 
             this.lblNombre.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.lblNombre.AutoSize = true;
             this.lblNombre.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblNombre.Location = new System.Drawing.Point(7, 351);
+            this.lblNombre.Location = new System.Drawing.Point(12, 352);
             this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(79, 13);
+            this.lblNombre.Size = new System.Drawing.Size(55, 13);
             this.lblNombre.TabIndex = 64;
-            this.lblNombre.Text = "NIF Empresa";
-            // 
-            // txtNifEmpresa
-            // 
-            this.txtNifEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtNifEmpresa.Enabled = false;
-            this.txtNifEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtNifEmpresa.Location = new System.Drawing.Point(11, 367);
-            this.txtNifEmpresa.Name = "txtNifEmpresa";
-            this.txtNifEmpresa.Size = new System.Drawing.Size(100, 22);
-            this.txtNifEmpresa.TabIndex = 6;
-            this.txtNifEmpresa.Tag = "";
-            this.txtNifEmpresa.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.lblNombre.Text = "Empresa";
             // 
             // label3
             // 
@@ -154,9 +89,9 @@
             this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(12, 269);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(70, 13);
+            this.label3.Size = new System.Drawing.Size(46, 13);
             this.label3.TabIndex = 63;
-            this.label3.Text = "NIF Cliente";
+            this.label3.Text = "Cliente";
             // 
             // txtFechaFin
             // 
@@ -213,21 +148,9 @@
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label7.Location = new System.Drawing.Point(12, 310);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(94, 13);
+            this.label7.Size = new System.Drawing.Size(38, 13);
             this.label7.TabIndex = 71;
-            this.label7.Text = "Seleccion local";
-            // 
-            // txtDescripcion
-            // 
-            this.txtDescripcion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDescripcion.Enabled = false;
-            this.txtDescripcion.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtDescripcion.Location = new System.Drawing.Point(70, 326);
-            this.txtDescripcion.Name = "txtDescripcion";
-            this.txtDescripcion.Size = new System.Drawing.Size(382, 22);
-            this.txtDescripcion.TabIndex = 4;
-            this.txtDescripcion.Leave += new System.EventHandler(this.TextBox_ToUpper);
+            this.label7.Text = "Local";
             // 
             // txtPrecioMensual
             // 
@@ -275,29 +198,6 @@
             this.txtObservaciones.TabIndex = 10;
             this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
-            // label4
-            // 
-            this.label4.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.label4.AutoSize = true;
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label4.Location = new System.Drawing.Point(118, 269);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(92, 13);
-            this.label4.TabIndex = 77;
-            this.label4.Text = "Nombre cliente";
-            // 
-            // txtIdLocal
-            // 
-            this.txtIdLocal.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.txtIdLocal.Enabled = false;
-            this.txtIdLocal.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtIdLocal.Location = new System.Drawing.Point(11, 326);
-            this.txtIdLocal.Name = "txtIdLocal";
-            this.txtIdLocal.Size = new System.Drawing.Size(53, 22);
-            this.txtIdLocal.TabIndex = 3;
-            this.txtIdLocal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.txtIdLocal.Leave += new System.EventHandler(this.txtIdLocal_Leave);
-            // 
             // btnRevisionContrato
             // 
             this.btnRevisionContrato.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -315,59 +215,92 @@
             this.btnRevisionContrato.UseVisualStyleBackColor = false;
             this.btnRevisionContrato.Click += new System.EventHandler(this.btnRevisionContrato_Click);
             // 
+            // cbCliente
+            // 
+            this.cbCliente.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbCliente.BackColor = System.Drawing.Color.White;
+            this.cbCliente.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCliente.Enabled = false;
+            this.cbCliente.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbCliente.FormattingEnabled = true;
+            this.cbCliente.Location = new System.Drawing.Point(15, 287);
+            this.cbCliente.Name = "cbCliente";
+            this.cbCliente.Size = new System.Drawing.Size(437, 22);
+            this.cbCliente.TabIndex = 79;
+            this.cbCliente.SelectionChangeCommitted += new System.EventHandler(this.cbCliente_SelectionChangeCommitted);
+            this.cbCliente.Enter += new System.EventHandler(this.cbCliente_Enter);
+            // 
+            // cbLocal
+            // 
+            this.cbLocal.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbLocal.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbLocal.Enabled = false;
+            this.cbLocal.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cbLocal.FormattingEnabled = true;
+            this.cbLocal.Location = new System.Drawing.Point(15, 326);
+            this.cbLocal.Name = "cbLocal";
+            this.cbLocal.Size = new System.Drawing.Size(437, 22);
+            this.cbLocal.TabIndex = 80;
+            this.cbLocal.SelectionChangeCommitted += new System.EventHandler(this.cbLocal_SelectionChangeCommitted);
+            this.cbLocal.Enter += new System.EventHandler(this.cbLocal_Enter);
+            // 
+            // cbEmpresa
+            // 
+            this.cbEmpresa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cbEmpresa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbEmpresa.Enabled = false;
+            this.cbEmpresa.FormattingEnabled = true;
+            this.cbEmpresa.Location = new System.Drawing.Point(15, 368);
+            this.cbEmpresa.Name = "cbEmpresa";
+            this.cbEmpresa.Size = new System.Drawing.Size(437, 21);
+            this.cbEmpresa.TabIndex = 81;
+            // 
             // UC_Contratos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.Controls.Add(this.cbEmpresa);
+            this.Controls.Add(this.cbLocal);
+            this.Controls.Add(this.cbCliente);
             this.Controls.Add(this.btnRevisionContrato);
-            this.Controls.Add(this.txtIdLocal);
-            this.Controls.Add(this.label4);
             this.Controls.Add(this.label8);
-            this.Controls.Add(this.txtNombreCliente);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.txtObservaciones);
-            this.Controls.Add(this.txtNifCliente);
             this.Controls.Add(this.txtPrecioMensual);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.txtDescripcion);
             this.Controls.Add(this.label7);
             this.Controls.Add(this.txtFechaFin);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.txtFechaInicio);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.panelDgv);
-            this.Controls.Add(this.label1);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtNombreEmpresa);
             this.Controls.Add(this.lblNombre);
-            this.Controls.Add(this.txtNifEmpresa);
             this.Name = "UC_Contratos";
             this.Padding = new System.Windows.Forms.Padding(8);
             this.Size = new System.Drawing.Size(765, 400);
             this.Load += new System.EventHandler(this.UC_Contratos_Load);
-            this.Controls.SetChildIndex(this.txtNifEmpresa, 0);
             this.Controls.SetChildIndex(this.lblNombre, 0);
-            this.Controls.SetChildIndex(this.txtNombreEmpresa, 0);
             this.Controls.SetChildIndex(this.label2, 0);
-            this.Controls.SetChildIndex(this.label1, 0);
             this.Controls.SetChildIndex(this.panelDgv, 0);
             this.Controls.SetChildIndex(this.label6, 0);
             this.Controls.SetChildIndex(this.txtFechaInicio, 0);
             this.Controls.SetChildIndex(this.label5, 0);
             this.Controls.SetChildIndex(this.txtFechaFin, 0);
             this.Controls.SetChildIndex(this.label7, 0);
-            this.Controls.SetChildIndex(this.txtDescripcion, 0);
             this.Controls.SetChildIndex(this.label9, 0);
             this.Controls.SetChildIndex(this.txtPrecioMensual, 0);
-            this.Controls.SetChildIndex(this.txtNifCliente, 0);
             this.Controls.SetChildIndex(this.txtObservaciones, 0);
             this.Controls.SetChildIndex(this.label3, 0);
-            this.Controls.SetChildIndex(this.txtNombreCliente, 0);
             this.Controls.SetChildIndex(this.label8, 0);
-            this.Controls.SetChildIndex(this.label4, 0);
-            this.Controls.SetChildIndex(this.txtIdLocal, 0);
             this.Controls.SetChildIndex(this.btnRevisionContrato, 0);
+            this.Controls.SetChildIndex(this.cbCliente, 0);
+            this.Controls.SetChildIndex(this.cbLocal, 0);
+            this.Controls.SetChildIndex(this.cbEmpresa, 0);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -377,25 +310,20 @@
 
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Panel panelDgv;
-        public System.Windows.Forms.TextBox txtNombreCliente;
-        private System.Windows.Forms.Label label1;
-        public System.Windows.Forms.TextBox txtNifCliente;
-        public System.Windows.Forms.TextBox txtNombreEmpresa;
         private System.Windows.Forms.Label lblNombre;
-        public System.Windows.Forms.TextBox txtNifEmpresa;
         private System.Windows.Forms.Label label3;
         public System.Windows.Forms.TextBox txtFechaFin;
         private System.Windows.Forms.Label label5;
         public System.Windows.Forms.TextBox txtFechaInicio;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label7;
-        public System.Windows.Forms.TextBox txtDescripcion;
         private System.Windows.Forms.TextBox txtPrecioMensual;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtObservaciones;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtIdLocal;
         private System.Windows.Forms.Button btnRevisionContrato;
+        private System.Windows.Forms.ComboBox cbCliente;
+        private System.Windows.Forms.ComboBox cbLocal;
+        private System.Windows.Forms.ComboBox cbEmpresa;
     }
 }

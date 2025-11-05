@@ -13,6 +13,9 @@ namespace Facturar.Entidades
         public string IBAN { get; set; } // para domiciliación o transferencia
         public string Observaciones { get; set; } // notas internas sobre el cliente
 
+        // Permite rellenar el combobox del cliente seleccionado en los contratos.
+        public string DatosCliente => $"{NIF} - {Nombre}";
+
         // Constructor por defecto
         public Cliente()
         {

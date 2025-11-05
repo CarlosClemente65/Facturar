@@ -10,6 +10,10 @@ namespace Facturar.Entidades
         [DisplayName("Ultima factura")]
         public int NumeroFacturaActual { get; set; } = 0;
 
+
+        // Permite rellenar el combobox de la empresa en los contratos
+        public string DatosEmpresa => $"{NIF} - {Nombre}";
+
         // Constructor por defecto
         public Empresa()
         {

@@ -30,6 +30,7 @@ namespace Facturar.Presentacion.Controles
 
         // Almacena la lista de contratos con todas sus propiedades
         private IEnumerable<Contrato> listaContratos;
+        private IEnumerable<Cliente> listaClientes;
 
         private bool ordenAscendente = true;
 
@@ -80,6 +81,7 @@ namespace Facturar.Presentacion.Controles
         // Carga los contratos en el grid base y sus relaciones
         public void CargarContratos(bool? activos = true)
         {
+            // Carga una lista con los contratos activos
             listaContratos = gestorContratos.ListarTodos(activos: activos);
 
             // Carga las entidades relacionadas para mostrar los datos en el grid
@@ -94,6 +96,10 @@ namespace Facturar.Presentacion.Controles
 
             AplicarFormatoColumnas();
 
+            // Metodos para cargar las listas de los combobox
+            CargarListaClientes(activos);
+            CargarListaLocales(activos);
+            CargarListaEmpresas(activos);
         }
 
         internal void ActualizarContratoSeleccionado()
@@ -122,7 +128,6 @@ namespace Facturar.Presentacion.Controles
                 contrato.IdCliente = ClienteContrato.Id;
                 contrato.IdLocal = LocalContrato.Id;
                 contrato.IdEmpresa = EmpresaContrato.Id;
-
             }
 
             // Establece las propiedades del contrato
@@ -194,23 +199,22 @@ namespace Facturar.Presentacion.Controles
 
         public void BloqueoTextBoxAlta()
         {
-            // Deshabilita los TextBox que no se pueden editar
-            txtNombreCliente.Enabled = false;
-            txtDescripcion.Enabled = false;
-            txtNifEmpresa.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
+            // Gestion de los controles que se pueden editar en modo alta
+            cbCliente.Enabled = true;
+            cbLocal.Enabled = true;
+            cbEmpresa.Enabled = true;
+            cbLocal.Focus();
+            cbCliente.Focus();
             txtFechaFin.Enabled = false;
         }
 
         public void BloqueoTextBoxEdicion()
         {
-            // Deshabilita los TextBox que no se pueden editar
-            txtNifCliente.Enabled = false;
-            txtNombreCliente.Enabled = false;
-            txtIdLocal.Enabled = false;
-            txtDescripcion.Enabled = false;
-            txtNifEmpresa.Enabled = false;
-            txtNombreEmpresa.Enabled = false;
+            // Gestion de los controles que se pueden editar en modo edicion
+            cbCliente.Enabled = false;
+            cbLocal.Enabled = false;
+            cbEmpresa.Enabled = false;
+
             txtFechaInicio.Enabled = false;
             txtFechaFin.Enabled = false; // No se permite poner la ficha fin en edicion
         }
@@ -235,17 +239,13 @@ namespace Facturar.Presentacion.Controles
         // Muestra los datos del contrato en los textBox correspondientes
         private void MostrarDatoscontrato(Contrato contrato)
         {
-            // TODO: Cambiar el NifCliente por un comboBox de clientes
-            txtNifCliente.Text = contrato.NIFCliente;
-            txtNombreCliente.Text = contrato.NombreCliente;
+            // Carga en los campos del cliente, local y empresa los datos que tiene el contrato
+            cbCliente.SelectedValue = contrato.IdCliente;
+            cbLocal.SelectedValue = contrato.IdLocal;
+            cbEmpresa.SelectedValue = contrato.IdEmpresa;
 
-            // TODO: Cambiar la descripcion del local por un comboBox de locales
-            txtIdLocal.Text = contrato.IdLocal.ToString();
-            txtDescripcion.Text = contrato.DescripcionLocal;
-
+            // Carga el resto de valores
             txtPrecioMensual.Text = contrato.PrecioMensual.ToString("N2");
-            txtNifEmpresa.Text = contrato.NIFEmpresa;
-            txtNombreEmpresa.Text = contrato.NombreEmpresa;
             txtFechaInicio.Text = contrato.FechaInicio.ToString("dd.MM.yyyy");
 
             // La fecha de fin puede ser nula
@@ -259,6 +259,84 @@ namespace Facturar.Presentacion.Controles
             }
 
             txtObservaciones.Text = contrato.Observaciones;
+        }
+
+        // Rellena la lista de empresas en el campo de empresas
+        private void CargarListaEmpresas(bool? activos)
+        {
+            // Carga los valores en el campo de seleccion de la empresa
+            var listaEmpresas = gestorEmpresas.ListarTodos(activas: activos);
+
+            // Ordenar la lista alfabeticamente
+            listaEmpresas = listaEmpresas.OrderBy(e => e.Nombre);
+
+            // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
+            var datosEmpresas = new List<Empresa>
+            {
+                // Añade a la lista el elemento inicial
+                new Empresa { Id = 0, NIF = "", Nombre = "" }
+            };
+
+            // Añade la lista de empresas a continuacion
+            datosEmpresas.AddRange(listaEmpresas);
+
+            // Carga en el combobox la lista de empresas.
+            cbEmpresa.DataSource = datosEmpresas.ToList(); // Origen de datos
+            cbEmpresa.DisplayMember = "DatosEmpresa"; // Campo de la clase que se mostrara (campo calculado)
+            cbEmpresa.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
+            cbEmpresa.SelectedValue = ContratoSeleccionado.IdEmpresa; // Muestra en el campo el elemento seleccionado
+        }
+
+        // Rellena la lista de locales en el campo de locales
+        private void CargarListaLocales(bool? activos)
+        {
+            // Carga los valores en el campo de seleccion del local
+            var listaLocales = gestorLocales.ListarTodos(activos: activos);
+
+            // Ordenar la lista alfabeticamente
+            listaLocales = listaLocales.OrderBy(l => l.Descripcion);
+
+            // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
+            var datosLocales = new List<Local>
+            {
+                // Añade a la lista el elemento inicial
+                new Local { Id = 0, Descripcion = "Seleccione un local" }
+            };
+
+            // Añade la lista de locales a continuacion
+            datosLocales.AddRange(listaLocales);
+
+            // Carga en el combobox la lista de clientes.
+            cbLocal.DataSource = datosLocales; // Origen de datos
+            cbLocal.DisplayMember = "DatosLocal"; //Campo de la clase que se mostrara (campo calculado)
+            cbLocal.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
+            cbLocal.SelectedValue = ContratoSeleccionado.IdLocal; // Muestra en el campo el elemento seleccionado
+        }
+
+        // Rellena la lista de clientes en el campo de clientes
+        private void CargarListaClientes(bool? activos)
+        {
+            // Carga los valores en el campo de seleccion del cliente
+            listaClientes = gestorClientes.ListarTodos(activos: activos);
+
+            // Ordenar la lista alfabeticamente
+            listaClientes = listaClientes.OrderBy(c => c.Nombre);
+
+            // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
+            var datosClientes = new List<Cliente>
+            {
+                // Añade a la lista el elemento inicial
+                new Cliente { Id = 0, NIF = "", Nombre = "Seleccione un cliente" }
+            };
+
+            // Añade la lista de clientes a continuacion
+            datosClientes.AddRange(listaClientes);
+
+            // Carga en el combobox la lista de clientes.
+            cbCliente.DataSource = datosClientes; // Origen de datos
+            cbCliente.DisplayMember = "DatosCliente"; // Campo de la clase que se mostrara (campo calculado)
+            cbCliente.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
+            cbCliente.SelectedValue = ContratoSeleccionado.IdCliente; // Muestra en el campo el elemento seleccionado
         }
 
         // Evento que se lanza al ordenar una columna en el grid base
@@ -370,90 +448,6 @@ namespace Facturar.Presentacion.Controles
             UtilesUI.FormatearImporte(sender as TextBox);
         }
 
-        private void txtNifCliente_Leave(object sender, EventArgs e)
-        {
-            // Solo en el alta se permite acceder al cliente
-            if(tipoProceso == Enumerador.TipoProceso.Alta)
-            {
-                txtNifCliente.Text = txtNifCliente.Text.ToUpper();
-
-                // En el alta se chequea que el cliente exista
-                // Busca el cliente por su NIF en la base de datos
-                ClienteContrato = ObtenerClientePorNif(txtNifCliente.Text);
-                if(ClienteContrato == null)
-                {
-                    MessageBox.Show("El cliente indicado no existe",
-                                    "Cliente no encontrado",
-                                    MessageBoxButtons.OK,
-                                    MessageBoxIcon.Warning);
-                    txtNombreCliente.Text = "Cliente no encontrado";
-                    txtNombreCliente.BackColor = Color.Red;
-                    txtNombreCliente.ForeColor = Color.White;
-                    erroresFormulario++;
-                    //txtNifCliente.Focus();
-                }
-                else
-                {
-                    txtNombreCliente.BackColor = SystemColors.Window;
-                    txtNombreCliente.ForeColor = SystemColors.WindowText;
-                    txtNombreCliente.Text = ClienteContrato?.Nombre ?? string.Empty;
-                }
-            }
-
-        }
-
-        private void txtIdLocal_Leave(object sender, EventArgs e)
-        {
-            //if(tipoProceso == Enumerador.TipoProceso.Alta)
-            //{
-            //    // Solo en el alta se permite acceder al local
-            //    LocalContrato = ObtenerLocalPorId(Convert.ToInt32(txtIdLocal.Text));
-            //    if(LocalContrato == null)
-            //    {
-            //        MessageBox.Show("El local indicado no existe",
-            //                        "Local no encontrado",
-            //                        MessageBoxButtons.OK,
-            //                        MessageBoxIcon.Warning);
-            //        txtIdLocal.Text = string.Empty;
-            //        txtIdLocal.Focus();
-            //    }
-
-
-            //    // Chequeo de que el local no tiene un contrato activo
-            //    else if(LocalContrato.ContratoActivo)
-            //    {
-            //        MessageBox.Show("El local ya tiene un contrato activo.",
-            //                         "Local con contrato activo",
-            //                         MessageBoxButtons.OK,
-            //                         MessageBoxIcon.Warning);
-            //        txtIdLocal.Text = string.Empty;
-            //        txtIdLocal.Focus();
-            //    }
-            //    else
-            //    {
-            //        // Se obtiene la empresa vinculada al local
-            //        EmpresaContrato = ObtenerEmpresaPorIdLocal(LocalContrato.IdEmpresa);
-
-            //        //Carga los datos del local y la empresa en los textBox correspondientes
-            //        txtDescripcion.Text = LocalContrato?.Descripcion ?? string.Empty;
-            //        txtNifEmpresa.Text = EmpresaContrato?.NIF ?? string.Empty;
-            //        txtNombreEmpresa.Text = EmpresaContrato?.Nombre ?? string.Empty;
-            //    }
-            //}
-        }
-
-        private Cliente ObtenerClientePorNif(string nif)
-        {
-            var gestorClientes = new GestorClientes();
-            return gestorClientes.ObtenerPorNIF(nif);
-        }
-
-        private Local ObtenerLocalPorId(int id)
-        {
-            var gestorLocales = new GestorLocales();
-            return gestorLocales.ObtenerPorId(id);
-        }
-
         private Empresa ObtenerEmpresaPorIdLocal(int id)
         {
             var gestorEmpresas = new GestorEmpresas();
@@ -464,6 +458,57 @@ namespace Facturar.Presentacion.Controles
         {
             var frmRevisiones = new frmRevisionContrato(ContratoActual);
             frmRevisiones.ShowDialog();
+        }
+
+        // Evento al seleccionar un elemento y cerrar la lista
+        private void cbCliente_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            // Asigna el cliente seleccionado al contrato
+            ClienteContrato = cbCliente.SelectedItem as Cliente;
+            cbLocal.Focus(); // Pone el foco en el local para forzar a seleccionar uno
+
+        }
+
+        // Evento al seleccionar un elemento y cerrar la lista
+        private void cbLocal_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+            // Carga el local seleccionado en el combobox
+            var local = cbLocal.SelectedItem as Local;
+
+            // Chequeo de que el local no tiene un contrato activo
+            if(tipoProceso == Enumerador.TipoProceso.Alta && local.ContratoActivo)
+            {
+                MessageBox.Show("El local ya tiene un contrato activo.",
+                                 "Local con contrato activo",
+                                 MessageBoxButtons.OK,
+                                 MessageBoxIcon.Warning);
+                cbLocal.SelectedIndex = 0;
+            }
+            else
+            {
+                // Asigna el local seleccionado al contrato
+                LocalContrato = cbLocal.SelectedItem as Local; 
+
+                // Obtiene el objeto Empresa segun el IdEmpresa del local
+                EmpresaContrato = ObtenerEmpresaPorIdLocal(local.IdEmpresa);
+
+                // Asigna los datos de la empresa al campo
+                cbEmpresa.SelectedValue = local.IdEmpresa;
+                txtPrecioMensual.Focus();
+            }
+        }
+
+        private void cbCliente_Enter(object sender, EventArgs e)
+        {
+            // Al entrar al campo del cliente, se selecciona el texto de ayuda (solo en el alta se puede acceder)
+            cbCliente.SelectedIndex = 0;
+        }
+
+        private void cbLocal_Enter(object sender, EventArgs e)
+        {
+            // Al entrar al campo del local , se selecciona el texto de ayuda (solo en el alta se puede acceder)
+            cbLocal.SelectedIndex = 0; 
+            cbEmpresa.SelectedIndex = 0; // Como la empresa esta vinculada al local, se selecciona el texto de ayuda.
         }
     }
 }
