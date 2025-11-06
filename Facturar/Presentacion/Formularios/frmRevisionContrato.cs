@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
 using Facturar.Presentacion.Controles;
 using Facturar.Servicios;
+using Facturar.Utilidades;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
 using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
@@ -15,27 +17,31 @@ namespace Facturar.Presentacion.Formularios
     {
         private GestorRevisiones gestor = new GestorRevisiones();
         private Contrato contratoSeleccionado;
+        private RevisionContrato revisionSeleccionada;
+        private Enumeradores.TipoProceso tipoProceso;
 
         private IEnumerable<RevisionContrato> listaRevisiones = new List<RevisionContrato>();
 
         public frmRevisionContrato(Contrato contrato)
         {
             InitializeComponent();
-            
+
             contratoSeleccionado = contrato;
 
+            // Suscripcion a los eventos de los botones del panel inferior general
             panelRevisionContrato_general.AltaClicked += PanelInferior_general_altaClicked;
             panelRevisionContrato_general.BajaClicked += PanelInferior_general_bajaClicked;
             panelRevisionContrato_general.EditarClicked += PanelInferior_general_editarClicked;
             panelRevisionContrato_general.EliminarClicked += PanelInferior_general_eliminarClicked;
-            panelRevisionContrato_general.SeleccionActivos += PanelRevisionContrato_general_SeleccionActivos;
             panelRevisionContrato_Edicion.ValidarClicked += PanelRevisionContrato_Edicion_ValidarClicked;
             panelRevisionContrato_Edicion.CancelarClicked += PanelRevisionContrato_Edicion_CancelarClicked;
         }
 
         private void frmRevisionContrato_Load(object sender, EventArgs e)
         {
-            panelRevisionContrato_general.EstadoVisible = true;
+            panelRevisionContrato_general.EstadoVisible = false; // Se quita el panel de los estados porque aqui no es necesario
+
+            // Configuracion del grid de revisiones
             ConfigurarGrid();
 
             // Monta las columnas por orden
@@ -45,16 +51,19 @@ namespace Facturar.Presentacion.Formularios
             CargarRevisiones();
         }
 
+
+        // Aplica estilo de colores al grid
         private void ConfigurarGrid()
         {
             dgvRevisiones.DefaultCellStyle.SelectionBackColor = Color.Wheat;
             dgvRevisiones.DefaultCellStyle.SelectionForeColor = Color.Black;
         }
 
+
+        // Carga una lista con las revisiones del contrato ordenada por fecha de revision
         private void CargarRevisiones()
         {
-            // Carga una lista con las revisiones del contrato
-            listaRevisiones = gestor.ListarPorContrato(contratoSeleccionado.Id);
+            listaRevisiones = gestor.ListarPorContrato(contratoSeleccionado.Id).OrderByDescending(r => r.FechaRevision).ToList();
 
             // Carga los datos de los contratos en el gridBase
             dgvRevisiones.DataSource = null;
@@ -63,25 +72,36 @@ namespace Facturar.Presentacion.Formularios
             AplicarFormatoColumnas();
         }
 
+
+        // Boton alta
         private void PanelInferior_general_altaClicked(object sender, EventArgs e)
         {
-            HabilitarCampos(mostrar: true);
-            MostrarPanelGeneral(false);
+            tipoProceso = Enumeradores.TipoProceso.Alta;
+            ModoEdicion(modoEdicion: true);
         }
 
+
+        // Boton baja (no tiene funcionalidad)
         private void PanelInferior_general_bajaClicked(object sender, EventArgs e)
         {
             MessageBox.Show("Las revisiones de un contrato no se pueden dar de baja.", "Error baja revision contrato", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
 
+
+        // Boton editar
         private void PanelInferior_general_editarClicked(object sender, EventArgs e)
         {
-            HabilitarCampos(mostrar: false);
-            MostrarPanelGeneral(false);
+            tipoProceso = Enumeradores.TipoProceso.Edicion;
+
+            ModoEdicion(modoEdicion: true);
         }
 
+
+        // Boton eliminar
         private void PanelInferior_general_eliminarClicked(object sender, EventArgs e)
         {
+            tipoProceso = Enumeradores.TipoProceso.Eliminacion;
+
             DialogResult resultado = MessageBox.Show(
                 "Esta seguro de eliminar la revision",
                 "Confirmar eliminacion",
@@ -90,63 +110,140 @@ namespace Facturar.Presentacion.Formularios
 
             if(resultado == DialogResult.Yes)
             {
-                gestor.Eliminar(ActualizarPropiedades());
+                gestor.Eliminar(revisionSeleccionada);
             }
+
+            CargarRevisiones();
         }
 
-        private void PanelRevisionContrato_general_SeleccionActivos(object sender, EventArgs e)
-        {
-            throw new NotImplementedException();
-        }
 
+        // Boton cancelar
         private void PanelRevisionContrato_Edicion_CancelarClicked(object sender, EventArgs e)
         {
-            MostrarPanelGeneral(true);
+            ModoEdicion(modoEdicion: false);
+            CargarRevisiones();
         }
 
         private void PanelRevisionContrato_Edicion_ValidarClicked(object sender, EventArgs e)
         {
-            MostrarPanelGeneral(true);
+            RevisionContrato copiaRevision; // Copia de la revision selecciona
+            RevisionContrato nuevaRevision; // Nueva revision a dar de alta
+            string mensajeOk = string.Empty;
+            string mensajeKo = string.Empty;
+            try
+            {
+                switch(tipoProceso)
+                {
+                    case Enumeradores.TipoProceso.Alta:                        
+                        // Se crea una revision con los valores de los campos
+                        nuevaRevision = CrearNuevaRevision(contratoSeleccionado);
+
+                        // Validacion de la revision
+                        //nuevaRevision.ValidarPropiedadesRevision();
+
+                        gestor.AgregarRevision(nuevaRevision, contratoSeleccionado);
+
+                        mensajeOk = "Revision dada de alta en la base de datos";
+                        break;
+
+                    case Enumeradores.TipoProceso.Edicion:
+                        // Se hace una copia por si hay errores poder restaurarla
+                        if(revisionSeleccionada != null)
+                        {
+                            copiaRevision = new RevisionContrato(revisionSeleccionada);
+                        }
+
+                        // Se crea una nueva revision
+                        nuevaRevision = CrearNuevaRevision(contratoSeleccionado);
+
+                        // Se le asigna el Id porque en la creacion no se sabe
+                        nuevaRevision.Id = revisionSeleccionada.Id;
+
+                        // Se graba en la base de datos
+                        gestor.Actualizar(nuevaRevision);
+
+                        mensajeOk = "Revision actualizada en la base de datos";
+                        break;
+                }
+
+            }
+
+            catch(Exception ex)
+            {
+                mensajeKo = $"No se ha podido actualizar la revision en la base de datos\n{ex.Message}";
+            }
+
+            if (mensajeOk != string.Empty)
+            {
+                MessageBox.Show(mensajeOk, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            if (mensajeKo != string.Empty)
+            {
+                MessageBox.Show(mensajeKo, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaRevision.Focus();
+                return;
+            }
+
+            // Cancela el modo edicion
+            ModoEdicion(modoEdicion: false);
+
+            // Carga los datos en el grid
+            CargarRevisiones();
         }
 
-        // Metodo para mostrar u ocultar los paneles general y edicion alternativamente
-        private void MostrarPanelGeneral(bool mostrar)
+
+        // Activa o desactiva campos y grid en el modo edicion
+        private void ModoEdicion(bool modoEdicion)
         {
-            panelRevisionContrato_general.Visible = mostrar;
-            panelRevisionContrato_Edicion.Visible = !mostrar;
-            panelRevisionContrato_general.EstadoVisible = mostrar;
-            btnContratos.Visible = mostrar;
+            // Alterna paneles edicion y general
+            panelRevisionContrato_Edicion.Visible = modoEdicion;
+            panelRevisionContrato_general.Visible = !modoEdicion;
+
+            // Alterna campos de datos
+            txtFechaRevision.Enabled = modoEdicion;
+            txtPrecioAnterior.Enabled = modoEdicion;
+            txtRevision.Enabled = modoEdicion;
+            txtPrecioRevisado.Enabled = modoEdicion;
+            txtObservaciones.Enabled = modoEdicion;
+
+            // Alterna botones
+            btnVolver.Visible = !modoEdicion;
+
+            // Alterna el grid
+            dgvRevisiones.Enabled = !modoEdicion;
         }
 
-        private void HabilitarCampos(bool mostrar)
-        {
-            txtFechaRevision.Enabled = mostrar;
-            txtPrecioAnterior.Enabled = mostrar;
-            txtRevision.Enabled = mostrar;
-            txtPrecioRevisado.Enabled = mostrar;
-            txtObservaciones.Enabled = mostrar;
-            dgvRevisiones.Enabled = !mostrar;
-        }
 
+        // Cierra el formulario de revisiones
         private void btnContratos_Click(object sender, EventArgs e)
         {
             this.Close();
         }
 
-        private RevisionContrato ActualizarPropiedades()
+        // Crea un objeto con una nueva revision cargando los campos del formulario
+        private RevisionContrato CrearNuevaRevision(Contrato contratoSeleccionado)
         {
-            RevisionContrato revisionContrato = new RevisionContrato
+            // Limpieza y conversion de campos numericos
+            decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior);
+            decimal.TryParse(txtRevision.Text, out decimal revision);
+            decimal.TryParse(txtPrecioRevisado.Text, out decimal precioRevisado);
+
+
+            RevisionContrato nuevaRevision = new RevisionContrato()
             {
+                IdContrato = contratoSeleccionado.Id,
                 FechaRevision = Utiles.ConvertirFecha(txtFechaRevision.Text) ?? DateTime.Today,
-                PrecioAnterior = Convert.ToDecimal(txtPrecioAnterior.Text),
-                PorcentajeRevision = Convert.ToDecimal(txtRevision?.Text),
-                PrecioRevisado = Convert.ToDecimal(txtPrecioRevisado.Text),
+                PrecioAnterior = precioAnterior,
+                PorcentajeRevision = revision,
+                PrecioRevisado = precioRevisado,
                 Observaciones = txtObservaciones.Text
             };
 
-            return revisionContrato;
+            return nuevaRevision;
         }
 
+
+        // Organiza las columnas del grid
         private void InicializaColumnas()
         {
             var columnas = new (string nombrePropiedad, int orden)[]
@@ -165,6 +262,8 @@ namespace Facturar.Presentacion.Formularios
 
         }
 
+
+        // Inserta la columnas configuradas en el grid
         private void ConfigurarColumnas<T>(IEnumerable<(string nombrePropiedad, int orden)> columnas)
         {
             dgvRevisiones.AutoGenerateColumns = false;
@@ -176,12 +275,14 @@ namespace Facturar.Presentacion.Formularios
             }
         }
 
+
+        // Formatea las columnas del grid segun el dato que contenga
         private void AplicarFormatoColumnas()
         {
             if(dgvRevisiones.Columns.Count == 0) return; // Protege contra columnas vacías
 
             // Lista con los nombres de las propiedades a ajustar
-            string[] columnasCentradas = { "Id", "FechaRevision", "IdContrato", "PorcentajeRevision"};
+            string[] columnasCentradas = { "Id", "FechaRevision", "IdContrato", "PorcentajeRevision" };
             string[] columnasFecha = { "FechaRevision" };
             string[] columnasImportes = { "PrecioAnterior", "PrecioRevisado" };
 
@@ -210,6 +311,33 @@ namespace Facturar.Presentacion.Formularios
 
             // Ajuste al contenido
             dgvRevisiones.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+        }
+
+
+        // Actualiza la revision seleccionada al cambiar la seleccion del grid
+        private void dgvRevisiones_SelectionChanged(object sender, EventArgs e)
+        {
+            if(dgvRevisiones.CurrentRow != null)
+            {
+                revisionSeleccionada = dgvRevisiones.CurrentRow.DataBoundItem as RevisionContrato;
+            }
+
+            // Limpia los textBox y muestra los datos de la revision seleccionada
+            UtilesUI.LimpiarTextBoxes(this);
+            MostrarDatosRevision(revisionSeleccionada);
+
+        }
+
+        // Rellena los campos con los valores de la revision seleccionada
+        private void MostrarDatosRevision(RevisionContrato revisionSeleccionada)
+        {
+            // Carga los valores de la revision en los campos
+            txtFechaRevision.Text = Utiles.FormatearFecha(revisionSeleccionada.FechaRevision);
+            txtPrecioAnterior.Text = (revisionSeleccionada.PrecioAnterior ?? 0).ToString("N2"); // Como pueder ser nula se pone a cero
+
+            txtRevision.Text = $"{revisionSeleccionada.PorcentajeRevision:N2}%"; // Formatea a dos decimales y añade el simbolo de porcentaje
+            txtPrecioRevisado.Text = $"{revisionSeleccionada.PrecioRevisado:N2}"; // Formatea a dos decimales
+            txtObservaciones.Text = revisionSeleccionada.Observaciones;
         }
     }
 }

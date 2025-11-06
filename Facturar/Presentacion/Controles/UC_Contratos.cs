@@ -228,7 +228,7 @@ namespace Facturar.Presentacion.Controles
                 // Actualiza el contrato seleccionada
                 ContratoSeleccionado = contrato;
 
-                // Limpia los textBox y muestra los datos de la empresa seleccionada
+                // Limpia los textBox y muestra los datos del contrato seleccionado
                 UtilesUI.LimpiarTextBoxes(this);
 
                 // Muestra los datos del contrato seleccionado
@@ -458,6 +458,7 @@ namespace Facturar.Presentacion.Controles
         {
             var frmRevisiones = new frmRevisionContrato(ContratoActual);
             frmRevisiones.ShowDialog();
+            CargarContratos();
         }
 
         // Evento al seleccionar un elemento y cerrar la lista

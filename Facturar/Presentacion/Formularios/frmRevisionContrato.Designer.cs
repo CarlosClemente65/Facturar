@@ -28,11 +28,10 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle4 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelRevisionContrato_general = new Facturar.Presentacion.Paneles.PanelInferior_general();
             this.panelRevisionContrato_Edicion = new Facturar.Presentacion.Paneles.PanelInferior_Edicion();
-            this.btnContratos = new System.Windows.Forms.Button();
             this.panelInferior = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.txtFechaRevision = new System.Windows.Forms.TextBox();
@@ -45,6 +44,7 @@
             this.label8 = new System.Windows.Forms.Label();
             this.txtObservaciones = new System.Windows.Forms.TextBox();
             this.dgvRevisiones = new System.Windows.Forms.DataGridView();
+            this.btnVolver = new System.Windows.Forms.Button();
             this.panelInferior.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRevisiones)).BeginInit();
             this.SuspendLayout();
@@ -68,35 +68,12 @@
             this.panelRevisionContrato_Edicion.TabIndex = 1;
             this.panelRevisionContrato_Edicion.Visible = false;
             // 
-            // btnContratos
-            // 
-            this.btnContratos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnContratos.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnContratos.FlatAppearance.BorderSize = 0;
-            this.btnContratos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
-            this.btnContratos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
-            this.btnContratos.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnContratos.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnContratos.Image = global::Facturar.Properties.Resources.Contratos2_black;
-            this.btnContratos.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnContratos.Location = new System.Drawing.Point(590, 2);
-            this.btnContratos.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.btnContratos.Name = "btnContratos";
-            this.btnContratos.Size = new System.Drawing.Size(90, 56);
-            this.btnContratos.TabIndex = 5;
-            this.btnContratos.Text = "Contratos";
-            this.btnContratos.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnContratos.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnContratos.UseVisualStyleBackColor = true;
-            this.btnContratos.Click += new System.EventHandler(this.btnContratos_Click);
-            // 
             // panelInferior
             // 
             this.panelInferior.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panelInferior.BackColor = System.Drawing.Color.OldLace;
-            this.panelInferior.Controls.Add(this.btnContratos);
+            this.panelInferior.Controls.Add(this.btnVolver);
             this.panelInferior.Controls.Add(this.panelRevisionContrato_general);
             this.panelInferior.Controls.Add(this.panelRevisionContrato_Edicion);
             this.panelInferior.Location = new System.Drawing.Point(0, 300);
@@ -221,14 +198,14 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvRevisiones.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.DisplayedCells;
             this.dgvRevisiones.BackgroundColor = System.Drawing.Color.WhiteSmoke;
-            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
-            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.ControlLight;
-            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
-            this.dgvRevisiones.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle3;
+            dataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleCenter;
+            dataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.ControlLight;
+            dataGridViewCellStyle1.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvRevisiones.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvRevisiones.ColumnHeadersHeight = 30;
             this.dgvRevisiones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
             this.dgvRevisiones.EnableHeadersVisualStyles = false;
@@ -237,20 +214,44 @@
             this.dgvRevisiones.MultiSelect = false;
             this.dgvRevisiones.Name = "dgvRevisiones";
             this.dgvRevisiones.ReadOnly = true;
-            dataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle4.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvRevisiones.RowHeadersDefaultCellStyle = dataGridViewCellStyle4;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvRevisiones.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
             this.dgvRevisiones.RowHeadersVisible = false;
             this.dgvRevisiones.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRevisiones.ShowEditingIcon = false;
             this.dgvRevisiones.ShowRowErrors = false;
             this.dgvRevisiones.Size = new System.Drawing.Size(660, 198);
             this.dgvRevisiones.TabIndex = 83;
+            this.dgvRevisiones.SelectionChanged += new System.EventHandler(this.dgvRevisiones_SelectionChanged);
+            // 
+            // btnVolver
+            // 
+            this.btnVolver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnVolver.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnVolver.FlatAppearance.BorderSize = 0;
+            this.btnVolver.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
+            this.btnVolver.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
+            this.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVolver.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVolver.Image = global::Facturar.Properties.Resources.Vovler;
+            this.btnVolver.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnVolver.Location = new System.Drawing.Point(590, 2);
+            this.btnVolver.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.btnVolver.Name = "btnVolver";
+            this.btnVolver.Size = new System.Drawing.Size(90, 56);
+            this.btnVolver.TabIndex = 5;
+            this.btnVolver.Text = "Volver";
+            this.btnVolver.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnVolver.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.Click += new System.EventHandler(this.btnContratos_Click);
             // 
             // frmRevisionContrato
             // 
@@ -290,7 +291,7 @@
         #endregion
         private Paneles.PanelInferior_Edicion panelRevisionContrato_Edicion;
         private Paneles.PanelInferior_general panelRevisionContrato_general;
-        private System.Windows.Forms.Button btnContratos;
+        private System.Windows.Forms.Button btnVolver;
         private System.Windows.Forms.Panel panelInferior;
         private System.Windows.Forms.Label label1;
         public System.Windows.Forms.TextBox txtFechaRevision;

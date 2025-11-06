@@ -26,7 +26,8 @@ namespace Facturar.Servicios
         /// <summary>
         /// Agrega una revision de un contrato
         /// </summary>
-        /// <param name="revision">Objeto con las propiedades de la revision del contrato</param>
+        /// <param name="nuevaRevision">Objeto con las propiedades de la revision del contrato</param>
+        /// <param name="contrato">Objeto con el contrato sobre el que se hace la revision</param>
         /// <returns>True si se ha podido insertar</returns>
         /// <exception cref="InvalidOperationException"></exception>
         public bool AgregarRevision(RevisionContrato nuevaRevision, Contrato contrato)
@@ -72,26 +73,33 @@ namespace Facturar.Servicios
                     throw new InvalidOperationException("No se ha podido insertar la revision del contrato en la base de datos");
                 }
 
-                // Una vez insertada la revision, se actualiza el precio mensual en el contrato
-                string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @IdContrato";
-                var parametrosContrato = new[]
-                {
-                    new SQLiteParameter("@NuevoPrecio", nuevaRevision.PrecioRevisado),
-                    new SQLiteParameter("@IdContrato", nuevaRevision.IdContrato)
-                };
-
-                var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
-
-                if(filasActualizadas <= 0)
-                {
-                    throw new InvalidOperationException("No se ha podido actualizar el precio mensual del contrato en la base de datos");
-                }
+                // Actualiza el precio revisado en el contrato
+                ActualizarContrato(precioRevisado: nuevaRevision.PrecioRevisado, idContrato: nuevaRevision.IdContrato);
 
                 return true; // Indica que la inserción fue exitosa
+
             }
             catch(Exception ex)
             {
                 throw new InvalidOperationException($"No se ha podido insertar la revision del contrato: {ex.Message}", ex);
+            }
+        }
+
+        private static void ActualizarContrato(decimal precioRevisado, int idContrato)
+        {
+            // Una vez insertada la revision, se actualiza el precio mensual en el contrato
+            string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @IdContrato";
+            var parametrosContrato = new[]
+            {
+                    new SQLiteParameter("@NuevoPrecio", precioRevisado),
+                    new SQLiteParameter("@IdContrato", idContrato)
+                };
+
+            var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
+
+            if(filasActualizadas <= 0)
+            {
+                throw new InvalidOperationException("No se ha podido actualizar el precio mensual del contrato en la base de datos");
             }
         }
 
@@ -110,7 +118,6 @@ namespace Facturar.Servicios
                 // Actualiza la revision del contrato en la base de datos
                 var parametros = new[]
                 {
-                    // No se incluye el IdContrato porque no se puede cambiar y se pasa como parametro
                     new SQLiteParameter("@Id", revision.Id),
                     new SQLiteParameter("@FechaRevision", revision.FechaRevision),
                     new SQLiteParameter("@PrecioAnterior", revision.PrecioAnterior),
@@ -120,7 +127,7 @@ namespace Facturar.Servicios
                 };
 
                 // Ejecuta el comando y obtiene el numero de filas actualizadas
-                string sqlActualizarRevision = "UPDATE RevisionContrato SET FechaRevision = @FechaRevision, PrecioAnterior = @PrecioAnterior, PorcentajeRevision = @PorcentajeRevision, PrecioRevisado = @PrecioRevisado, Observaciones = @Observaciones WHERE Id = @Id";
+                string sqlActualizarRevision = "UPDATE RevisionesContrato SET FechaRevision = @FechaRevision, PrecioAnterior = @PrecioAnterior, PorcentajeRevision = @PorcentajeRevision, PrecioRevisado = @PrecioRevisado, Observaciones = @Observaciones WHERE Id = @Id";
 
                 var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlActualizarRevision, parametros));
 
@@ -128,6 +135,10 @@ namespace Facturar.Servicios
                 {
                     throw new InvalidOperationException("No se ha podido actualizar la revision del contrato en la base de datos");
                 }
+
+                // Actualiza el precio de la revision en el contrato
+                ActualizarContrato(precioRevisado: revision.PrecioRevisado, idContrato: revision.IdContrato);
+
                 return true; // Indica que la inserción fue exitosa
             }
 
@@ -172,14 +183,10 @@ namespace Facturar.Servicios
         /// <exception cref="InvalidOperationException"></exception>
         public bool Eliminar(RevisionContrato revision)
         {
-            // Obtiene todas las revisiones del contrato de la revision a eliminar
-            var revisiones = ListarPorContrato(revision.IdContrato);
+            // Chequeo antes de eliminar de que no haya revisiones posteriores
+            var fechaUltimaRevision = ObtenerUltimaRevision(revision.IdContrato);
 
-            // Comprueba si existe una revision posterior
-            bool hayRevisionPosterior = revisiones.Any(r =>
-                r.FechaRevision > revision.FechaRevision);
-
-            if (hayRevisionPosterior)
+            if(fechaUltimaRevision.HasValue && fechaUltimaRevision > revision.FechaRevision)
             {
                 throw new InvalidOperationException("Solo se puede eliminar la ultima revision del contrato");
             }
@@ -262,7 +269,7 @@ namespace Facturar.Servicios
         /// <returns></returns>
         public RevisionContrato ObtenerPorId(int id)
         {
-            return GestorDatos.ObtenerDatosPorId<RevisionContrato>("RevisionContratos", id);
+            return GestorDatos.ObtenerDatosPorId<RevisionContrato>("RevisionesContrato", id);
         }
 
 
@@ -285,13 +292,6 @@ namespace Facturar.Servicios
         /// <returns>Fecha de la ultima revision del contrato</returns>
         private DateTime? ObtenerUltimaRevision(int IdContrato)
         {
-            // Valida que exista el contrato
-            var gestor = ObtenerPorId(IdContrato);
-            if(gestor == null)
-            {
-                throw new InvalidOperationException("El contrato no existe en la base de datos.");
-            }
-
             // Prepara consulta a la base de datos
             string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE IdContrato = @IdContrato";
             var parametros = new[] {
@@ -307,6 +307,6 @@ namespace Facturar.Servicios
             return Convert.ToDateTime(resultado);
         }
 
-        
+
     }
 }

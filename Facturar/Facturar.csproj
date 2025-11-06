@@ -278,6 +278,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="aplicacion.ico" />
+    <None Include="Resources\Vovler.png" />
+    <None Include="Resources\Salir_black.png" />
     <None Include="Resources\Factura_black.png" />
     <None Include="Resources\Inicio_black.png" />
     <None Include="Resources\Borrar_black1.png" />

@@ -48,6 +48,7 @@ namespace Facturar.Presentacion
         private UC_Contratos ucContratos = new UC_Contratos();
         private UC_Configuracion ucConfiguracion = new UC_Configuracion();
         private UC_Facturas ucFacturas = new UC_Facturas();
+        
 
 
         // Control de entidad cargada en el panel central

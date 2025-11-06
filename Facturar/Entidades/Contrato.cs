@@ -121,6 +121,21 @@ namespace Facturar.Entidades
     }
     public class RevisionContrato
     {
+        public RevisionContrato()
+        {
+        }
+
+        public RevisionContrato(RevisionContrato copiaRevision)
+        {
+            Id = copiaRevision.Id;
+            IdContrato = copiaRevision.IdContrato;
+            FechaRevision = copiaRevision.FechaRevision;
+            PrecioAnterior = copiaRevision.PrecioAnterior;
+            PorcentajeRevision = copiaRevision.PorcentajeRevision;
+            PrecioRevisado = copiaRevision.PrecioRevisado;
+            Observaciones = copiaRevision.Observaciones;
+        }
+
         [DisplayName("Nº reg.")]
         public int Id { get; set; }
 
