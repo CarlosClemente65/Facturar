@@ -342,20 +342,33 @@ namespace Facturar.Utilidades
         private static void ProbarRevisiones(Procesos proceso)
         {
             var revision = new RevisionContrato();
-            var gestor = new GestorContratos();
+            var contrato = new Contrato();
+            var gestor = new GestorRevisiones();
             bool resultado;
             try
             {
                 switch(proceso)
                 {
                     case Procesos.Alta:
+                        contrato.Id = 1;
+                        contrato.IdEmpresa = 1;
+                        contrato.IdCliente = 1;
+                        contrato.IdLocal = 1;
+                        contrato.FechaInicio = Utiles.ConvertirFecha("01/05/2024").Value;
+
                         revision.IdContrato = 8;
                         revision.FechaRevision = Utiles.ConvertirFecha("14/05/2026").Value;
                         revision.PrecioAnterior = 700;
                         revision.PrecioRevisado = 750m;
                         revision.Observaciones = "Revision contrato de pruebas";
 
-                        resultado = gestor.AgregarRevisionContrato(revision);
+                        resultado = gestor.AgregarRevision(revision, contrato);
+
+                        contrato.Id = 2;
+                        contrato.IdEmpresa = 2;
+                        contrato.IdCliente = 2;
+                        contrato.IdLocal = 2;
+                        contrato.FechaInicio = Utiles.ConvertirFecha("01/05/2015").Value;
 
                         revision.IdContrato = 9;
                         revision.FechaRevision = Utiles.ConvertirFecha("16/05/2025").Value;
@@ -363,7 +376,7 @@ namespace Facturar.Utilidades
                         revision.PrecioRevisado = 780m;
                         revision.Observaciones = "Revision contrato de pruebas";
 
-                        resultado = gestor.AgregarRevisionContrato(revision);
+                        resultado = gestor.AgregarRevision(revision, contrato);
 
                         break;
 

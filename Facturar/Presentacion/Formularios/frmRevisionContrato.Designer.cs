@@ -35,12 +35,12 @@
             this.btnContratos = new System.Windows.Forms.Button();
             this.panelInferior = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtFechaInicio = new System.Windows.Forms.TextBox();
-            this.txtPrecioMensual = new System.Windows.Forms.TextBox();
+            this.txtFechaRevision = new System.Windows.Forms.TextBox();
+            this.txtPrecioAnterior = new System.Windows.Forms.TextBox();
             this.label9 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
-            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.txtRevision = new System.Windows.Forms.TextBox();
+            this.txtPrecioRevisado = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
             this.txtObservaciones = new System.Windows.Forms.TextBox();
@@ -114,27 +114,27 @@
             this.label1.Text = "Fecha revision";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // txtFechaInicio
+            // txtFechaRevision
             // 
-            this.txtFechaInicio.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtFechaInicio.Enabled = false;
-            this.txtFechaInicio.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtFechaInicio.Location = new System.Drawing.Point(12, 251);
-            this.txtFechaInicio.Name = "txtFechaInicio";
-            this.txtFechaInicio.Size = new System.Drawing.Size(90, 22);
-            this.txtFechaInicio.TabIndex = 9;
-            this.txtFechaInicio.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFechaRevision.Enabled = false;
+            this.txtFechaRevision.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtFechaRevision.Location = new System.Drawing.Point(12, 251);
+            this.txtFechaRevision.Name = "txtFechaRevision";
+            this.txtFechaRevision.Size = new System.Drawing.Size(90, 22);
+            this.txtFechaRevision.TabIndex = 9;
+            this.txtFechaRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // txtPrecioMensual
+            // txtPrecioAnterior
             // 
-            this.txtPrecioMensual.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtPrecioMensual.Enabled = false;
-            this.txtPrecioMensual.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtPrecioMensual.Location = new System.Drawing.Point(108, 251);
-            this.txtPrecioMensual.Name = "txtPrecioMensual";
-            this.txtPrecioMensual.Size = new System.Drawing.Size(100, 22);
-            this.txtPrecioMensual.TabIndex = 75;
-            this.txtPrecioMensual.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioAnterior.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPrecioAnterior.Enabled = false;
+            this.txtPrecioAnterior.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPrecioAnterior.Location = new System.Drawing.Point(108, 251);
+            this.txtPrecioAnterior.Name = "txtPrecioAnterior";
+            this.txtPrecioAnterior.Size = new System.Drawing.Size(100, 22);
+            this.txtPrecioAnterior.TabIndex = 75;
+            this.txtPrecioAnterior.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label9
             // 
@@ -157,27 +157,27 @@
             this.label2.Text = "% \r\nrevision";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBox1
+            // txtRevision
             // 
-            this.textBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox1.Enabled = false;
-            this.textBox1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox1.Location = new System.Drawing.Point(214, 251);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(80, 22);
-            this.textBox1.TabIndex = 78;
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtRevision.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtRevision.Enabled = false;
+            this.txtRevision.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtRevision.Location = new System.Drawing.Point(214, 251);
+            this.txtRevision.Name = "txtRevision";
+            this.txtRevision.Size = new System.Drawing.Size(80, 22);
+            this.txtRevision.TabIndex = 78;
+            this.txtRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
-            // textBox2
+            // txtPrecioRevisado
             // 
-            this.textBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.textBox2.Enabled = false;
-            this.textBox2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.textBox2.Location = new System.Drawing.Point(300, 251);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 22);
-            this.textBox2.TabIndex = 79;
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioRevisado.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtPrecioRevisado.Enabled = false;
+            this.txtPrecioRevisado.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.txtPrecioRevisado.Location = new System.Drawing.Point(300, 251);
+            this.txtPrecioRevisado.Name = "txtPrecioRevisado";
+            this.txtPrecioRevisado.Size = new System.Drawing.Size(100, 22);
+            this.txtPrecioRevisado.TabIndex = 79;
+            this.txtPrecioRevisado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             // 
             // label3
             // 
@@ -262,13 +262,13 @@
             this.Controls.Add(this.dgvRevisiones);
             this.Controls.Add(this.label8);
             this.Controls.Add(this.txtObservaciones);
-            this.Controls.Add(this.textBox2);
+            this.Controls.Add(this.txtPrecioRevisado);
             this.Controls.Add(this.label3);
-            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.txtRevision);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.txtPrecioMensual);
+            this.Controls.Add(this.txtPrecioAnterior);
             this.Controls.Add(this.label9);
-            this.Controls.Add(this.txtFechaInicio);
+            this.Controls.Add(this.txtFechaRevision);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.panelInferior);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
@@ -293,12 +293,12 @@
         private System.Windows.Forms.Button btnContratos;
         private System.Windows.Forms.Panel panelInferior;
         private System.Windows.Forms.Label label1;
-        public System.Windows.Forms.TextBox txtFechaInicio;
-        private System.Windows.Forms.TextBox txtPrecioMensual;
+        public System.Windows.Forms.TextBox txtFechaRevision;
+        private System.Windows.Forms.TextBox txtPrecioAnterior;
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.TextBox txtRevision;
+        private System.Windows.Forms.TextBox txtPrecioRevisado;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtObservaciones;

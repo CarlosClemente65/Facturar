@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Windows.Forms;
 using Facturar.Presentacion.Controles;
 using Facturar.Presentacion.Paneles;
-using Facturar.Presentacion.Procesos;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
 using Proceso = Facturar.Presentacion.Procesos;

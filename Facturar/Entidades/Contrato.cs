@@ -121,12 +121,25 @@ namespace Facturar.Entidades
     }
     public class RevisionContrato
     {
+        [DisplayName("Nº reg.")]
         public int Id { get; set; }
+
+        [DisplayName("Nº contrato")]
         public int IdContrato { get; set; }
+
+        [DisplayName("Fecha revision")]
         public DateTime FechaRevision { get; set; } // Fecha en que se revisa el contrato
+
+        [DisplayName("Precio anterior")]
         public decimal? PrecioAnterior { get; set; } // Precio antes de la revisión
+
+        [DisplayName("Porcentaje revision")]
         public decimal? PorcentajeRevision { get; set; } // Porcentaje de revisión aplicado
+
+        [DisplayName("Precio revisado")]
         public decimal PrecioRevisado { get; set; } // Precio después de la revisión
+
+        [DisplayName("Observaciones")]
         public string Observaciones { get; set; } // Observaciones de la revision
 
         public void ValidarPropiedadesRevision()

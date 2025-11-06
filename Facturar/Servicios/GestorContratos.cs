@@ -108,6 +108,7 @@ namespace Facturar.Servicios
             }
         }
 
+
         /// <summary>
         /// Metodo no implementado; usar Baja(int contratoId, DateTime? fechaBaja) en su lugar
         /// </summary>
@@ -120,6 +121,7 @@ namespace Facturar.Servicios
             // Este metodo no se implementa porque los contratos se identifican por Id y no por NIF
             throw new NotImplementedException();
         }
+
 
         /// <summary>
         /// Permite dar de baja un contrato estableciendo su fecha de fin
@@ -154,6 +156,7 @@ namespace Facturar.Servicios
                 throw new InvalidOperationException($"Error al dar de baja el contrato: {ex.Message}", ex);
             }
         }
+
 
         /// <summary>
         /// Metodo no implementado; usar Eliminar(int contratoId) en su lugar
@@ -202,82 +205,7 @@ namespace Facturar.Servicios
         }
 
 
-        public bool AgregarRevisionContrato(RevisionContrato nuevaRevision)
-        {
-            var contrato = ObtenerPorId(nuevaRevision.IdContrato);
-            if(contrato == null)
-            {
-                throw new InvalidOperationException("El contrato no existe en la base de datos");
-            }
-
-            if(!contrato.Activo)
-            {
-                throw new InvalidOperationException("El contrato no esta activo. No se puede agregar una revision");
-            }
-
-            // Valida los campos de la clase
-            nuevaRevision.ValidarPropiedadesRevision();
-
-            // Valida que la fecha de revision no sea anterior a la fecha del contrato
-            if(nuevaRevision.FechaRevision <= contrato.FechaInicio)
-            {
-                throw new InvalidOperationException("La fecha de revision es anterior a la fecha del contrato");
-            }
-
-            // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
-            DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.IdContrato);
-
-            if(ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
-            {
-                throw new InvalidOperationException($"La fecha de revision del contrato({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser anterior o igual a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
-            }
-
-            try
-            {
-                // Asignacion de valores a parametros
-                var parametros = new[] {
-                    new SQLiteParameter("@IdContrato", nuevaRevision.IdContrato),
-                    new SQLiteParameter("@FechaRevision", nuevaRevision.FechaRevision),
-                    new SQLiteParameter("@PrecioAnterior", nuevaRevision.PrecioAnterior),
-                    new SQLiteParameter("@PorcentajeRevision", nuevaRevision.PorcentajeRevision),
-                    new SQLiteParameter("@PrecioRevisado", nuevaRevision.PrecioRevisado),
-                    new SQLiteParameter("@Observaciones", nuevaRevision.Observaciones)
-                };
-
-                // Ejecuta el comando y obtiene el numero de filas insertadas
-                string sql = "INSERT INTO RevisionesContrato " +
-                    "(IdContrato, FechaRevision, PrecioAnterior, PorcentajeRevision, PrecioRevisado, Observaciones) " +
-                   "VALUES (@IdContrato, @FechaRevision, @PrecioAnterior, @PorcentajeRevision, @PrecioRevisado, @Observaciones)";
-
-                var filasInsertadas = Convert.ToInt32(GestorDatos.EjecutarComando(sql, parametros));
-
-                if(filasInsertadas <= 0)
-                {
-                    throw new InvalidOperationException("No se ha podido insertar la revision del contrato en la base de datos");
-                }
-
-                // Una vez insertada la revision, se actualiza el precio mensual en el contrato
-                string sqlContrato = "UPDATE Contratos SET PrecioMensual = @NuevoPrecio WHERE Id = @IdContrato";
-                var parametrosContrato = new[]
-                {
-                    new SQLiteParameter("@NuevoPrecio", nuevaRevision.PrecioRevisado),
-                    new SQLiteParameter("@IdContrato", nuevaRevision.IdContrato)
-                };
-
-                var filasActualizadas = Convert.ToInt32(GestorDatos.EjecutarComando(sqlContrato, parametrosContrato));
-
-                if(filasActualizadas <= 0)
-                {
-                    throw new InvalidOperationException("No se ha podido actualizar el precio mensual del contrato en la base de datos");
-                }
-
-                return true; // Indica que la inserción fue exitosa
-            }
-            catch(Exception ex)
-            {
-                throw new InvalidOperationException($"No se ha podido insertar la revision del contrato: {ex.Message}", ex);
-            }
-        }
+        
 
 
         /// <summary>
@@ -588,7 +516,6 @@ namespace Facturar.Servicios
         }
 
 
-
         /// <summary>
         /// Obtiene el contrato activo asociado a un local identificado por su Id
         /// </summary>
@@ -639,34 +566,7 @@ namespace Facturar.Servicios
         }
 
 
-        /// <summary>
-        /// Obtiene la ultima revision de un contrato
-        /// </summary>
-        /// <param name="IdContrato"></param>
-        /// <returns>Fecha de la ultima revision del contrato</returns>
-        private DateTime? ObtenerUltimaRevision(int IdContrato)
-        {
-            // Valida que exista el contrato
-            var gestor = ObtenerPorId(IdContrato);
-            if(gestor == null)
-            {
-                throw new InvalidOperationException("El contrato no existe en la base de datos.");
-            }
-
-            // Prepara consulta a la base de datos
-            string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE IdContrato = @IdContrato";
-            var parametros = new[] {
-                new SQLiteParameter("@IdContrato", IdContrato)
-                };
-            object resultado = GestorDatos.EjecutarComandoValorUnico(sql, parametros);
-
-            if(resultado == null || resultado == DBNull.Value)
-            {
-                return null;
-            }
-
-            return Convert.ToDateTime(resultado);
-        }
+        
 
     }
 }
