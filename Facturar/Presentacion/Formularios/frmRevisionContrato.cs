@@ -18,7 +18,7 @@ namespace Facturar.Presentacion.Formularios
         private GestorRevisiones gestor = new GestorRevisiones();
         private Contrato contratoSeleccionado;
         private RevisionContrato revisionSeleccionada;
-        private Enumeradores.TipoProceso tipoProceso;
+        private Enumeradores.TipoProceso tipoProceso = Enumeradores.TipoProceso.Ninguno;
 
         private IEnumerable<RevisionContrato> listaRevisiones = new List<RevisionContrato>();
 
@@ -93,6 +93,15 @@ namespace Facturar.Presentacion.Formularios
         {
             tipoProceso = Enumeradores.TipoProceso.Edicion;
 
+            // Se valida que no se modifique una revision si hay alguna posterior
+            var ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+
+            if(revisionSeleccionada.FechaRevision < ultimaRevision)
+            {
+                MessageBox.Show("No se puede modificar esta revision. Existe una posterior", "Error edicion revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             ModoEdicion(modoEdicion: true);
         }
 
@@ -120,6 +129,7 @@ namespace Facturar.Presentacion.Formularios
         // Boton cancelar
         private void PanelRevisionContrato_Edicion_CancelarClicked(object sender, EventArgs e)
         {
+            tipoProceso = Enumeradores.TipoProceso.Ninguno;
             ModoEdicion(modoEdicion: false);
             CargarRevisiones();
         }
@@ -134,7 +144,7 @@ namespace Facturar.Presentacion.Formularios
             {
                 switch(tipoProceso)
                 {
-                    case Enumeradores.TipoProceso.Alta:                        
+                    case Enumeradores.TipoProceso.Alta:
                         // Se crea una revision con los valores de los campos
                         nuevaRevision = CrearNuevaRevision(contratoSeleccionado);
 
@@ -165,7 +175,6 @@ namespace Facturar.Presentacion.Formularios
                         mensajeOk = "Revision actualizada en la base de datos";
                         break;
                 }
-
             }
 
             catch(Exception ex)
@@ -173,16 +182,18 @@ namespace Facturar.Presentacion.Formularios
                 mensajeKo = $"No se ha podido actualizar la revision en la base de datos\n{ex.Message}";
             }
 
-            if (mensajeOk != string.Empty)
+            if(mensajeOk != string.Empty)
             {
                 MessageBox.Show(mensajeOk, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if (mensajeKo != string.Empty)
+            if(mensajeKo != string.Empty)
             {
                 MessageBox.Show(mensajeKo, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaRevision.Focus();
                 return;
             }
+
+            tipoProceso = Enumeradores.TipoProceso.Ninguno;
 
             // Cancela el modo edicion
             ModoEdicion(modoEdicion: false);
@@ -224,9 +235,9 @@ namespace Facturar.Presentacion.Formularios
         private RevisionContrato CrearNuevaRevision(Contrato contratoSeleccionado)
         {
             // Limpieza y conversion de campos numericos
-            decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior);
-            decimal.TryParse(txtRevision.Text, out decimal revision);
-            decimal.TryParse(txtPrecioRevisado.Text, out decimal precioRevisado);
+            decimal.TryParse(txtPrecioAnterior.Text.Replace('.', ','), out decimal precioAnterior);
+            decimal.TryParse(txtRevision.Text.Replace('.', ','), out decimal revision);
+            decimal.TryParse(txtPrecioRevisado.Text.Replace('.', ','), out decimal precioRevisado);
 
 
             RevisionContrato nuevaRevision = new RevisionContrato()
@@ -284,7 +295,7 @@ namespace Facturar.Presentacion.Formularios
             // Lista con los nombres de las propiedades a ajustar
             string[] columnasCentradas = { "Id", "FechaRevision", "IdContrato", "PorcentajeRevision" };
             string[] columnasFecha = { "FechaRevision" };
-            string[] columnasImportes = { "PrecioAnterior", "PrecioRevisado" };
+            string[] columnasImportes = { "PrecioAnterior", "PrecioRevisado", "PorcentajeRevision" };
 
             // Aplica formatos
             foreach(DataGridViewColumn columna in dgvRevisiones.Columns)
@@ -338,6 +349,98 @@ namespace Facturar.Presentacion.Formularios
             txtRevision.Text = $"{revisionSeleccionada.PorcentajeRevision:N2}%"; // Formatea a dos decimales y añade el simbolo de porcentaje
             txtPrecioRevisado.Text = $"{revisionSeleccionada.PrecioRevisado:N2}"; // Formatea a dos decimales
             txtObservaciones.Text = revisionSeleccionada.Observaciones;
+        }
+
+        // Asigna la fecha de revision a la fecha actual
+        private void txtFechaRevision_Enter(object sender, EventArgs e)
+        {
+            if(txtFechaRevision.Text == "")
+            {
+                txtFechaRevision.Text = Utiles.FormatearFecha(DateTime.Today);
+            }
+        }
+
+        // Validacion de la fecha de revision
+        private void txtFechaRevision_Leave(object sender, EventArgs e)
+        {
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
+            bool esValida = DateTime.TryParseExact(
+                txtFechaRevision.Text,                                  // Fecha a validar
+                formatosValidos,                                    // Formatos validos
+                System.Globalization.CultureInfo.InvariantCulture,  // Cultura
+                System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
+                out DateTime fechaRevision                          // Fecha resultante
+                );
+
+            if(!esValida)
+            {
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaRevision.Focus();
+            }
+
+            txtFechaRevision.Text = Utiles.FormatearFecha(fechaRevision);
+
+            // Se valida que la fecha de revision no sea anterior a la ultima
+            var ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+            if(fechaRevision < ultimaRevision && tipoProceso == Enumeradores.TipoProceso.Alta)
+            {
+                MessageBox.Show("La fecha de revision no puede ser anterior a la ultima", "Error en fecha revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtFechaRevision.Focus();
+                return;
+            }
+        }
+
+        // Pone a mayuscaulas las observaciones
+        private void txtObservaciones_Leave(object sender, EventArgs e)
+        {
+            txtObservaciones.Text = txtObservaciones.Text.ToUpper();
+        }
+
+
+        // Validacion de que no se introduzcan valores erroneos en campos de importe
+        private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            UtilesUI.ValidarImporte(sender as TextBox, e);
+        }
+
+
+        // Validacion de campos de importe
+        private void txtImporte_Leave(object sender, EventArgs e)
+        {
+            TextBox txt = sender as TextBox;
+
+            // Valida que no se introduzca algo que no sean numeros
+            if(!decimal.TryParse(txt.Text, out decimal importe))
+            {
+                MessageBox.Show("Debe introducir un importe numerico valido.", "Importe incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                return;
+            }
+
+            // Valida que sea un importe positivo
+            if(importe <= 0)
+            {
+                MessageBox.Show("El importe debe ser mayor que cero", "Importe erroneo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txt.Focus();
+                return;
+            }
+
+            // Si no hay errores, formatea el importe
+            UtilesUI.FormatearImporte(sender as TextBox);
+        }
+
+
+        // Calculo del precio revisado si se introduce un porcentaje
+        private void txtRevision_Leave(object sender, EventArgs e)
+        {
+
+            if(decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior) && decimal.TryParse(txtRevision.Text, out decimal revision))
+            {
+                decimal incremento = 1 + (revision / 100);
+                decimal calculoRevisado = Math.Round(precioAnterior * incremento, 2);
+
+                txtPrecioRevisado.Text = calculoRevisado.ToString("N2");
+            }
         }
     }
 }

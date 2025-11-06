@@ -290,7 +290,7 @@ namespace Facturar.Servicios
         /// </summary>
         /// <param name="IdContrato"></param>
         /// <returns>Fecha de la ultima revision del contrato</returns>
-        private DateTime? ObtenerUltimaRevision(int IdContrato)
+        public DateTime? ObtenerUltimaRevision(int IdContrato)
         {
             // Prepara consulta a la base de datos
             string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE IdContrato = @IdContrato";

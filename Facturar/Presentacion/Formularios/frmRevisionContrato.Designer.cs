@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
+            System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
             this.panelRevisionContrato_general = new Facturar.Presentacion.Paneles.PanelInferior_general();
             this.panelRevisionContrato_Edicion = new Facturar.Presentacion.Paneles.PanelInferior_Edicion();
             this.panelInferior = new System.Windows.Forms.Panel();
@@ -101,6 +102,8 @@
             this.txtFechaRevision.Size = new System.Drawing.Size(90, 22);
             this.txtFechaRevision.TabIndex = 9;
             this.txtFechaRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txtFechaRevision.Enter += new System.EventHandler(this.txtFechaRevision_Enter);
+            this.txtFechaRevision.Leave += new System.EventHandler(this.txtFechaRevision_Leave);
             // 
             // txtPrecioAnterior
             // 
@@ -112,6 +115,8 @@
             this.txtPrecioAnterior.Size = new System.Drawing.Size(100, 22);
             this.txtPrecioAnterior.TabIndex = 75;
             this.txtPrecioAnterior.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioAnterior.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtPrecioAnterior.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label9
             // 
@@ -144,6 +149,8 @@
             this.txtRevision.Size = new System.Drawing.Size(80, 22);
             this.txtRevision.TabIndex = 78;
             this.txtRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtRevision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtRevision.Leave += new System.EventHandler(this.txtRevision_Leave);
             // 
             // txtPrecioRevisado
             // 
@@ -155,6 +162,8 @@
             this.txtPrecioRevisado.Size = new System.Drawing.Size(100, 22);
             this.txtPrecioRevisado.TabIndex = 79;
             this.txtPrecioRevisado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioRevisado.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
+            this.txtPrecioRevisado.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label3
             // 
@@ -187,6 +196,7 @@
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(274, 22);
             this.txtObservaciones.TabIndex = 81;
+            this.txtObservaciones.Leave += new System.EventHandler(this.txtObservaciones_Leave);
             // 
             // dgvRevisiones
             // 
@@ -208,20 +218,29 @@
             this.dgvRevisiones.ColumnHeadersDefaultCellStyle = dataGridViewCellStyle1;
             this.dgvRevisiones.ColumnHeadersHeight = 30;
             this.dgvRevisiones.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.DisableResizing;
+            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window;
+            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText;
+            dataGridViewCellStyle2.Padding = new System.Windows.Forms.Padding(1);
+            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight;
+            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
+            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.False;
+            this.dgvRevisiones.DefaultCellStyle = dataGridViewCellStyle2;
             this.dgvRevisiones.EnableHeadersVisualStyles = false;
             this.dgvRevisiones.Location = new System.Drawing.Point(12, 13);
             this.dgvRevisiones.Margin = new System.Windows.Forms.Padding(0);
             this.dgvRevisiones.MultiSelect = false;
             this.dgvRevisiones.Name = "dgvRevisiones";
             this.dgvRevisiones.ReadOnly = true;
-            dataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
-            dataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            dataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText;
-            dataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Control;
-            dataGridViewCellStyle2.SelectionForeColor = System.Drawing.Color.Black;
-            dataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
-            this.dgvRevisiones.RowHeadersDefaultCellStyle = dataGridViewCellStyle2;
+            dataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft;
+            dataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            dataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText;
+            dataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Control;
+            dataGridViewCellStyle3.SelectionForeColor = System.Drawing.Color.Black;
+            dataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.True;
+            this.dgvRevisiones.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
             this.dgvRevisiones.RowHeadersVisible = false;
             this.dgvRevisiones.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dgvRevisiones.ShowEditingIcon = false;
