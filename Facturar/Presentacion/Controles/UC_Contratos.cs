@@ -32,6 +32,7 @@ namespace Facturar.Presentacion.Controles
         // Almacena la lista de contratos con todas sus propiedades
         private IEnumerable<Contrato> listaContratos;
         private IEnumerable<Cliente> listaClientes;
+        private IEnumerable<Local> listaLocales;
 
         private bool ordenAscendente = true;
 
@@ -301,14 +302,15 @@ namespace Facturar.Presentacion.Controles
             cbEmpresa.DataSource = datosEmpresas.ToList(); // Origen de datos
             cbEmpresa.DisplayMember = "DatosEmpresa"; // Campo de la clase que se mostrara (campo calculado)
             cbEmpresa.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
-            cbEmpresa.SelectedValue = ContratoSeleccionado.IdEmpresa; // Muestra en el campo el elemento seleccionado
+
+            cbEmpresa.SelectedValue = ContratoSeleccionado?.IdEmpresa ?? 0; // Muestra en el campo el elemento seleccionado
         }
 
         // Rellena la lista de locales en el campo de locales
         private void CargarListaLocales(bool? activos)
         {
             // Carga los valores en el campo de seleccion del local
-            var listaLocales = gestorLocales.ListarTodos(activos: activos);
+            listaLocales = gestorLocales.ListarTodos(activos: activos);
 
             // Ordenar la lista alfabeticamente
             listaLocales = listaLocales.OrderBy(l => l.Descripcion);
@@ -327,7 +329,8 @@ namespace Facturar.Presentacion.Controles
             cbLocal.DataSource = datosLocales; // Origen de datos
             cbLocal.DisplayMember = "DatosLocal"; //Campo de la clase que se mostrara (campo calculado)
             cbLocal.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
-            cbLocal.SelectedValue = ContratoSeleccionado.IdLocal; // Muestra en el campo el elemento seleccionado
+
+            cbLocal.SelectedValue = ContratoSeleccionado?.IdLocal ?? 0; // Muestra en el campo el elemento seleccionado
         }
 
         // Rellena la lista de clientes en el campo de clientes
@@ -353,7 +356,7 @@ namespace Facturar.Presentacion.Controles
             cbCliente.DataSource = datosClientes; // Origen de datos
             cbCliente.DisplayMember = "DatosCliente"; // Campo de la clase que se mostrara (campo calculado)
             cbCliente.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
-            cbCliente.SelectedValue = ContratoSeleccionado.IdCliente; // Muestra en el campo el elemento seleccionado
+            cbCliente.SelectedValue = ContratoSeleccionado?.IdCliente ?? 0; // Muestra en el campo el elemento seleccionado
         }
 
         private void txtFechaInicio_Enter(object sender, EventArgs e)
@@ -364,20 +367,23 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaInicio_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de inicio
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             bool esValida = DateTime.TryParseExact(
                 txtFechaInicio.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaInicio                            // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaInicio.Clear();
                 txtFechaInicio.Focus();
             }
+
+            txtFechaInicio.Text = Utiles.FormatearFecha(fechaInicio);
         }
 
         private void txtFechaFin_Enter(object sender, EventArgs e)
@@ -388,7 +394,7 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaFin_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
 
             if(txtFechaFin.Text.Trim() == "")
             {
@@ -401,14 +407,17 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaFin                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaFin.Clear();
                 txtFechaFin.Focus();
             }
+
+            txtFechaFin.Text = Utiles.FormatearFecha(fechaFin);
         }
 
         private void TextBox_ToUpper(object sender, EventArgs e)
@@ -456,9 +465,12 @@ namespace Facturar.Presentacion.Controles
 
         private void btnRevisionContrato_Click(object sender, EventArgs e)
         {
-            var frmRevisiones = new frmRevisionContrato(ContratoActual);
-            frmRevisiones.ShowDialog();
-            CargarContratos();
+            if(GridBase.Rows.Count > 0)
+            {
+                var frmRevisiones = new frmRevisionContrato(ContratoActual);
+                frmRevisiones.ShowDialog();
+                CargarContratos();
+            }
         }
 
         // Evento al seleccionar un elemento y cerrar la lista
@@ -499,19 +511,6 @@ namespace Facturar.Presentacion.Controles
             }
         }
 
-        private void cbCliente_Enter(object sender, EventArgs e)
-        {
-            // Al entrar al campo del cliente, se selecciona el texto de ayuda (solo en el alta se puede acceder)
-            cbCliente.SelectedIndex = 0;
-        }
-
-        private void cbLocal_Enter(object sender, EventArgs e)
-        {
-            // Al entrar al campo del local , se selecciona el texto de ayuda (solo en el alta se puede acceder)
-            cbLocal.SelectedIndex = 0;
-            cbEmpresa.SelectedIndex = 0; // Como la empresa esta vinculada al local, se selecciona el texto de ayuda.
-        }
-
         public void RestauraControles(bool activar)
         {
             switch(tipoProceso)
@@ -529,6 +528,25 @@ namespace Facturar.Presentacion.Controles
 
             // Refresca el grid de contratos
             CargarContratos(); // Refresca el grid
+        }
+
+        private void cbCliente_Enter(object sender, EventArgs e)
+        {
+            //if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // Al entrar al campo del cliente, se selecciona el texto de ayuda (solo en el alta se puede acceder)
+                cbCliente.SelectedIndex = 0;
+            }
+        }
+
+        private void cbLocal_Enter(object sender, EventArgs e)
+        {
+            //if(tipoProceso == Enumerador.TipoProceso.Alta)
+            {
+                // Al entrar al campo del local , se selecciona el texto de ayuda (solo en el alta se puede acceder)
+                cbLocal.SelectedIndex = 0;
+                cbEmpresa.SelectedIndex = 0; // Como la empresa esta vinculada al local, se selecciona el texto de ayuda.
+            }
         }
     }
 }

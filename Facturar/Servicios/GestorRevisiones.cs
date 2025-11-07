@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
-using System.Diagnostics.Contracts;
-using System.Linq;
 using Facturar.Entidades;
 using Facturar.Interfaces;
 using Facturar.Utilidades;
@@ -42,7 +40,7 @@ namespace Facturar.Servicios
             }
 
             // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
-            DateTime? ultimaRevision = ObtenerUltimaRevision(nuevaRevision.IdContrato);
+            DateTime? ultimaRevision = FechaUltimaRevision(nuevaRevision.IdContrato);
 
             if(ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
             {
@@ -184,7 +182,7 @@ namespace Facturar.Servicios
         public bool Eliminar(RevisionContrato revision)
         {
             // Chequeo antes de eliminar de que no haya revisiones posteriores
-            var fechaUltimaRevision = ObtenerUltimaRevision(revision.IdContrato);
+            var fechaUltimaRevision = FechaUltimaRevision(revision.IdContrato);
 
             if(fechaUltimaRevision.HasValue && fechaUltimaRevision > revision.FechaRevision)
             {
@@ -290,7 +288,7 @@ namespace Facturar.Servicios
         /// </summary>
         /// <param name="IdContrato"></param>
         /// <returns>Fecha de la ultima revision del contrato</returns>
-        public DateTime? ObtenerUltimaRevision(int IdContrato)
+        public DateTime? FechaUltimaRevision(int IdContrato)
         {
             // Prepara consulta a la base de datos
             string sql = "SELECT MAX(FechaRevision) FROM RevisionesContrato WHERE IdContrato = @IdContrato";
@@ -307,6 +305,29 @@ namespace Facturar.Servicios
             return Convert.ToDateTime(resultado);
         }
 
+        public RevisionContrato ObtenerUltimaRevision(int idContrato)
+        {
+            // Prepara consulta a la base de datos
+            string sql = @"
+                    SELECT * 
+                    FROM RevisionesContrato 
+                    WHERE IdContrato = @IdContrato 
+                    ORDER BY FechaRevision DESC 
+                    LIMIT 1";
 
+            var parametros = new[] { new SQLiteParameter("@IdContrato", idContrato) };
+
+            var tabla = GestorDatos.EjecutarConsulta(sql,parametros);
+
+            if(tabla.Rows.Count == 0)
+            {
+                return null;
+            }
+
+            var fila = tabla.Rows[0];
+
+            return MapeadorDatos.MapearFila<RevisionContrato>(fila);
+
+        }
     }
 }

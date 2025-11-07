@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using Facturar.Entidades;
-using Facturar.Presentacion.Controles;
 using Facturar.Servicios;
 using Facturar.Utilidades;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
@@ -18,6 +16,7 @@ namespace Facturar.Presentacion.Formularios
         private GestorRevisiones gestor = new GestorRevisiones();
         private Contrato contratoSeleccionado;
         private RevisionContrato revisionSeleccionada;
+        private RevisionContrato ultimaRevision;
         private Enumeradores.TipoProceso tipoProceso = Enumeradores.TipoProceso.Ninguno;
 
         private IEnumerable<RevisionContrato> listaRevisiones = new List<RevisionContrato>();
@@ -94,7 +93,7 @@ namespace Facturar.Presentacion.Formularios
             tipoProceso = Enumeradores.TipoProceso.Edicion;
 
             // Se valida que no se modifique una revision si hay alguna posterior
-            var ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+            var ultimaRevision = gestor.FechaUltimaRevision(contratoSeleccionado.Id);
 
             if(revisionSeleccionada.FechaRevision < ultimaRevision)
             {
@@ -374,17 +373,19 @@ namespace Facturar.Presentacion.Formularios
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaRevision.Clear();
                 txtFechaRevision.Focus();
             }
 
             txtFechaRevision.Text = Utiles.FormatearFecha(fechaRevision);
 
             // Se valida que la fecha de revision no sea anterior a la ultima
-            var ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+            var ultimaRevision = gestor.FechaUltimaRevision(contratoSeleccionado.Id);
             if(fechaRevision < ultimaRevision && tipoProceso == Enumeradores.TipoProceso.Alta)
             {
                 MessageBox.Show("La fecha de revision no puede ser anterior a la ultima", "Error en fecha revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtFechaRevision.Clear();
                 txtFechaRevision.Focus();
                 return;
             }
@@ -440,6 +441,16 @@ namespace Facturar.Presentacion.Formularios
                 decimal calculoRevisado = Math.Round(precioAnterior * incremento, 2);
 
                 txtPrecioRevisado.Text = calculoRevisado.ToString("N2");
+            }
+        }
+
+        private void txtPrecioAnterior_Enter(object sender, EventArgs e)
+        {
+            ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+            if(tipoProceso == Enumeradores.TipoProceso.Alta && ultimaRevision != null)
+            {
+                txtPrecioAnterior.Text = ultimaRevision.PrecioRevisado.ToString("N2");
+                txtRevision.Focus();
             }
         }
     }

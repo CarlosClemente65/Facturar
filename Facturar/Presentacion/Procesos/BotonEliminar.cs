@@ -81,7 +81,9 @@ namespace Facturar.Presentacion.Procesos
 
                         // Refresca el grid de locales
                         ucLocales.CargarLocales(); // Refresca el grid
+
                         break;
+
 
                     case Enumerador.TipoEntidad.Cliente:
                         try
@@ -109,6 +111,7 @@ namespace Facturar.Presentacion.Procesos
                     case Enumerador.TipoEntidad.Contrato:
                         try
                         {
+                            ucContratos.tipoProceso = Enumerador.TipoProceso.Eliminacion;
                             // Elimina el contrato en la base de datos
                             gestorContratos.Eliminar(idContrato: ucContratos.ContratoActual.Id);
 

@@ -95,7 +95,7 @@
             this.txtPersonaContacto.Location = new System.Drawing.Point(417, 328);
             this.txtPersonaContacto.Name = "txtPersonaContacto";
             this.txtPersonaContacto.Size = new System.Drawing.Size(337, 22);
-            this.txtPersonaContacto.TabIndex = 54;
+            this.txtPersonaContacto.TabIndex = 11;
             this.txtPersonaContacto.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label11
@@ -118,7 +118,7 @@
             this.txtEmail.Location = new System.Drawing.Point(147, 328);
             this.txtEmail.Name = "txtEmail";
             this.txtEmail.Size = new System.Drawing.Size(262, 22);
-            this.txtEmail.TabIndex = 52;
+            this.txtEmail.TabIndex = 10;
             // 
             // label10
             // 
@@ -139,7 +139,7 @@
             this.txtTelefono.Location = new System.Drawing.Point(11, 328);
             this.txtTelefono.Name = "txtTelefono";
             this.txtTelefono.Size = new System.Drawing.Size(130, 22);
-            this.txtTelefono.TabIndex = 50;
+            this.txtTelefono.TabIndex = 9;
             // 
             // label9
             // 
@@ -160,7 +160,7 @@
             this.txtProvincia.Location = new System.Drawing.Point(625, 288);
             this.txtProvincia.Name = "txtProvincia";
             this.txtProvincia.Size = new System.Drawing.Size(129, 22);
-            this.txtProvincia.TabIndex = 48;
+            this.txtProvincia.TabIndex = 8;
             this.txtProvincia.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label7
@@ -182,7 +182,7 @@
             this.txtPoblacion.Location = new System.Drawing.Point(489, 288);
             this.txtPoblacion.Name = "txtPoblacion";
             this.txtPoblacion.Size = new System.Drawing.Size(130, 22);
-            this.txtPoblacion.TabIndex = 46;
+            this.txtPoblacion.TabIndex = 7;
             this.txtPoblacion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label8
@@ -204,7 +204,7 @@
             this.txtCodigoPostal.Location = new System.Drawing.Point(415, 288);
             this.txtCodigoPostal.Name = "txtCodigoPostal";
             this.txtCodigoPostal.Size = new System.Drawing.Size(68, 22);
-            this.txtCodigoPostal.TabIndex = 44;
+            this.txtCodigoPostal.TabIndex = 6;
             this.txtCodigoPostal.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // label6
@@ -227,7 +227,7 @@
             this.txtDireccion.Location = new System.Drawing.Point(11, 288);
             this.txtDireccion.Name = "txtDireccion";
             this.txtDireccion.Size = new System.Drawing.Size(398, 22);
-            this.txtDireccion.TabIndex = 42;
+            this.txtDireccion.TabIndex = 5;
             this.txtDireccion.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label5
@@ -249,7 +249,7 @@
             this.txtFechaBaja.Location = new System.Drawing.Point(664, 248);
             this.txtFechaBaja.Name = "txtFechaBaja";
             this.txtFechaBaja.Size = new System.Drawing.Size(90, 22);
-            this.txtFechaBaja.TabIndex = 40;
+            this.txtFechaBaja.TabIndex = 4;
             this.txtFechaBaja.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtFechaBaja.Enter += new System.EventHandler(this.txtFechaBaja_Enter);
             this.txtFechaBaja.Leave += new System.EventHandler(this.txtFechaBaja_Leave);
@@ -273,7 +273,7 @@
             this.txtFechaAlta.Location = new System.Drawing.Point(569, 248);
             this.txtFechaAlta.Name = "txtFechaAlta";
             this.txtFechaAlta.Size = new System.Drawing.Size(90, 22);
-            this.txtFechaAlta.TabIndex = 38;
+            this.txtFechaAlta.TabIndex = 3;
             this.txtFechaAlta.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.txtFechaAlta.Enter += new System.EventHandler(this.txtFechaAlta_Enter);
             this.txtFechaAlta.Leave += new System.EventHandler(this.txtFechaAlta_Leave);
@@ -298,7 +298,7 @@
             this.txtNombreCliente.Location = new System.Drawing.Point(124, 248);
             this.txtNombreCliente.Name = "txtNombreCliente";
             this.txtNombreCliente.Size = new System.Drawing.Size(439, 22);
-            this.txtNombreCliente.TabIndex = 36;
+            this.txtNombreCliente.TabIndex = 2;
             this.txtNombreCliente.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // lblNombre
@@ -320,7 +320,7 @@
             this.txtNifCliente.Location = new System.Drawing.Point(11, 248);
             this.txtNifCliente.Name = "txtNifCliente";
             this.txtNifCliente.Size = new System.Drawing.Size(100, 22);
-            this.txtNifCliente.TabIndex = 34;
+            this.txtNifCliente.TabIndex = 1;
             this.txtNifCliente.Tag = "primerCampo";
             this.txtNifCliente.Leave += new System.EventHandler(this.txtNifCliente_Leave);
             // 
@@ -344,7 +344,7 @@
             this.txtIban.Location = new System.Drawing.Point(117, 367);
             this.txtIban.Name = "txtIban";
             this.txtIban.Size = new System.Drawing.Size(252, 22);
-            this.txtIban.TabIndex = 55;
+            this.txtIban.TabIndex = 14;
             // 
             // label12
             // 
@@ -376,7 +376,7 @@
             this.txtObservaciones.Location = new System.Drawing.Point(375, 367);
             this.txtObservaciones.Name = "txtObservaciones";
             this.txtObservaciones.Size = new System.Drawing.Size(379, 22);
-            this.txtObservaciones.TabIndex = 59;
+            this.txtObservaciones.TabIndex = 15;
             this.txtObservaciones.Leave += new System.EventHandler(this.TextBox_ToUpper);
             // 
             // label14
@@ -396,6 +396,7 @@
             this.cbFormaPago.Enabled = false;
             this.cbFormaPago.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
             this.cbFormaPago.FormattingEnabled = true;
+            this.cbFormaPago.ItemHeight = 13;
             this.cbFormaPago.Location = new System.Drawing.Point(11, 368);
             this.cbFormaPago.Name = "cbFormaPago";
             this.cbFormaPago.Size = new System.Drawing.Size(100, 21);

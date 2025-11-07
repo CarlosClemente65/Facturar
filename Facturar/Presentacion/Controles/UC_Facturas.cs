@@ -7,7 +7,8 @@ using System.Windows.Forms;
 using Facturar.Entidades;
 using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -131,7 +132,7 @@ namespace Facturar.Presentacion.Controles
                 FacturaSeleccionada = factura;
 
                 // Limpia los textBox y muestra los datos de la empresa seleccionada
-                Utiles.LimpiarTextBoxes(this);
+                UtilesUI.LimpiarTextBoxes(this);
 
                 // Muestra los datos de la empresa seleccionada
                 MostrarDatosFactura(factura);
@@ -276,31 +277,34 @@ namespace Facturar.Presentacion.Controles
 
         private void txtImporte_KeyPress(object sender, KeyPressEventArgs e)
         {
-            Utiles.ValidarImporte(sender as TextBox, e);
+            UtilesUI.ValidarImporte(sender as TextBox, e);
         }
 
         private void txtImporte_Leave(object sender, EventArgs e)
         {
-            Utiles.FormatearImporte(sender as TextBox);
+            UtilesUI.FormatearImporte(sender as TextBox);
         }
 
         private void txtFechaFactura_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de factura
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             bool esValida = DateTime.TryParseExact(
                 txtFechaFactura.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaFactura                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaFactura.Clear(); 
                 txtFechaFactura.Focus();
             }
+
+            txtFechaFactura.Text = Utiles.FormatearFecha(fechaFactura);
         }
 
         private void txtNifEmpresa_Leave(object sender, EventArgs e)

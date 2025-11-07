@@ -8,7 +8,8 @@ using Facturar.Entidades;
 using Facturar.Servicios;
 using static System.Net.Mime.MediaTypeNames;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -121,7 +122,7 @@ namespace Facturar.Presentacion.Controles
                 EmpresaSeleccionada = empresa;
 
                 // Limpia los textBox y muestra los datos de la empresa seleccionada
-                Utiles.LimpiarTextBoxes(this);
+                UtilesUI.LimpiarTextBoxes(this);
 
                 // Muestra los datos de la empresa seleccionada
                 MostrarDatosEmpresa(empresa);
@@ -135,11 +136,11 @@ namespace Facturar.Presentacion.Controles
 
             if(ordenAscendente)
             {
-                GridBase.DataSource = listaEmpresas.OrderBy(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaEmpresas.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
             else
             {
-                GridBase.DataSource = listaEmpresas.OrderByDescending(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaEmpresas.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
 
             ordenAscendente = !ordenAscendente;
@@ -271,20 +272,23 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             bool esValida = DateTime.TryParseExact(
                 txtFechaAlta.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaAlta                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaAlta.Clear(); 
                 txtFechaAlta.Focus();
             }
+
+            txtFechaAlta.Text = Utiles.FormatearFecha(fechaAlta);
         }
 
         private void txtFechaBaja_Enter(object sender, EventArgs e)
@@ -295,7 +299,7 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaBaja_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
 
             if(txtFechaBaja.Text.Trim() == "")
             {
@@ -308,14 +312,17 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaBaja                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaBaja.Clear(); 
                 txtFechaBaja.Focus();
             }
+
+            txtFechaBaja.Text = Utiles.FormatearFecha(fechaBaja);
         }
 
         private void txtNifEmpresa_Leave(object sender, EventArgs e)

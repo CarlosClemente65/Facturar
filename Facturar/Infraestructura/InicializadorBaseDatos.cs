@@ -100,7 +100,7 @@ namespace Facturar.Infraestructura
                         PorcentajeRevision DECIMAL,
                         PrecioRevisado DECIMAL NOT NULL,
                         Observaciones TEXT,
-                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id)
+                        FOREIGN KEY(IdContrato) REFERENCES Contratos(Id) ON DELETE CASCADE
                     );
                 ";
 

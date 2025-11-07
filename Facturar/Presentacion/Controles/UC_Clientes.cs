@@ -8,7 +8,8 @@ using Facturar.Entidades;
 using Facturar.Servicios;
 using static Facturar.Utilidades.Enumeradores;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using Utiles = Facturar.Utilidades.UtilidadesUI;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
+using Utiles = Facturar.Utilidades.UtilesGenerales;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -103,7 +104,7 @@ namespace Facturar.Presentacion.Controles
                 ClienteSeleccionado = cliente;
 
                 // Limpia los textBox y muestra los datos del cliente seleccionado
-                Utiles.LimpiarTextBoxes(this);
+                UtilesUI.LimpiarTextBoxes(this);
 
                 // Muestra los datos del cliente seleccionado
                 MostrarDatosCliente(cliente);
@@ -117,11 +118,11 @@ namespace Facturar.Presentacion.Controles
 
             if(ordenAscendente)
             {
-                GridBase.DataSource = listaClientes.OrderBy(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaClientes.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
             else
             {
-                GridBase.DataSource = listaClientes.OrderByDescending(emp => Utiles.GetPropValue(emp, nombreColumna)).ToList();
+                GridBase.DataSource = listaClientes.OrderByDescending(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
 
             ordenAscendente = !ordenAscendente;
@@ -166,8 +167,6 @@ namespace Facturar.Presentacion.Controles
         public void BloqueoTextBoxEdicion()
         {
             // Deshabilita los TextBox que no se pueden editar
-            txtNifCliente.Enabled = false;
-            txtNombreCliente.Enabled = false;
             txtFechaAlta.Enabled = false;
             txtFechaBaja.Enabled = false;
         }
@@ -238,12 +237,11 @@ namespace Facturar.Presentacion.Controles
             if(tipoProceso == Enumerador.TipoProceso.Alta)
             {
                 // En el caso del alta, se asignan las propiedades que no se pueden modificar en la edición
-                cliente.NIF = txtNifCliente.Text;  // No se permite modificar el NIF
-                cliente.Nombre = txtNombreCliente.Text; // No se permite modificar el nombre
 
             }
 
-            // Campos comunes en el alta y edicion
+            cliente.NIF = txtNifCliente.Text;  
+            cliente.Nombre = txtNombreCliente.Text; 
             cliente.Direccion = txtDireccion.Text;
             cliente.CodigoPostal = txtCodigoPostal.Text;
             cliente.Poblacion = txtPoblacion.Text;
@@ -264,31 +262,34 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             bool esValida = DateTime.TryParseExact(
                 txtFechaAlta.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaAlta                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy, o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaAlta.Clear(); 
                 txtFechaAlta.Focus();
             }
+
+            txtFechaAlta.Text = Utiles.FormatearFecha(fechaAlta);
         }
 
         private void txtFechaBaja_Enter(object sender, EventArgs e)
         {
-            txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
+            //txtFechaBaja.Text = Utilidades.UtilesGenerales.FormatearFecha(DateTime.Today);
         }
 
         private void txtFechaBaja_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
 
             if(txtFechaBaja.Text.Trim() == "")
             {
@@ -301,14 +302,17 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaBaja                                     // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaBaja.Clear(); 
                 txtFechaBaja.Focus();
             }
+
+            txtFechaBaja.Text = Utiles.FormatearFecha(fechaBaja);
         }
 
         private void TextBox_ToUpper(object sender, EventArgs e)

@@ -299,10 +299,11 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.cbEmpresa.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cbEmpresa.Enabled = false;
+            this.cbEmpresa.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.cbEmpresa.FormattingEnabled = true;
             this.cbEmpresa.Location = new System.Drawing.Point(11, 368);
             this.cbEmpresa.Name = "cbEmpresa";
-            this.cbEmpresa.Size = new System.Drawing.Size(395, 21);
+            this.cbEmpresa.Size = new System.Drawing.Size(395, 22);
             this.cbEmpresa.TabIndex = 9;
             this.cbEmpresa.SelectionChangeCommitted += new System.EventHandler(this.cbEmpresa_SelectionChangeCommitted);
             this.cbEmpresa.Enter += new System.EventHandler(this.cbEmpresa_Enter);

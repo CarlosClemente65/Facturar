@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Diagnostics.Contracts;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -274,27 +273,27 @@ namespace Facturar.Presentacion.Controles
         // Rellena la lista de empresas en el campo de empresas
         private void CargarListaEmpresas(bool? activos)
         {
-            // Carga los valores en el campo de seleccion de la empresa
-            var listaEmpresas = gestorEmpresas.ListarTodos(activas: activos);
+                // Carga los valores en el campo de seleccion de la empresa
+                var listaEmpresas = gestorEmpresas.ListarTodos(activas: activos);
 
-            // Ordenar la lista alfabeticamente
-            listaEmpresas = listaEmpresas.OrderBy(e => e.Nombre);
+                // Ordenar la lista alfabeticamente
+                listaEmpresas = listaEmpresas.OrderBy(e => e.Nombre);
 
-            // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
-            var datosEmpresas = new List<Empresa>
+                // Crea una nueva lista para mostrar en el combobox y añade el elemento inicial
+                var datosEmpresas = new List<Empresa>
             {
                 // Añade a la lista el elemento inicial
                 new Empresa { Id = 0, NIF = "", Nombre = "" }
             };
 
-            // Añade la lista de empresas a continuacion
-            datosEmpresas.AddRange(listaEmpresas);
+                // Añade la lista de empresas a continuacion
+                datosEmpresas.AddRange(listaEmpresas);
 
-            // Carga en el combobox la lista de empresas.
-            cbEmpresa.DataSource = datosEmpresas.ToList(); // Origen de datos
-            cbEmpresa.DisplayMember = "DatosEmpresa"; // Campo de la clase que se mostrara (campo calculado)
-            cbEmpresa.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
-            cbEmpresa.SelectedValue = LocalSeleccionado.IdEmpresa; // Muestra en el campo el elemento seleccionado
+                // Carga en el combobox la lista de empresas.
+                cbEmpresa.DataSource = datosEmpresas.ToList(); // Origen de datos
+                cbEmpresa.DisplayMember = "DatosEmpresa"; // Campo de la clase que se mostrara (campo calculado)
+                cbEmpresa.ValueMember = "Id"; // Campo que se utiliza como indice de los elementos
+                cbEmpresa.SelectedValue = LocalSeleccionado?.IdEmpresa ?? 0; // Muestra en el campo el elemento seleccionado (si no hay locales muestra el primer elemento)
         }
 
         private void txtFechaAlta_Enter(object sender, EventArgs e)
@@ -305,20 +304,23 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaAlta_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de alta
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             bool esValida = DateTime.TryParseExact(
                 txtFechaAlta.Text,                                  // Fecha a validar
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaAlta                              // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaAlta.Clear(); 
                 txtFechaAlta.Focus();
             }
+
+            txtFechaAlta.Text = Utiles.FormatearFecha(fechaAlta);
         }
 
         private void txtFechaBaja_Enter(object sender, EventArgs e)
@@ -329,7 +331,7 @@ namespace Facturar.Presentacion.Controles
         private void txtFechaBaja_Leave(object sender, EventArgs e)
         {
             // Validacion de la fecha de baja
-            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy" };
+            string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
             if(txtFechaBaja.Text.Trim() == "")
             {
                 // Si el campo está vacío, no se realiza la validación
@@ -341,14 +343,17 @@ namespace Facturar.Presentacion.Controles
                 formatosValidos,                                    // Formatos validos
                 System.Globalization.CultureInfo.InvariantCulture,  // Cultura
                 System.Globalization.DateTimeStyles.None,           // Sin estilos adicionales
-                out _                                     // Fecha resultante
+                out DateTime fechaBaja                              // Fecha resultante
                 );
 
             if(!esValida)
             {
-                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy o dd-MM-yyyy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                txtFechaBaja.Clear(); 
                 txtFechaBaja.Focus();
             }
+
+            txtFechaBaja.Text = Utiles.FormatearFecha(fechaBaja);
         }
 
         private void TextBox_ToUpper(object sender, EventArgs e)

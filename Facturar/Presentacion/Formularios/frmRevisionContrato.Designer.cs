@@ -34,6 +34,7 @@
             this.panelRevisionContrato_general = new Facturar.Presentacion.Paneles.PanelInferior_general();
             this.panelRevisionContrato_Edicion = new Facturar.Presentacion.Paneles.PanelInferior_Edicion();
             this.panelInferior = new System.Windows.Forms.Panel();
+            this.btnVolver = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.txtFechaRevision = new System.Windows.Forms.TextBox();
             this.txtPrecioAnterior = new System.Windows.Forms.TextBox();
@@ -45,7 +46,6 @@
             this.label8 = new System.Windows.Forms.Label();
             this.txtObservaciones = new System.Windows.Forms.TextBox();
             this.dgvRevisiones = new System.Windows.Forms.DataGridView();
-            this.btnVolver = new System.Windows.Forms.Button();
             this.panelInferior.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRevisiones)).BeginInit();
             this.SuspendLayout();
@@ -82,6 +82,29 @@
             this.panelInferior.Size = new System.Drawing.Size(683, 60);
             this.panelInferior.TabIndex = 6;
             // 
+            // btnVolver
+            // 
+            this.btnVolver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnVolver.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
+            this.btnVolver.FlatAppearance.BorderSize = 0;
+            this.btnVolver.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
+            this.btnVolver.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
+            this.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnVolver.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnVolver.Image = global::Facturar.Properties.Resources.Vovler;
+            this.btnVolver.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
+            this.btnVolver.Location = new System.Drawing.Point(590, 2);
+            this.btnVolver.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.btnVolver.Name = "btnVolver";
+            this.btnVolver.Size = new System.Drawing.Size(90, 56);
+            this.btnVolver.TabIndex = 5;
+            this.btnVolver.Text = "Volver";
+            this.btnVolver.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
+            this.btnVolver.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
+            this.btnVolver.UseVisualStyleBackColor = true;
+            this.btnVolver.Click += new System.EventHandler(this.btnContratos_Click);
+            // 
             // label1
             // 
             this.label1.Font = new System.Drawing.Font("Verdana", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -115,6 +138,7 @@
             this.txtPrecioAnterior.Size = new System.Drawing.Size(100, 22);
             this.txtPrecioAnterior.TabIndex = 75;
             this.txtPrecioAnterior.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioAnterior.Enter += new System.EventHandler(this.txtPrecioAnterior_Enter);
             this.txtPrecioAnterior.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
             this.txtPrecioAnterior.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
@@ -248,29 +272,6 @@
             this.dgvRevisiones.Size = new System.Drawing.Size(660, 198);
             this.dgvRevisiones.TabIndex = 83;
             this.dgvRevisiones.SelectionChanged += new System.EventHandler(this.dgvRevisiones_SelectionChanged);
-            // 
-            // btnVolver
-            // 
-            this.btnVolver.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnVolver.FlatAppearance.BorderColor = System.Drawing.SystemColors.ActiveBorder;
-            this.btnVolver.FlatAppearance.BorderSize = 0;
-            this.btnVolver.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(200)))), ((int)(((byte)(120)))), ((int)(((byte)(60)))));
-            this.btnVolver.FlatAppearance.MouseOverBackColor = System.Drawing.Color.FromArgb(((int)(((byte)(225)))), ((int)(((byte)(180)))), ((int)(((byte)(150)))));
-            this.btnVolver.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnVolver.Font = new System.Drawing.Font("Verdana", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnVolver.Image = global::Facturar.Properties.Resources.Vovler;
-            this.btnVolver.ImageAlign = System.Drawing.ContentAlignment.TopCenter;
-            this.btnVolver.Location = new System.Drawing.Point(590, 2);
-            this.btnVolver.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.btnVolver.Name = "btnVolver";
-            this.btnVolver.Size = new System.Drawing.Size(90, 56);
-            this.btnVolver.TabIndex = 5;
-            this.btnVolver.Text = "Volver";
-            this.btnVolver.TextAlign = System.Drawing.ContentAlignment.BottomCenter;
-            this.btnVolver.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
-            this.btnVolver.UseVisualStyleBackColor = true;
-            this.btnVolver.Click += new System.EventHandler(this.btnContratos_Click);
             // 
             // frmRevisionContrato
             // 
