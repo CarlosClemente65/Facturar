@@ -80,6 +80,15 @@ namespace Facturar.Presentacion.Controles
         // Carga los contratos en el grid base y sus relaciones
         public void CargarContratos(bool? activos = true)
         {
+            // Inicializa el grid para limpiar de cargas anteriores
+            GridBase.DataSource = null;
+            GridBase.Rows.Clear();
+            GridBase.CurrentCell = null;
+
+            // Inicializa el contrato seleccionado (se asigna despues)
+            ContratoSeleccionado = null;
+            UtilesUI.LimpiarTextBoxes(this);
+
             // Carga una lista con los contratos activos
             listaContratos = gestorContratos.ListarTodos(activos: activos);
 
@@ -90,7 +99,6 @@ namespace Facturar.Presentacion.Controles
             }
 
             // Carga los datos de los contratos en el gridBase
-            GridBase.DataSource = null;
             GridBase.DataSource = listaContratos.ToList();
 
             AplicarFormatoColumnas();
@@ -99,6 +107,9 @@ namespace Facturar.Presentacion.Controles
             CargarListaClientes(activos);
             CargarListaLocales(activos);
             CargarListaEmpresas(activos);
+
+            // Limpia los campos de datos
+            //UtilesUI.LimpiarTextBoxes(this);
         }
 
         internal void ActualizarContratoSeleccionado()
@@ -282,6 +293,9 @@ namespace Facturar.Presentacion.Controles
         // Rellena la lista de empresas en el campo de empresas
         private void CargarListaEmpresas(bool? activos)
         {
+            // Limpia la lista de empresas por si se ha modificado
+            cbEmpresa.DataSource = null;
+
             // Carga los valores en el campo de seleccion de la empresa
             var listaEmpresas = gestorEmpresas.ListarTodos(activas: activos);
 
@@ -309,6 +323,9 @@ namespace Facturar.Presentacion.Controles
         // Rellena la lista de locales en el campo de locales
         private void CargarListaLocales(bool? activos)
         {
+            // Limpia la lista de locales por si se ha modificado
+            cbLocal.DataSource = null;
+
             // Carga los valores en el campo de seleccion del local
             listaLocales = gestorLocales.ListarTodos(activos: activos);
 
@@ -336,6 +353,9 @@ namespace Facturar.Presentacion.Controles
         // Rellena la lista de clientes en el campo de clientes
         private void CargarListaClientes(bool? activos)
         {
+            // Limpia la lista de clientes por si se ha modificado
+            cbCliente.DataSource = null;
+
             // Carga los valores en el campo de seleccion del cliente
             listaClientes = gestorClientes.ListarTodos(activos: activos);
 

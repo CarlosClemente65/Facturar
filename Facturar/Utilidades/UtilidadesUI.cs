@@ -37,6 +37,12 @@ namespace Facturar.Utilidades
                     txt.Text = "";
                 }
 
+                if(ctrl is ComboBox cb && cb.Items.Count > 0)
+                {
+                    // Pone el primer elemento
+                    cb.SelectedIndex = 0;
+                }
+
                 if(ctrl.HasChildren)
                 {
                     LimpiarTextBoxes(ctrl);
@@ -226,6 +232,6 @@ namespace Facturar.Utilidades
                 // Formatea con dos decimales y coma como separador decimal
                 txt.Text = valor.ToString("N2");
             }
-        }        
+        }
     }
 }

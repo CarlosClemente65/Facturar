@@ -38,11 +38,23 @@ namespace Facturar.Presentacion.Controles
         // Evento que se dispara al cambiar la selección de fila en el grid
         private void dgvBase_SelectionChanged(object sender, System.EventArgs e)
         {
-            if(dgvBase.CurrentRow != null)
+            // Si no hay filas, limpia la fila seleccionada y sale
+            if(dgvBase.Rows.Count == 0)
             {
-                var entidadSeleccionada = GridBase.CurrentRow.DataBoundItem;
-                FilaSeleccionada?.Invoke(this, entidadSeleccionada);
+                dgvBase.CurrentCell = null;
+                return;
             }
+
+            // Si la fila actual es nula o es el encabezado, se sale
+            if(dgvBase.CurrentRow == null || dgvBase.CurrentRow.Index < 0)
+            {
+                return;
+            }
+
+            // Carga los datos de la entidad seleccionada
+            var entidadSeleccionada = GridBase.CurrentRow.DataBoundItem;
+            FilaSeleccionada?.Invoke(this, entidadSeleccionada);
+
         }
 
 

@@ -115,6 +115,8 @@ namespace Facturar.Presentacion.Procesos
                             // Elimina el contrato en la base de datos
                             gestorContratos.Eliminar(idContrato: ucContratos.ContratoActual.Id);
 
+                            ucContratos.ContratoActual = new Contrato();
+
                             // Muestra mensaje de proceso correcto
                             mensajeOk = "Eliminado el contrato de la base de datos.";
                         }
