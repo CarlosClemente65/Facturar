@@ -430,20 +430,6 @@ namespace Facturar.Presentacion.Formularios
             UtilesUI.FormatearImporte(sender as TextBox);
         }
 
-
-        // Calculo del precio revisado si se introduce un porcentaje
-        private void txtRevision_Leave(object sender, EventArgs e)
-        {
-
-            if(decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior) && decimal.TryParse(txtRevision.Text, out decimal revision))
-            {
-                decimal incremento = 1 + (revision / 100);
-                decimal calculoRevisado = Math.Round(precioAnterior * incremento, 2);
-
-                txtPrecioRevisado.Text = calculoRevisado.ToString("N2");
-            }
-        }
-
         private void txtPrecioAnterior_Enter(object sender, EventArgs e)
         {
             ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
@@ -453,5 +439,20 @@ namespace Facturar.Presentacion.Formularios
                 txtRevision.Focus();
             }
         }
+
+        private void txtPrecioRevisado_Enter(object sender, EventArgs e)
+        {
+            decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior);
+            decimal.TryParse(txtRevision.Text.Replace("%", "").Trim(), out decimal revision);
+            if(revision != 0)
+            {
+                decimal incremento = 1 + (revision / 100);
+                decimal calculoRevisado = Math.Round(precioAnterior * incremento, 2);
+
+                txtPrecioRevisado.Text = calculoRevisado.ToString("N2");
+            }
+
+        }
+
     }
 }

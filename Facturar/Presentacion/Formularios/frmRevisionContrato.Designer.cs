@@ -31,10 +31,10 @@
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle1 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle2 = new System.Windows.Forms.DataGridViewCellStyle();
             System.Windows.Forms.DataGridViewCellStyle dataGridViewCellStyle3 = new System.Windows.Forms.DataGridViewCellStyle();
-            this.panelRevisionContrato_general = new Facturar.Presentacion.Paneles.PanelInferior_general();
-            this.panelRevisionContrato_Edicion = new Facturar.Presentacion.Paneles.PanelInferior_Edicion();
             this.panelInferior = new System.Windows.Forms.Panel();
             this.btnVolver = new System.Windows.Forms.Button();
+            this.panelRevisionContrato_general = new Facturar.Presentacion.Paneles.PanelInferior_general();
+            this.panelRevisionContrato_Edicion = new Facturar.Presentacion.Paneles.PanelInferior_Edicion();
             this.label1 = new System.Windows.Forms.Label();
             this.txtFechaRevision = new System.Windows.Forms.TextBox();
             this.txtPrecioAnterior = new System.Windows.Forms.TextBox();
@@ -49,25 +49,6 @@
             this.panelInferior.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvRevisiones)).BeginInit();
             this.SuspendLayout();
-            // 
-            // panelRevisionContrato_general
-            // 
-            this.panelRevisionContrato_general.BackColor = System.Drawing.Color.Transparent;
-            this.panelRevisionContrato_general.EstadoVisible = false;
-            this.panelRevisionContrato_general.Location = new System.Drawing.Point(200, 2);
-            this.panelRevisionContrato_general.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
-            this.panelRevisionContrato_general.Name = "panelRevisionContrato_general";
-            this.panelRevisionContrato_general.Size = new System.Drawing.Size(390, 60);
-            this.panelRevisionContrato_general.TabIndex = 2;
-            // 
-            // panelRevisionContrato_Edicion
-            // 
-            this.panelRevisionContrato_Edicion.Location = new System.Drawing.Point(0, 2);
-            this.panelRevisionContrato_Edicion.Margin = new System.Windows.Forms.Padding(0);
-            this.panelRevisionContrato_Edicion.Name = "panelRevisionContrato_Edicion";
-            this.panelRevisionContrato_Edicion.Size = new System.Drawing.Size(200, 60);
-            this.panelRevisionContrato_Edicion.TabIndex = 1;
-            this.panelRevisionContrato_Edicion.Visible = false;
             // 
             // panelInferior
             // 
@@ -104,6 +85,25 @@
             this.btnVolver.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageAboveText;
             this.btnVolver.UseVisualStyleBackColor = true;
             this.btnVolver.Click += new System.EventHandler(this.btnContratos_Click);
+            // 
+            // panelRevisionContrato_general
+            // 
+            this.panelRevisionContrato_general.BackColor = System.Drawing.Color.Transparent;
+            this.panelRevisionContrato_general.EstadoVisible = false;
+            this.panelRevisionContrato_general.Location = new System.Drawing.Point(200, 2);
+            this.panelRevisionContrato_general.Margin = new System.Windows.Forms.Padding(0, 3, 0, 0);
+            this.panelRevisionContrato_general.Name = "panelRevisionContrato_general";
+            this.panelRevisionContrato_general.Size = new System.Drawing.Size(390, 60);
+            this.panelRevisionContrato_general.TabIndex = 2;
+            // 
+            // panelRevisionContrato_Edicion
+            // 
+            this.panelRevisionContrato_Edicion.Location = new System.Drawing.Point(0, 2);
+            this.panelRevisionContrato_Edicion.Margin = new System.Windows.Forms.Padding(0);
+            this.panelRevisionContrato_Edicion.Name = "panelRevisionContrato_Edicion";
+            this.panelRevisionContrato_Edicion.Size = new System.Drawing.Size(200, 60);
+            this.panelRevisionContrato_Edicion.TabIndex = 1;
+            this.panelRevisionContrato_Edicion.Visible = false;
             // 
             // label1
             // 
@@ -174,7 +174,6 @@
             this.txtRevision.TabIndex = 78;
             this.txtRevision.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.txtRevision.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
-            this.txtRevision.Leave += new System.EventHandler(this.txtRevision_Leave);
             // 
             // txtPrecioRevisado
             // 
@@ -186,8 +185,8 @@
             this.txtPrecioRevisado.Size = new System.Drawing.Size(100, 22);
             this.txtPrecioRevisado.TabIndex = 79;
             this.txtPrecioRevisado.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
+            this.txtPrecioRevisado.Enter += new System.EventHandler(this.txtPrecioRevisado_Enter);
             this.txtPrecioRevisado.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtImporte_KeyPress);
-            this.txtPrecioRevisado.Leave += new System.EventHandler(this.txtImporte_Leave);
             // 
             // label3
             // 
