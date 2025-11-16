@@ -354,7 +354,6 @@
         #endregion
 
         private System.Windows.Forms.Panel panelSuperior;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.PictureBox imgMinimizar;
         private System.Windows.Forms.PictureBox imgCerrar;
         private System.Windows.Forms.Label lbMensaje;

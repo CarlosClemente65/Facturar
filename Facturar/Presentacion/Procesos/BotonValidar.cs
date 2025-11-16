@@ -148,6 +148,9 @@ namespace Facturar.Presentacion.Procesos
                         // Quita el efecto de bloqueo de edicion
                         Utiles.BloqueoEdicionDgv(_grid: ucContratos.GridBase, bloquear: false);
 
+                        // Habilita el boton e revisiones de contrato
+                        ucContratos.btnRevisionContrato.Enabled = true;
+
                         // Refresca el grid de contratos
                         ucContratos.CargarContratos(); // Refresca el grid
 

@@ -322,9 +322,9 @@
         private System.Windows.Forms.Label label9;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox txtObservaciones;
-        private System.Windows.Forms.Button btnRevisionContrato;
         private System.Windows.Forms.ComboBox cbCliente;
         private System.Windows.Forms.ComboBox cbLocal;
         private System.Windows.Forms.ComboBox cbEmpresa;
+        internal System.Windows.Forms.Button btnRevisionContrato;
     }
 }

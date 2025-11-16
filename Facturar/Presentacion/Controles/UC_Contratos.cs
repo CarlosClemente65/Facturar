@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Facturar.Entidades;
+using Facturar.Presentacion.Formularios;
+using Facturar.Servicios;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Facturar.Entidades;
-using Facturar.Presentacion.Formularios;
-using Facturar.Servicios;
 using Enumerador = Facturar.Utilidades.Enumeradores;
-using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
+using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
 namespace Facturar.Presentacion.Controles
 {
@@ -28,6 +28,7 @@ namespace Facturar.Presentacion.Controles
         GestorEmpresas gestorEmpresas = new GestorEmpresas();
         GestorClientes gestorClientes = new GestorClientes();
         GestorLocales gestorLocales = new GestorLocales();
+        GestorRevisiones gestorRevisiones = new GestorRevisiones();
 
         // Almacena la lista de contratos con todas sus propiedades
         private IEnumerable<Contrato> listaContratos;
@@ -66,7 +67,7 @@ namespace Facturar.Presentacion.Controles
             // Añade el grid al panel
             panelDgv.Controls.Add(GridBase);
 
-            if(!datosCargados)
+            if (!datosCargados)
             {
                 // Monta las columnas por orden
                 InicializaColumnas();
@@ -93,7 +94,7 @@ namespace Facturar.Presentacion.Controles
             listaContratos = gestorContratos.ListarTodos(activos: activos);
 
             // Carga las entidades relacionadas para mostrar los datos en el grid
-            foreach(var contrato in listaContratos)
+            foreach (var contrato in listaContratos)
             {
                 contrato.CargarRelaciones(gestorEmpresas: gestorEmpresas, gestorClientes: gestorClientes, gestorLocales: gestorLocales);
             }
@@ -115,7 +116,7 @@ namespace Facturar.Presentacion.Controles
         internal void ActualizarContratoSeleccionado()
         {
             // Carga el objeto contrato segun la fila seleccionada
-            if(dgvBase.CurrentRow?.DataBoundItem is Contrato contrato)
+            if (dgvBase.CurrentRow?.DataBoundItem is Contrato contrato)
             {
                 ContratoSeleccionado = contrato;
                 LocalContrato = contrato.Local ?? gestorLocales.ObtenerPorId(contrato.IdLocal); // Carga el local del contrato y si no existe lo obtiene del gestor
@@ -127,12 +128,12 @@ namespace Facturar.Presentacion.Controles
         // Actualiza las propiedades del contrato segun el contenido de los textBox
         public void ActualizaPropiedadesContrato(Contrato contrato)
         {
-            if(contrato == null)
+            if (contrato == null)
             {
                 throw new ArgumentNullException("No se han pasado datos del contrato para actualizar");
             }
 
-            if(tipoProceso == Enumerador.TipoProceso.Alta)
+            if (tipoProceso == Enumerador.TipoProceso.Alta)
             {
                 // En el caso del alta, la empresa, cliente y local no se modifican
                 contrato.IdCliente = ClienteContrato.Id;
@@ -173,7 +174,7 @@ namespace Facturar.Presentacion.Controles
 
         private void AplicarFormatoColumnas()
         {
-            if(dgvBase.Columns.Count == 0) return; // Protege contra columnas vacías
+            if (dgvBase.Columns.Count == 0) return; // Protege contra columnas vacías
 
             // Lista con los nombres de las propiedades a ajustar
             string[] columnasCentradas = { "Id", "NIFCliente", "NIFEmpresa", "PrecioMensual", "FechaInicio", "FechaFin" };
@@ -181,22 +182,22 @@ namespace Facturar.Presentacion.Controles
             string[] columnasImportes = { "PrecioMensual" };
 
             // Aplica formatos
-            foreach(DataGridViewColumn columna in GridBase.Columns)
+            foreach (DataGridViewColumn columna in GridBase.Columns)
             {
                 // Ajuste al centro
-                if(columnasCentradas.Contains(columna.DataPropertyName))
+                if (columnasCentradas.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
 
                 // Ajuste formato fecha
-                if(columnasFecha.Contains(columna.DataPropertyName))
+                if (columnasFecha.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Format = "dd.MM.yyyy";
                 }
 
                 // Aplica formato de importe y alineado a la derecha
-                if(columnasImportes.Contains(columna.DataPropertyName))
+                if (columnasImportes.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     columna.DefaultCellStyle.Format = "N2";
@@ -228,14 +229,25 @@ namespace Facturar.Presentacion.Controles
 
             txtFechaInicio.Enabled = false;
             txtFechaFin.Enabled = false; // No se permite poner la ficha fin en edicion
-            txtPrecioMensual.Focus();
+            txtObservaciones.Focus();
+            if (gestorRevisiones.ObtenerUltimaRevision(ContratoSeleccionado.Id) == null)
+            {
+                txtPrecioMensual.Enabled = true; // Solo se permite modificar el precio mensual en el alta (en edicion solo se puede mediante revisones de contratos)
+                txtPrecioMensual.Focus();
+
+            }
+            else
+            {
+                txtPrecioMensual.Enabled = false; // En modo edicion no se permite modificar el precio mensual (solo mediante revisiones)
+            }
+            btnRevisionContrato.Enabled = false;
         }
 
         // Evento que se lanza al seleccionar una fila en el grid base
         private void GridBase_FilaSeleccionada(object sender, object entidad)
         {
             // Como recibe un objeto genérico, se chequea que sea del tipo contrato
-            if(entidad is Contrato contrato)
+            if (entidad is Contrato contrato)
             {
                 // Actualiza el contrato seleccionada
                 ContratoSeleccionado = contrato;
@@ -253,7 +265,7 @@ namespace Facturar.Presentacion.Controles
         {
             string nombreColumna = GridBase.Columns[columnaIndex].DataPropertyName;
 
-            if(ordenAscendente)
+            if (ordenAscendente)
             {
                 GridBase.DataSource = listaContratos.OrderBy(emp => UtilesUI.GetPropValue(emp, nombreColumna)).ToList();
             }
@@ -278,7 +290,7 @@ namespace Facturar.Presentacion.Controles
             txtFechaInicio.Text = Utiles.FormatearFecha(contrato.FechaInicio);
 
             // La fecha de fin puede ser nula
-            if(contrato.FechaFin.HasValue)
+            if (contrato.FechaFin.HasValue)
             {
                 txtFechaFin.Text = Utiles.FormatearFecha(contrato.FechaFin.Value);
             }
@@ -396,7 +408,7 @@ namespace Facturar.Presentacion.Controles
                 out DateTime fechaInicio                            // Fecha resultante
                 );
 
-            if(!esValida)
+            if (!esValida)
             {
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaInicio.Clear();
@@ -416,7 +428,7 @@ namespace Facturar.Presentacion.Controles
             // Validacion de la fecha de baja
             string[] formatosValidos = { "dd/MM/yyyy", "dd.MM.yyyy", "dd-MM-yyyy", "dd.MM.yy" };
 
-            if(txtFechaFin.Text.Trim() == "")
+            if (txtFechaFin.Text.Trim() == "")
             {
                 // Si el campo está vacío, no se realiza la validación
                 return;
@@ -430,7 +442,7 @@ namespace Facturar.Presentacion.Controles
                 out DateTime fechaFin                                     // Fecha resultante
                 );
 
-            if(!esValida)
+            if (!esValida)
             {
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaFin.Clear();
@@ -442,7 +454,7 @@ namespace Facturar.Presentacion.Controles
 
         private void TextBox_ToUpper(object sender, EventArgs e)
         {
-            if(sender is TextBox txt)
+            if (sender is TextBox txt)
             {
                 txt.Text = txt.Text.ToUpper();
             }
@@ -458,7 +470,7 @@ namespace Facturar.Presentacion.Controles
             TextBox txt = sender as TextBox;
 
             // Valida que no se introduzca algo que no sean numeros
-            if(!decimal.TryParse(txt.Text, out decimal importe))
+            if (!decimal.TryParse(txt.Text, out decimal importe))
             {
                 MessageBox.Show("Debe introducir un importe numerico valido.", "Importe incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txt.Focus();
@@ -466,7 +478,7 @@ namespace Facturar.Presentacion.Controles
             }
 
             // Valida que sea un importe positivo
-            if(importe <= 0)
+            if (importe <= 0)
             {
                 MessageBox.Show("El importe debe ser mayor que cero", "Importe erroneo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txt.Focus();
@@ -485,7 +497,7 @@ namespace Facturar.Presentacion.Controles
 
         private void btnRevisionContrato_Click(object sender, EventArgs e)
         {
-            if(GridBase.Rows.Count > 0)
+            if (GridBase.Rows.Count > 0)
             {
                 var frmRevisiones = new frmRevisionContrato(ContratoActual);
                 frmRevisiones.ShowDialog();
@@ -509,7 +521,7 @@ namespace Facturar.Presentacion.Controles
             var local = cbLocal.SelectedItem as Local;
 
             // Chequeo de que el local no tiene un contrato activo
-            if(tipoProceso == Enumerador.TipoProceso.Alta && local.ContratoActivo)
+            if (tipoProceso == Enumerador.TipoProceso.Alta && local.ContratoActivo)
             {
                 MessageBox.Show("El local ya tiene un contrato activo.",
                                  "Local con contrato activo",
@@ -533,7 +545,7 @@ namespace Facturar.Presentacion.Controles
 
         public void RestauraControles(bool activar)
         {
-            switch(tipoProceso)
+            switch (tipoProceso)
             {
                 case Enumerador.TipoProceso.Alta:
                     BloqueoTextBoxAlta();

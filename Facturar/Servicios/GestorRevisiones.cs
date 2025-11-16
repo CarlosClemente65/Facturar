@@ -36,7 +36,7 @@ namespace Facturar.Servicios
             // Valida que la fecha de revision no sea anterior a la fecha del contrato
             if(nuevaRevision.FechaRevision <= contrato.FechaInicio)
             {
-                throw new InvalidOperationException("La fecha de revision no puede ser anterior a la fecha del contrato");
+                throw new InvalidOperationException("La fecha de revision no puede ser igual o anterior a la fecha del contrato");
             }
 
             // Valida que la fecha de revision no sea anterior a la ultima revision del contrato
@@ -44,7 +44,7 @@ namespace Facturar.Servicios
 
             if(ultimaRevision.HasValue && nuevaRevision.FechaRevision <= ultimaRevision.Value)
             {
-                throw new InvalidOperationException($"La fecha de revision del contrato({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser anterior o igual a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
+                throw new InvalidOperationException($"La fecha de revision del contrato({nuevaRevision.FechaRevision:dd/MM/yyyy}) no puede ser igual o anterior a la ultima revision ({ultimaRevision.Value:dd/MM/yyyy})");
             }
 
             try

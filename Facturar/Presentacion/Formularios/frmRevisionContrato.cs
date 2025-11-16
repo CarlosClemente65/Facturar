@@ -1,11 +1,13 @@
-﻿using System;
+﻿using Facturar.Entidades;
+using Facturar.Servicios;
+using Facturar.Utilidades;
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Windows.Forms;
-using Facturar.Entidades;
-using Facturar.Servicios;
-using Facturar.Utilidades;
 using Utiles = Facturar.Utilidades.UtilesGenerales;
 using UtilesUI = Facturar.Utilidades.UtilidadesUI;
 
@@ -77,6 +79,24 @@ namespace Facturar.Presentacion.Formularios
         {
             tipoProceso = Enumeradores.TipoProceso.Alta;
             ModoEdicion(modoEdicion: true);
+            var ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
+            if (ultimaRevision != null)
+            {
+                txtFechaRevision.Text = Utiles.FormatearFecha(ultimaRevision.FechaRevision.AddMonths(1)).ToString(); // Se pone un mes mas de la fecha de ultima revision
+                txtPrecioAnterior.Text = ultimaRevision.PrecioRevisado.ToString(); // Se obtiene el precio revisado de la ultima revision
+                txtPrecioAnterior.Enabled = false; // No se puede modificar el precio anterior si hay revision.
+            }
+            else
+            {
+                txtFechaRevision.Text = Utiles.FormatearFecha(contratoSeleccionado.FechaInicio.AddMonths(1)); // Se pone un mes mas a la fecha del contrato
+                txtPrecioAnterior.Text = contratoSeleccionado.PrecioMensual.ToString(); // Si no hay revision se pone el precio mensual el contratol
+            }
+
+            txtRevision.Text = "";
+            txtPrecioRevisado.Text = "";
+            txtObservaciones.Text = "";
+            txtFechaRevision.Focus();
+            txtFechaRevision.SelectAll();
         }
 
 
@@ -95,7 +115,7 @@ namespace Facturar.Presentacion.Formularios
             // Se valida que no se modifique una revision si hay alguna posterior
             var ultimaRevision = gestor.FechaUltimaRevision(contratoSeleccionado.Id);
 
-            if(revisionSeleccionada.FechaRevision < ultimaRevision)
+            if (revisionSeleccionada.FechaRevision < ultimaRevision)
             {
                 MessageBox.Show("No se puede modificar esta revision. Existe una posterior", "Error edicion revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
@@ -116,7 +136,7 @@ namespace Facturar.Presentacion.Formularios
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question
                 );
 
-            if(resultado == DialogResult.Yes)
+            if (resultado == DialogResult.Yes)
             {
                 gestor.Eliminar(revisionSeleccionada);
             }
@@ -141,7 +161,7 @@ namespace Facturar.Presentacion.Formularios
             string mensajeKo = string.Empty;
             try
             {
-                switch(tipoProceso)
+                switch (tipoProceso)
                 {
                     case Enumeradores.TipoProceso.Alta:
                         // Se crea una revision con los valores de los campos
@@ -157,7 +177,7 @@ namespace Facturar.Presentacion.Formularios
 
                     case Enumeradores.TipoProceso.Edicion:
                         // Se hace una copia por si hay errores poder restaurarla
-                        if(revisionSeleccionada != null)
+                        if (revisionSeleccionada != null)
                         {
                             copiaRevision = new RevisionContrato(revisionSeleccionada);
                         }
@@ -176,16 +196,16 @@ namespace Facturar.Presentacion.Formularios
                 }
             }
 
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 mensajeKo = $"No se ha podido actualizar la revision en la base de datos\n{ex.Message}";
             }
 
-            if(mensajeOk != string.Empty)
+            if (mensajeOk != string.Empty)
             {
                 MessageBox.Show(mensajeOk, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
-            if(mensajeKo != string.Empty)
+            if (mensajeKo != string.Empty)
             {
                 MessageBox.Show(mensajeKo, "Actualizacion base de datos", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaRevision.Focus();
@@ -279,7 +299,7 @@ namespace Facturar.Presentacion.Formularios
             dgvRevisiones.AutoGenerateColumns = false;
             dgvRevisiones.Columns.Clear();
 
-            foreach(var (nombrePropiedad, orden) in columnas)
+            foreach (var (nombrePropiedad, orden) in columnas)
             {
                 UtilesUI.InsertaColumnaDGV<T>(dgvRevisiones, nombrePropiedad, orden);
             }
@@ -289,7 +309,7 @@ namespace Facturar.Presentacion.Formularios
         // Formatea las columnas del grid segun el dato que contenga
         private void AplicarFormatoColumnas()
         {
-            if(dgvRevisiones.Columns.Count == 0) return; // Protege contra columnas vacías
+            if (dgvRevisiones.Columns.Count == 0) return; // Protege contra columnas vacías
 
             // Lista con los nombres de las propiedades a ajustar
             string[] columnasCentradas = { "Id", "FechaRevision", "IdContrato", "PorcentajeRevision" };
@@ -297,22 +317,22 @@ namespace Facturar.Presentacion.Formularios
             string[] columnasImportes = { "PrecioAnterior", "PrecioRevisado", "PorcentajeRevision" };
 
             // Aplica formatos
-            foreach(DataGridViewColumn columna in dgvRevisiones.Columns)
+            foreach (DataGridViewColumn columna in dgvRevisiones.Columns)
             {
                 // Ajuste al centro
-                if(columnasCentradas.Contains(columna.DataPropertyName))
+                if (columnasCentradas.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
                 }
 
                 // Ajuste formato fecha
-                if(columnasFecha.Contains(columna.DataPropertyName))
+                if (columnasFecha.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Format = "dd.MM.yyyy";
                 }
 
                 // Aplica formato de importe y alineado a la derecha
-                if(columnasImportes.Contains(columna.DataPropertyName))
+                if (columnasImportes.Contains(columna.DataPropertyName))
                 {
                     columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                     columna.DefaultCellStyle.Format = "N2";
@@ -327,7 +347,7 @@ namespace Facturar.Presentacion.Formularios
         // Actualiza la revision seleccionada al cambiar la seleccion del grid
         private void dgvRevisiones_SelectionChanged(object sender, EventArgs e)
         {
-            if(dgvRevisiones.CurrentRow != null)
+            if (dgvRevisiones.CurrentRow != null)
             {
                 revisionSeleccionada = dgvRevisiones.CurrentRow.DataBoundItem as RevisionContrato;
             }
@@ -353,10 +373,11 @@ namespace Facturar.Presentacion.Formularios
         // Asigna la fecha de revision a la fecha actual
         private void txtFechaRevision_Enter(object sender, EventArgs e)
         {
-            if(txtFechaRevision.Text == "")
+            if (txtFechaRevision.Text == "")
             {
                 txtFechaRevision.Text = Utiles.FormatearFecha(DateTime.Today);
             }
+            txtFechaRevision.SelectAll();
         }
 
         // Validacion de la fecha de revision
@@ -371,7 +392,7 @@ namespace Facturar.Presentacion.Formularios
                 out DateTime fechaRevision                          // Fecha resultante
                 );
 
-            if(!esValida)
+            if (!esValida)
             {
                 MessageBox.Show("Formato de fecha inválido. Usa uno de estos formatos: \ndd/MM/yyyy, dd.MM.yyyy, dd-MM-yyyy o dd.MM.yy", "Error de formato de fecha", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 txtFechaRevision.Clear();
@@ -380,9 +401,17 @@ namespace Facturar.Presentacion.Formularios
 
             txtFechaRevision.Text = Utiles.FormatearFecha(fechaRevision);
 
+            // Se valida que la fecha de revision no sea anterior a la fecha del contrato
+            if (fechaRevision < contratoSeleccionado.FechaInicio)
+            {
+                MessageBox.Show("La fecha de revision no puede ser anterior a la fecha del contrato", "Error en fecha revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtFechaRevision.Clear();
+                txtFechaRevision.Focus();
+                return;
+            }
             // Se valida que la fecha de revision no sea anterior a la ultima
             var ultimaRevision = gestor.FechaUltimaRevision(contratoSeleccionado.Id);
-            if(fechaRevision < ultimaRevision && tipoProceso == Enumeradores.TipoProceso.Alta)
+            if (fechaRevision < ultimaRevision && tipoProceso == Enumeradores.TipoProceso.Alta)
             {
                 MessageBox.Show("La fecha de revision no puede ser anterior a la ultima", "Error en fecha revision", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtFechaRevision.Clear();
@@ -411,7 +440,7 @@ namespace Facturar.Presentacion.Formularios
             TextBox txt = sender as TextBox;
 
             // Valida que no se introduzca algo que no sean numeros
-            if(!decimal.TryParse(txt.Text, out decimal importe))
+            if (!decimal.TryParse(txt.Text, out decimal importe))
             {
                 MessageBox.Show("Debe introducir un importe numerico valido.", "Importe incorrecto", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txt.Focus();
@@ -419,7 +448,7 @@ namespace Facturar.Presentacion.Formularios
             }
 
             // Valida que sea un importe positivo
-            if(importe <= 0)
+            if (importe <= 0)
             {
                 MessageBox.Show("El importe debe ser mayor que cero", "Importe erroneo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txt.Focus();
@@ -433,7 +462,7 @@ namespace Facturar.Presentacion.Formularios
         private void txtPrecioAnterior_Enter(object sender, EventArgs e)
         {
             ultimaRevision = gestor.ObtenerUltimaRevision(contratoSeleccionado.Id);
-            if(tipoProceso == Enumeradores.TipoProceso.Alta && ultimaRevision != null)
+            if (tipoProceso == Enumeradores.TipoProceso.Alta && ultimaRevision != null)
             {
                 txtPrecioAnterior.Text = ultimaRevision.PrecioRevisado.ToString("N2");
                 txtRevision.Focus();
@@ -444,7 +473,7 @@ namespace Facturar.Presentacion.Formularios
         {
             decimal.TryParse(txtPrecioAnterior.Text, out decimal precioAnterior);
             decimal.TryParse(txtRevision.Text.Replace("%", "").Trim(), out decimal revision);
-            if(revision != 0)
+            if (revision != 0)
             {
                 decimal incremento = 1 + (revision / 100);
                 decimal calculoRevisado = Math.Round(precioAnterior * incremento, 2);
